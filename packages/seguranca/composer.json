@@ -1,0 +1,32 @@
+{
+    "name": "gappay/seguranca",
+    "description": "Módulo de Segurança do GapPay",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Renato Pereira",
+            "email": "renatogap.dev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GapPay\\Seguranca\\": "src/"
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GapPay\\Seguranca\\Tests\\": "src/Tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "GapPay\\Seguranca\\Providers\\SegurancaServiceProvider"
+            ]
+        }
+    }
+}

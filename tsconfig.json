@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "strict": true,
+      "module": "ESNext",
+      "target": "ESNext",
+      "moduleResolution": "Node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "baseUrl": ".",
+    "paths": {
+      "@/*": ["./resources/js/*"]
+    },
+  },
+  "include": ["resources/js/**/*", "resources/js/**/*.vue"],
+  "exclude": ["node_modules"],
+}

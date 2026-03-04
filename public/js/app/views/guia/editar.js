@@ -1,0 +1,1 @@
+"use strict";function salvarFormulario(a){a.preventDefault();document.getElementById("frente");var e=new FormData(form);Ajax.ajax({url:BASE_URL+"/guia/update",method:"POST",data:e,contentType:!1,processData:!1,success:function(a){mensagem(!0,a.msg,"success")}})}salvar.onclick=salvarFormulario;

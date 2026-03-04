@@ -1,0 +1,81 @@
+services:
+    app:
+        build:
+            args:
+                # Não altere o nome de usuário abaixo
+                user: ${APP_USUARIO}
+                uid: 1000
+            context: ./
+            dockerfile: docker/php/php.dockerfile
+        image: php84
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        container_name: ${APP_NAME:-php}-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+            - ./docker/php/.bashrc:/home/${APP_USUARIO}/.bashrc
+            - ./docker/php/auth.json:/home/${APP_USUARIO}/.composer/auth.json
+        networks:
+            - dev
+
+    nginx:
+        image: nginx:alpine
+        container_name: ${APP_NAME:-web}-nginx
+        restart: unless-stopped
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx:/etc/nginx/conf.d
+        networks:
+            - dev
+        links:
+            - app
+
+    ############################
+    # MySQL
+    ############################
+    db:
+        image: mysql:latest
+        container_name: ${APP_NAME}-db
+        #command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+        ports:
+            - "${DB_PORT}:${DB_PORT}"
+        volumes:
+            - mysql-storage:/var/lib/mysql
+        networks:
+            - dev
+
+    ############################
+    # Postgres
+    ############################
+#    db:
+#        image: postgres:16-alpine
+#        restart: unless-stopped
+#        container_name: ${APP_NAME:-postgres}-db
+#        environment:
+#            POSTGRES_PASSWORD: ${DB_PASSWORD:-123456789}
+#        ports:
+#            - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+#        volumes:
+#            - /Users/${APP_USUARIO}/mysql_paynow:/var/lib/postgresql/data
+#            - ./docker/postgres/01_estrutura_policia.sql:/docker-entrypoint-initdb.d/01_estrutura_policia.sql
+#            - ./docker/postgres/02_estrutura_seguranca.sql:/docker-entrypoint-initdb.d/02_estrutura_seguranca.sql
+#            - ./docker/postgres/03_estrutura_srh.sql:/docker-entrypoint-initdb.d/03_estrutura_srh.sql
+#            - ./docker/postgres/04_dados.sql:/docker-entrypoint-initdb.d/04_dados.sql
+#        networks:
+#            - dev
+
+networks:
+    dev:
+        driver: bridge
+
+volumes:
+  mysql-storage:
