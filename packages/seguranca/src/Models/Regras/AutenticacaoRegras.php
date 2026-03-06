@@ -44,9 +44,6 @@ class AutenticacaoRegras
             $usuarioSistema = AutorizacaoDB::possuiPermissaoSistema($usuario, config('policia.codigo'));
             if (!$usuarioSistema) {
                 throw new Exception('Seu usuário não possui acesso a este sistema. Entre em contato com a administração do sistema para solicitar acesso');
-                // throw ValidationException::withMessages([
-                //     'email' => ['Seu usuário não possui acesso a este sistema'],
-                // ]);
             }
 
             /**
@@ -56,17 +53,18 @@ class AutenticacaoRegras
             
             if (self::isUsuarioExpirado($usuario, $usuarioSistema)) {
                 throw new Exception('Seu acesso expirou. Entre em contato com a administração do sistema para renovar seu acesso');
-                // throw ValidationException::withMessages([
-                //     'email' => ['Seu acesso expirou'],
-                // ]);
             }
         }
 
         //autentica usuário
         Auth::login($usuario);
+        \Log::info('AutenticacaoRegras: user logged in', [
+            'user_id' => $usuario->id,
+            'email' => $usuario->email,
+            'session_id' => session()->getId()
+        ]);
         UsuarioDB::registrarLogin($usuario, $ip, $agente);
         UsuarioDB::renovarAcesso($usuario);
-        //CookieSSO::make($usuario->id, config('policia.chave_sso'));
     }
 
     /**
@@ -120,9 +118,6 @@ class AutenticacaoRegras
 
         //faz logoff
         Auth::logout();
-
-        //expira cookie sso
-        //CookieSSO::delete();
 
         //limpa sessão
         Session::flush();

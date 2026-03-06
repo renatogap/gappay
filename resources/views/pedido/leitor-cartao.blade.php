@@ -1,8 +1,8 @@
 @extends('layouts.default')
 @section('conteudo')
-    <h4>
+    <h5>
         <span class="material-icons icone">qr_code_scanner</span> Aproxime o cartão
-    </h4>
+    </h5>
     <br>
     @if (session('sucesso'))
         <div class="alert alert-danger">

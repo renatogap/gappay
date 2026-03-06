@@ -10,12 +10,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "gappay/seguranca": "dev-main",
+        "intervention/image": "^2.5",
         "laravel/fortify": "^1.27",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "intervention/image": "^2.5",
-        "gappay/seguranca": "dev-main"
+        "stripe/stripe-php": "^19.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",

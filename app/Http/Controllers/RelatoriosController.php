@@ -283,7 +283,7 @@ class RelatoriosController extends Controller
         $cartaoCliente = CartaoCliente::where('fk_cartao', $cartao->id)->where('status', 2)->first();
 
         if(!$cartaoCliente){
-            return redirect('relatorio/consultar-pedidos')->with('error', 'Cartão não disponível, dirija-se a uma caixa.');
+            return redirect('relatorio/consultar-pedidos')->with('error', 'Este cartão não está habilitado para uso. Verifique se foi cadastrado corretamente ou se o cartão encontra-se bloqueado.');
         }
 
         $pedidos = DB::table('pedido as p')

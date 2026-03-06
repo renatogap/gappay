@@ -2,12 +2,12 @@
 
 
 @section('conteudo')
-    <h4>
+    <h5>
         <span class="material-icons icone">qr_code_scanner</span> Aproxime o cartão
         <a href="{{url('')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>  
-    </h4>
+    </h5>
     <hr>
     @if (session('sucesso'))
         <div class="alert alert-danger">

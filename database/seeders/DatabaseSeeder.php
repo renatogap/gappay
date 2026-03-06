@@ -41,7 +41,8 @@ class DatabaseSeeder extends Seeder
             SituacaoPedidoSeeder::class,
             TipoClienteSeeder::class,
             TipoPagamentoSeeder::class,
-            TipoUnidadeMedidaSeeder::class
+            TipoUnidadeMedidaSeeder::class,
+            CartaoClienteSeeder::class
         ]);
     }
 }

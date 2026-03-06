@@ -3,14 +3,11 @@
 namespace GapPay\Seguranca\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use GapPay\Seguranca\Models\Regras\AutenticacaoRegras;
 use GapPay\Seguranca\Models\Regras\RedefinicaoSenhaRegras;
-use GapPay\Seguranca\Models\Regras\UsuarioRegras;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AutenticacaoController extends Controller
@@ -23,18 +20,18 @@ class AutenticacaoController extends Controller
         ]);
 
         try {
-            AutenticacaoRegras::autenticacao($request->email, $request->senha, implode(',', $request->ips()),
-                $request->userAgent());
-
+            AutenticacaoRegras::autenticacao(
+                $request->email, 
+                $request->senha, 
+                implode(',', $request->ips()),
+                $request->userAgent()
+            );
 
             //return response(UsuarioRegras::info(Auth::user()));
             return redirect()->route('home');
 
         } catch (\Exception $e) {
-
             return redirect()->route('tela.login')->with('error', $e->getMessage())->withInput();
-
-            //return response(exibirErro($e, 'Falha ao autenticar usuário'), 422);
         } 
     }
 

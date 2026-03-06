@@ -77,7 +77,7 @@ class CartaoClienteDB extends Model
         return $sql->get();
     }
 
-    public static function extratoCartaoCliente($id_cartao_cliente)
+    public static function extratoCartaoCliente($id_cartao_cliente, $dtInicio = null, $dtTermino = null, $horaInicio = null, $horaTermino = null)
     {
         $sql1 = DB::table('entrada_credito as e')
             ->join('tipo_pagamento as tp', 'tp.id', '=', 'e.fk_tipo_pagamento')
@@ -86,6 +86,9 @@ class CartaoClienteDB extends Model
             ->where('e.fk_cartao_cliente', $id_cartao_cliente)
             ->orderBy('e.id');
 
+        if($dtInicio && $dtTermino && $horaInicio && $horaTermino) {
+            $sql1->whereBetween('e.data', ["$dtInicio $horaInicio", "$dtTermino $horaTermino"]);
+        }
 
 
         $sql2 = DB::table('saida_credito as s')
@@ -94,6 +97,9 @@ class CartaoClienteDB extends Model
             ->where('s.fk_cartao_cliente', $id_cartao_cliente)
             ->orderBy('s.id');
 
+        if ($dtInicio && $dtTermino && $horaInicio && $horaTermino) {
+            $sql2->whereBetween('s.data', ["$dtInicio $horaInicio", "$dtTermino $horaTermino"]);
+        }
 
         $dados = $sql1->union($sql2)->orderBy('data', 'DESC')->get();
 

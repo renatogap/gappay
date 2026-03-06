@@ -20,7 +20,16 @@ class Autorizacao
      */
     public function handle(Request $request, Closure $next)
     {
+        \Log::info('Autorização middleware: checking auth', [
+            'auth_check' => Auth::check(),
+            'user_id' => Auth::id(),
+            'session_id' => session()->getId(),
+            'url' => $request->url(),
+            'method' => $request->method()
+        ]);
+
         if (!Auth::check()) { // Usuário não autenticado
+            \Log::warning('Autorização middleware: usuário não autenticado, redirecionando para login');
             if (!$request->ajax()) { // Se não for uma requisição AJAX, redireciona para a tela de login
                 return redirect()->route('tela.login');
             }
@@ -32,30 +41,22 @@ class Autorizacao
          */
         $usuario = Auth::user();
         if ($usuario->isRoot()) {//root passa direto para próxima camada
+            \Log::info('Autorização middleware: usuário é root, permitindo acesso sem verificação de permissão');
             return $next($request);
         }
 
         $acaoSolicitada = AcaoSolicitada::getInstance();
 
-        //usuário deve trocar senha e não está na tela de troca de senha
-//        if ($usuario->deveTrocarSenha()
-//            && $acaoSolicitada->getNome() !== 'configuracoes/senha' //url do front
-//            && $acaoSolicitada->getNome() !== 'api/configuracoes/senha'//url do back
-//            && $acaoSolicitada->getNome() !== 'api/usuario/configuracoes'//url do back que popula a tela de configurações
-//            && $acaoSolicitada->getNome() !== 'api/usuario/info'//url do back que verifica se usuário está logado
-//        ) {
-//            return response(['url' => '/configuracoes/senha'], 307);//307 - Temporary Redirect
-//        }
-
-        //usuário deve atualizar seu cadastro e não está na tela de atualizar cadastro
-        // if ($usuario->cadastroIncompleto() && $acaoSolicitada->getNome() !== 'api/usuario/configuracoes') {
-        //     return response(['url' => '/configuracoes'], 307);
-        // }
-
         if (!UsuarioLogado::permissaoUrl($acaoSolicitada)) {
-            return abort(403, 'Seu usuário não possui permissão para acessar o recurso solicitado');
+            \Log::warning('Seu usuário não possui permissão para acessar o recurso solicitado', [
+                'user_id' => $usuario->id,
+                'acao' => $acaoSolicitada
+            ]);
+
+            die('Seu usuário não possui permissão para acessar o recurso solicitado');
         }
 
+        \Log::info('Autorizacao middleware: user authorized, proceeding');
         return $next($request);
     }
 }

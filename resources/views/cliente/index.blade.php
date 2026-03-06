@@ -1,20 +1,13 @@
 @extends('layouts.default')
-
-
 @section('conteudo')
     <h5>
-        Aproxime o cartão de orígem
+        <span class="material-icons icone">qr_code_scanner</span> Aproxime o cartão
         <a href="{{url('')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>  
     </h5>
     <hr>
-    @if (session('sucesso'))
-        <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        {!! session('sucesso') !!}
-        </div>
-    @endif
+
     @if (session('error'))
         <div class="alert alert-danger">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -45,8 +38,7 @@
 @section('scripts')
 
 <script type="text/javascript" src="{{url('js/instascan.min.js')}}"></script>
-
-<script>   
+<script>
     var indexCamera = 1;
 
     var scanner = new Instascan.Scanner({
@@ -54,15 +46,15 @@
     });
 
     scanner.addListener('scan', function(content) {
-        scanner.stop();
         $('#div-aguarde').removeClass('d-none');
         document.getElementById('preview').classList.add('d-none');
         document.getElementById('mudarCamera').innerHTML = '';
         play();
-        window.location = BASE_URL+'cartao-cliente/dados-transferencia/'+content;
+        window.location = BASE_URL+'cliente/login/'+content;
+        //window.location = BASE_URL+'relatorio/fechamento-conta/'+content;
     });
 
-    Instascan.Camera.getCameras().then(cameras => 
+    Instascan.Camera.getCameras().then(cameras =>
     {
         if(cameras.length == 1){
             scanner.start(cameras[0]);
@@ -78,8 +70,8 @@
     function mudarCamera() {
         scanner.stop();
         indexCamera++;
-        
-        Instascan.Camera.getCameras().then(cameras => 
+
+        Instascan.Camera.getCameras().then(cameras =>
         {
             if(cameras.length >= indexCamera){
                 scanner.start(cameras[indexCamera]);
@@ -106,7 +98,7 @@
     }
 
     $('#botao').trigger('click');  //simula a interação com o cliente, já que o audio só é ativado depois de uma interação
-        
+
 </script>
 
 @endsection

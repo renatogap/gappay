@@ -26,7 +26,7 @@ services:
         container_name: ${APP_NAME:-web}-nginx
         restart: unless-stopped
         ports:
-            - "8000:8000"
+            - "8001:8000"
         volumes:
             - ./:/var/www
             - ./docker/nginx:/etc/nginx/conf.d
@@ -52,27 +52,6 @@ services:
             - mysql-storage:/var/lib/mysql
         networks:
             - dev
-
-    ############################
-    # Postgres
-    ############################
-#    db:
-#        image: postgres:16-alpine
-#        restart: unless-stopped
-#        container_name: ${APP_NAME:-postgres}-db
-#        environment:
-#            POSTGRES_PASSWORD: ${DB_PASSWORD:-123456789}
-#        ports:
-#            - "${DB_PORT:-5432}:${DB_PORT:-5432}"
-#        volumes:
-#            - /Users/${APP_USUARIO}/mysql_paynow:/var/lib/postgresql/data
-#            - ./docker/postgres/01_estrutura_policia.sql:/docker-entrypoint-initdb.d/01_estrutura_policia.sql
-#            - ./docker/postgres/02_estrutura_seguranca.sql:/docker-entrypoint-initdb.d/02_estrutura_seguranca.sql
-#            - ./docker/postgres/03_estrutura_srh.sql:/docker-entrypoint-initdb.d/03_estrutura_srh.sql
-#            - ./docker/postgres/04_dados.sql:/docker-entrypoint-initdb.d/04_dados.sql
-#        networks:
-#            - dev
-
 networks:
     dev:
         driver: bridge

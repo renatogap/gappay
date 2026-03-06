@@ -19,12 +19,17 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
+        
+        // Registar aliases de middleware
+        $middleware->alias([
+            'session.cliente' => \App\Http\Middleware\SessaoClienteMiddleware::class,
+        ]);
+        
         $middleware->group('seguranca', [
              \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
 //             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \GapPay\Seguranca\Middleware\RecursoExiste::class,
-            //\GapPay\Seguranca\Middleware\AutenticacaoUnica::class,
             \GapPay\Seguranca\Middleware\Autorizacao::class,
             \GapPay\Seguranca\Middleware\CadastroAutomaticoDeTelaEDependencia::class,
             \App\Http\Middleware\MenuMiddleware::class

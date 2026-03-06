@@ -13,13 +13,7 @@ use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsuarioLocalController;
 
 Route::group(['middleware' => ['web']], function () {
-//    Route::get('/', [\GapPay\Seguranca\Controllers\UsuarioController::class,'@index']);
-//    Route::get('/', [\App\Http\Controllers\UsuarioLocalController::class, 'login']);
 
-
-
-    //só pra aproveitar o middleware nativo de athentication do laravel
-//    Route::get('/login', [\GapPay\Seguranca\Controllers\AutenticacaoController::class, 'login']);
 });
 
 
@@ -32,20 +26,8 @@ Route::group(['middleware' => ['web']], function () {
  */
 Route::group(['middleware' => ['seguranca']], function () {
     //Route::get('/home', [\App\Http\Controllers\UsuarioLocalController::class, 'home'])->name('home');
-    Route::view('/senha', 'layouts.vue');
-    Route::view('/configuracoes', 'layouts.vue')->name('configuracoes.usuario');
 
-    Route::view('seguranca/acoes', 'layouts.vue');
-    Route::view('seguranca/acoes/create', 'layouts.vue');
-    Route::view('seguranca/acoes/{id}/edit', 'layouts.vue');
-
-    Route::controller(\App\Http\Controllers\PerfilController::class)->group(function () {
-        Route::get('/admin/perfil', 'index');
-        Route::get('/admin/perfil/create', 'create');
-        Route::get('/admin/perfil/{id}/edit', 'edit');
-    });
-
-    Route::view('seguranca/perfis', 'layouts.vue');
+    Route::get('/home', [UsuarioLocalController::class, 'home'])->name('home');
 
     Route::controller(\App\Http\Controllers\UsuarioLocalController::class)->group(function () {
         Route::get('admin/usuario', 'index');
@@ -58,9 +40,6 @@ Route::group(['middleware' => ['seguranca']], function () {
         Route::post('admin/usuario/reativar/{usuario}', 'reativar')->name('usuario.reativar');
         Route::post('admin/usuario/excluir/{usuario}', 'UsuarioLocalController@excluir')->name('usuario.delete');
     });
-
-
-    Route::get('/home', [UsuarioLocalController::class, 'home'])->name('home');
 
     Route::get('cartao', [CartaoController::class, 'index']);
     Route::get('cartao/create', [CartaoController::class, 'create']);
@@ -207,4 +186,21 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::get('dashboard/pedidos-por-hora/{data}', [DashboardController::class, 'pedidosPorhora']);
     Route::get('dashboard/recargas-por-hora/{data}', [DashboardController::class, 'recargasPorHora']);
     Route::get('dashboard/recargas-por-mes/{ano}', [DashboardController::class, 'recargasPorMes']);
+
+
+
+    Route::view('/senha', 'layouts.vue');
+    Route::view('/configuracoes', 'layouts.vue')->name('configuracoes.usuario');
+
+    Route::view('seguranca/acoes', 'layouts.vue');
+    Route::view('seguranca/acoes/create', 'layouts.vue');
+    Route::view('seguranca/acoes/{id}/edit', 'layouts.vue');
+
+    Route::controller(\App\Http\Controllers\PerfilController::class)->group(function () {
+        Route::get('/admin/perfil', 'index');
+        Route::get('/admin/perfil/create', 'create');
+        Route::get('/admin/perfil/{id}/edit', 'edit');
+    });
+
+    Route::view('seguranca/perfis', 'layouts.vue');
 });
