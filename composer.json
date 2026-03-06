@@ -9,7 +9,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "gappay/seguranca": "dev-main",
         "intervention/image": "^2.5",
         "laravel/fortify": "^1.27",
