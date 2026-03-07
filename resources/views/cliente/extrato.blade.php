@@ -244,16 +244,17 @@
             grid-template-columns: 1fr;
         }
 
-        .transacao-item {
-            flex-direction: column;
-            align-items: flex-start;
+        .transacao-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .icon-extrato {
+            font-size: 0.8em;
         }
 
         .transacao-valor {
-            width: 100%;
-            align-items: flex-start;
-            margin-left: 0;
-            margin-top: 1em;
+            font-size: 1em;
         }
 
         .filtro-container {
@@ -272,8 +273,8 @@
 </style>
 
 <h5>
-    <i class="material-icons icone">history</i>
-    Histórico de Transações
+    <i class="material-icons icone">receipt_long</i>
+    Extrato
 
     <a href="{{ url('cliente/home') }}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
         keyboard_backspace
@@ -319,7 +320,7 @@
     <div class="transacao-item">
         <div class="transacao-info">
             <div class="transacao-icon {{ $isEntrada ? 'entrada' : 'saida' }}">
-                <i class="material-icons">
+                <i class="material-icons icon-extrato">
                     {{ $isEntrada ? 'add_circle' : 'remove_circle' }}
                 </i>
             </div>
@@ -328,7 +329,7 @@
                 <div class="descricao">{{ $transacao->observacao ?? 'Sem descrição' }}</div>
                 <!-- <span class="subtitulo float-right">{{ $dataRelativa }}</span> -->
                 <div class="subtitulo">{{ $dataFormatada }}</div>
-                <span class="tipo">{{ $transacao->tipo_pagamento }}</span>
+                <span class="tipo">{{ $isEntrada ? $transacao->tipo_pagamento : 'CONSUMO' }}</span>
             </div>
         </div>
 
@@ -336,7 +337,6 @@
             <div class="valor {{ $isEntrada ? 'entrada' : 'saida' }}">
                 {{ $isEntrada ? '+' : '-' }} R$ {{ number_format(abs($transacao->valor), 2, ',', '.') }}
             </div>
-
         </div>
     </div>
     @endforeach

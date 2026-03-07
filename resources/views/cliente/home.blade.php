@@ -116,11 +116,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        
         flex-shrink: 0;
         box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); */
+        transition: all 0.3s ease;
         float: right;
         border: none;
+        margin-top: 15px;
     }
 
     #btn-toggle-saldo:hover {
@@ -160,7 +162,7 @@
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #3153e7 0%, #043795 100%);
+        /* background: linear-gradient(90deg, #3153e7 0%, #043795 100%); */
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.3s ease;
@@ -170,6 +172,7 @@
         transform: translateY(-8px);
         box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25);
         border-color: #3153e7;
+        text-decoration: none;
     }
 
     .atalho-card:hover::before {
@@ -287,14 +290,6 @@
     }
 
     @media (max-width: 480px) {
-        .atalhos-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .saldo-display {
-            flex-direction: column;
-            align-items: flex-start;
-        }
 
         .saldo-valor,
         .saldo-oculto {
@@ -373,7 +368,7 @@
             <div class="atalho-titulo">Extrato</div>
         </a>
 
-        <a href="{{ url('cliente/cardapios') }}" class="atalho-card">
+        <a href="{{ url('cliente/cardapio/1') }}" class="atalho-card">
             <div class="atalho-icone">
                 <i class="material-icons">restaurant_menu</i>
             </div>

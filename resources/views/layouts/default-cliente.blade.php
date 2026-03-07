@@ -22,7 +22,7 @@
         html,
         body {
             height: 100%;
-            background: {{ config('policia.background') }};
+            background: <?= config('policia.background') ?>;
             width: 100%;
         }
 
@@ -38,22 +38,22 @@
         }
 
         .bg-dark {
-            background: {{ config('policia.background') }};
+            background: <?= config('policia.background') ?>;
         }
 
         .btn-parque {
-            background: {{ config('policia.btn-parque') }};
+            background: <?= config('policia.btn-parque') ?>;
             color: white;
         }
 
         .btn-parque:hover {
-            background: {{ config('policia.btn-parque-hover') }};
+            background: <?= config('policia.btn-parque-hover') ?>;
             color: white;
         }
 
         .btn-secondary {
             color: #333;
-            background: {{ config('policia.btn-secondary') }};
+            background: <?= config('policia.btn-secondary') ?>;
         }
 
         .btn-secondary:hover {
