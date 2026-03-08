@@ -25,6 +25,7 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
     Route::get('cliente/cardapio/ver-thumb/{id}', 'verThumb');
     Route::get('cliente/cardapio/{id_tipo_cardapio}', 'cardapio');
     Route::get('cliente/cardapio/item/{id}', 'pedidoItem');
+    Route::get('cliente/pedido/{pedido_id}/entregue', 'entregarPedido'); //Público - QR Code
 });
 
 
@@ -47,7 +48,8 @@ Route::middleware(['session.cliente'])->group(function () {
         Route::post('cliente/cardapio/remove-item-pedido-cliente', 'removeItemPedidoCliente');
         Route::get('cliente/confirmar-pedido', 'confirmarPedido');
         Route::get('cliente/pedido/finalizar', 'finalizarPedido');
-        Route::get('cliente/meus-pedidos/{pedido_id}', 'meusPedidos');
+        Route::get('cliente/meus-pedidos', 'meusPedidos');
+        Route::get('cliente/meu-pedido/{pedido_id}', 'meuPedido');
     });
 });
 

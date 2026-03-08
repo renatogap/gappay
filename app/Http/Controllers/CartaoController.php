@@ -51,7 +51,7 @@ class CartaoController extends Controller
                 $newQrCode = $imgQrcode->resize(1400, 1400);
 
                 //Pega o modelo da imagem do cartão
-                $img = WideImage::load(storage_path().'/cartao-paynow.png');
+                $img = WideImage::load(storage_path().'/cartao-gappay.png');
 
                 $newImage = $img->merge($newQrCode, "right - 1570", "bottom - 720", 100);
                 //Mescla a imagem do cartão com a imagem do qrcode e gera uma nova imagem

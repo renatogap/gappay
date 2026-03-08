@@ -372,7 +372,7 @@
     </div>
 
     <div class="atalhos-grid">
-        <a href="{{ url('cliente/meus-pedidos/4') }}" class="atalho-card">
+        <a href="{{ url('cliente/meus-pedidos') }}" class="atalho-card">
             <div class="atalho-icone">
                 <i class="material-icons">shopping_cart</i>
             </div>

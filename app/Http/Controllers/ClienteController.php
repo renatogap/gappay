@@ -22,10 +22,9 @@ use App\Models\Facade\FormasPagamentoDB;
 use App\Models\Regras\ClienteRegras;
 use App\Models\Regras\PedidoRegras;
 use Exception;
-use GapPay\Seguranca\Models\Entity\SegGrupo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use QRcode;
 
 class ClienteController extends Controller
 {
@@ -362,7 +361,19 @@ class ClienteController extends Controller
         }
     }
 
-    public function meusPedidos($pedido_id)
+    public function meusPedidos()
+    {
+        $cartaoCliente = session('cliente');
+
+        $pedidos = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
+            ->where('status', '=', 1)
+            ->orderBy('dt_pedido', 'desc')
+            ->get();
+
+        return view('cliente.meus-pedidos', compact('pedidos'));
+    }
+
+    public function meuPedido($pedido_id)
     {
         $pedidos = DB::table('pedido as p')
             ->join('pedido_item as pi', 'p.id', '=', 'pi.fk_pedido')
@@ -376,6 +387,8 @@ class ClienteController extends Controller
                 't.nome as tipo_cardapio',
                 'p.mesa',
                 'p.dt_pedido',
+                'p.taxa_servico',
+                'p.valor_total',
                 'p.status as status_pedido',
                 's.nome as situacao',
                 'c.fk_tipo_cardapio',
@@ -397,9 +410,50 @@ class ClienteController extends Controller
             ->where('p.status', '=', 1) //SOLICITADO
             ->get();
 
-        $statusItensPedido = $pedidos->pluck('status')->toArray();
+        // Gerar QR Code
+        include_once 'lib/phpqrcode/qrlib.php';
 
-        return view('cliente.historico-pedido', compact('pedidos', 'statusItensPedido'));
+        $qrCodeUrl = url('cliente/pedido/' . $pedido_id . '/entregue');
+        $qrCodePath = storage_path() . '/qrcode/qrcode.png';
+
+        //Gera a imagem qrcode baseado na url e salva na pasta qrcode do storage
+        QRcode::png($qrCodeUrl, $qrCodePath, QR_ECLEVEL_H, 5, 1);
+
+        // Converter para base64 para embedding direto
+        $qrCodeData = base64_encode(file_get_contents($qrCodePath));
+        $qrCode = '<img src="data:image/png;base64,' . $qrCodeData . '" class="ticket-qrcode-img" alt="QR Code">';
+
+        return view('cliente.meu-pedido', compact('pedidos', 'qrCode'));
+    }
+
+    public function entregarPedido($pedido_id)
+    {
+        try {
+            $pedido = Pedido::find($pedido_id);
+
+            if (!$pedido) {
+                return response()->json([
+                    'sucesso' => false,
+                    'mensagem' => 'Pedido não encontrado'
+                ], 404);
+            }
+
+            // Atualizar status para 3 (entregue) e registrar data/hora de entrega
+            $pedido->status = 3;
+            $pedido->dt_entrega = now();
+            $pedido->save();
+
+            return response()->json([
+                'sucesso' => true,
+                'mensagem' => 'Pedido entregue com sucesso!',
+                'redirect' => url('cliente/meus-pedidos')
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'sucesso' => false,
+                'mensagem' => 'Erro ao entrega o pedido: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function pedidoItem($id)
