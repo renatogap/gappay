@@ -56,6 +56,7 @@
 
     Instascan.Camera.getCameras().then(cameras =>
     {
+        console.log(cameras)
         if(cameras.length == 1){
             scanner.start(cameras[0]);
         }

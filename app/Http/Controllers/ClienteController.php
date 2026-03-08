@@ -8,20 +8,32 @@ use App\Models\Entity\CardapioTipo;
 use App\Models\Entity\Cartao;
 use App\Models\Entity\CartaoCliente;
 use App\Models\Entity\Cliente;
+use App\Models\Entity\Estoque;
 use App\Models\Entity\GrauParentesco;
+use App\Models\Entity\Pedido;
+use App\Models\Entity\SituacaoCartao;
 use App\Models\Facade\CardapioDB;
 use App\Models\Facade\CartaoClienteDB;
 use App\Models\Facade\ClienteDB;
 use App\Models\Facade\DependenteDB;
 use App\Models\Facade\EscolaDB;
+use App\Models\Facade\EstoqueDB;
 use App\Models\Facade\FormasPagamentoDB;
 use App\Models\Regras\ClienteRegras;
+use App\Models\Regras\PedidoRegras;
 use Exception;
+use GapPay\Seguranca\Models\Entity\SegGrupo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
+    public function index()
+    {
+        return view('cliente.index');
+    }
+
     public function list(Request $request)
     {
         $texto = $request->texto != "{texto" ? $request->texto : '';
@@ -63,11 +75,6 @@ class ClienteController extends Controller
         }
     }
 
-    public function index()
-    {
-        return view('cliente.index');
-    }
-
     public function editar($id)
     {
         $cliente        = Cliente::find($id);
@@ -84,7 +91,12 @@ class ClienteController extends Controller
     public function home()
     {
         $cartaoCliente = session('cliente');
-        return view('cliente.home', compact('cartaoCliente'));
+        
+        $pedidosPendentes = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
+            ->where('status', 1) // status que representa pedido não finalizado
+            ->count();
+
+        return view('cliente.home', compact('cartaoCliente', 'pedidosPendentes'));
     }
 
     public function saldo()
@@ -165,8 +177,229 @@ class ClienteController extends Controller
 
     public function cardapio($id_tipo_cardapio)
     {
-        $myCardapio = CardapioDB::pesquisar($id_tipo_cardapio);
-        return view('cliente.cardapio', compact('myCardapio'));
+        //$myCardapio = CardapioDB::pesquisar($id_tipo_cardapio);
+        $id_tipo_cardapio = 1;
+        return view('cliente.cardapio', compact('id_tipo_cardapio'));
+    }
+
+    public function getCardapioDoPDV($id_tipo_cardapio)
+    {
+        $cardapio = CardapioDB::pesquisar($id_tipo_cardapio);
+        return response()->json($cardapio, 200);
+    }
+
+    public function addPedidoCliente(Request $request)
+    {
+        $sessao = [];
+
+        if ($request->session()->exists('pedido')) {
+            $sessao = $request->session()->get('pedido');
+        }
+
+        $params = (object) $request->all();
+
+        #Esse script foi inserido porque algumas vezes o javascript falhava na tela do usuário
+        #Não calculando corretamente o valor total do pedido (valor * qtd)
+        #Logo, esse calculo deve ser feito também aqui na regra de negócio
+        #Validando os valores, e caso não bata, o php substitui o valor gerado errado
+        if ($params->unidade == 1) {
+            $valorTotalItem = ($params->quantidade * $params->valorCardapio);
+        } else {
+            //calculo caso a unidade seja em gramas, onde o valor do cardápio é por kg
+            $valorTotalItem = (($params->quantidade * $params->valorCardapio) / $params->unidade);
+        }
+
+        if (!isset($params->valor)) {
+            $params->valor = 0;
+        }
+
+        if ($valorTotalItem != $params->valor) {
+            $params->valor = $valorTotalItem;
+        }
+
+        $sessao[$params->id_cardapio] = $params;
+
+        session(["pedido" => $sessao]);
+
+        return response()->json(['success' => true, 'message' => 'Item adicionado ao pedido com sucesso!'], 200);
+    }
+
+    public function removeItemPedidoCliente(Request $request)
+    {
+        $pedido = request()->session()->get('pedido');
+
+        if (isset($pedido[$request->itemId])) {
+
+            if ($request->quantidade <= 0) {
+                unset($pedido[$request->itemId]);
+            } else {
+                $pedido[$request->itemId]->quantidade = $request->quantidade;
+            }
+
+            request()->session()->put('pedido', $pedido);
+        }
+
+        return response()->json(['success' => true, 'message' => "Item {$request->itemId} removido do pedido!"], 200);
+    }
+
+    public function confirmarPedido()
+    {
+        $pedido = request()->session()->get('pedido');
+
+        if (isset($pedido[request('remove')])) {
+
+            unset($pedido[request('remove')]);
+
+
+            if (count($pedido) > 0) {
+                session(["pedido" => $pedido]);
+                redirect('cliente/confirmar-pedido');
+            } else {
+                request()->session()->forget('pedido');
+                return redirect('cliente/cardapio/1');
+            }
+        }
+
+        return view('cliente.confirmar-pedido', compact('pedido'));
+    }
+
+    public function finalizarPedido()
+    {
+        $cartao_id = session('cliente')->fk_cartao;
+
+        $params = new \StdClass();
+
+        //verifica se o pedido ainda está na sessão
+        if (!request()->session()->exists('pedido')) {
+            return redirect('cliente/cardapio/1')->with('error', 'Não há pedidos registrados no momento.');
+        }
+
+        $params->cartao = Cartao::where('id', $cartao_id)->first();
+
+        //pega o pedido da sessão e armazena na variável
+        $params->pedidoCliente = request()->session()->get('pedido');
+
+
+        //verifica falha de leitura do cartão
+        if (!$params->cartao) {
+            return redirect('cliente/confirmar-pedido')->with('error', 'Não foi possível ler o QR Code do cartão, tente novamente.');
+        }
+
+        $situacao = SituacaoCartao::find($params->cartao->fk_situacao);
+
+        //verifica se o cartão está ativo
+        if ($params->cartao->fk_situacao !== 2) {
+            return redirect('cliente/confirmar-pedido')->with('error', 'Não foi possível finalizar o pedido. Este cartão se encontra <b>' . $situacao->nome . '</b> e não está habilitado para uso.');
+        }
+
+        //pega o cartão ativo para o cliente
+        $params->cartaoCliente = CartaoCliente::where('fk_cartao', $cartao_id)->where('status', 2)->first();
+
+        //verifica se o cartão do cliente foi encontrado
+        if (!$params->cartaoCliente) {
+            return redirect('cliente/confirmar-pedido')->with('error', 'Não foi possível localizar o cartão do cliente. Tente novamente.');
+        }
+
+        //verifica se o cartão do cliente está ativo
+        if ($params->cartaoCliente->status != 2) {
+            return redirect('cliente/confirmar-pedido')->with('error', 'Não foi possível finalizar o pedido. Este cartão não está habilitado para uso.');
+        }
+
+
+        //Validação do ESTOQUE
+        $msgErro = [];
+
+        
+        foreach ($params->pedidoCliente as $item) {
+
+            //primeiro verifica se o produto esta ativo no estoque
+            $estoqueItem = Estoque::where('fk_item_cardapio', $item->id_cardapio)->first();
+
+            
+            //caso o produto esteja ativo, valida o saldo em estoque
+            if ($estoqueItem) {
+
+                $saldoAtualDoProduto = EstoqueDB::saldoEstoqueProdutoCardapio($item->id_cardapio);
+
+                if ($saldoAtualDoProduto < $item->quantidade) {
+                    $cardapio = Cardapio::find($item->id_cardapio);
+                    $msgErro[] = '* ' . $cardapio->nome_item . ' insuficiente. Quantidade no estoque: <b>' . $saldoAtualDoProduto . '</b>';
+                }
+            }
+        }
+
+        if (count($msgErro) > 0) {
+            return redirect('cliente/confirmar-pedido')->with('error', implode('<br>', $msgErro));
+        }
+        //End validação Estoque
+
+
+        $params->valorTotalPedido = array_sum(array_column($params->pedidoCliente, 'valor'));
+
+        $params->taxaServico = 0;
+
+        //verifica se existe saldo no cartão para finalizar o pedido
+        if ($params->cartaoCliente->valor_atual < $params->valorTotalPedido) {
+            return redirect('cliente/confirmar-pedido')
+                ->with('error', 'Crédito insuficiente no cartão. O saldo atual é de: <b>R$ ' . $params->cartaoCliente->valor_atual . '</b>');
+        }
+
+
+        DB::beginTransaction();
+
+        try {
+
+            //Regras
+            PedidoRegras::salvarPedido($params);
+
+            request()->session()->forget('pedido');
+
+            DB::commit();
+            return view('cliente.pedido-finalizado', compact('params'));
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect('cliente/confirmar-pedido')->with('error', '<b>Atenção, algo aconteceu!</b><br>' . $ex->getMessage());
+        }
+    }
+
+    public function meusPedidos($pedido_id)
+    {
+        $pedidos = DB::table('pedido as p')
+            ->join('pedido_item as pi', 'p.id', '=', 'pi.fk_pedido')
+            ->join('cardapio as c', 'c.id', '=', 'pi.fk_item_cardapio')
+            ->join('cardapio_tipo as t', 't.id', '=', 'c.fk_tipo_cardapio')
+            ->join('cardapio_categoria as cc', 'cc.id', '=', 'c.fk_categoria')
+            ->join('situacao_pedido as s', 's.id', '=', 'p.status')
+            ->join('cartao_cliente as ccl', 'p.fk_cartao_cliente', '=', 'ccl.id')
+            ->select([
+                'p.id',
+                't.nome as tipo_cardapio',
+                'p.mesa',
+                'p.dt_pedido',
+                'p.status as status_pedido',
+                's.nome as situacao',
+                'c.fk_tipo_cardapio',
+                'c.nome_item',
+                'c.valor as valor_unit',
+                'c.unid',
+                'cc.nome as categoria',
+                'pi.id as id_item_pedido',
+                'pi.quantidade',
+                'pi.valor as valor_total_item',
+                'pi.observacao',
+                'pi.status',
+                'pi.dt_pronto',
+                'p.fk_usuario',
+                'p.fk_cartao_cliente',
+                'ccl.nome as nome_cliente'
+            ])
+            ->where('p.id', $pedido_id)
+            ->where('p.status', '=', 1) //SOLICITADO
+            ->get();
+
+        $statusItensPedido = $pedidos->pluck('status')->toArray();
+
+        return view('cliente.historico-pedido', compact('pedidos', 'statusItensPedido'));
     }
 
     public function pedidoItem($id)

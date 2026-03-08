@@ -9,6 +9,8 @@ class SegAcaoLocalSeeder extends Seeder
 {
     public function run(): void
     {
+        $agora = date('Y-m-d H:i:s');
+
         $items = [
             [
                 'id' => 50,
@@ -21,8 +23,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-26 06:46:29',
-                'updated_at' => '2020-07-26 06:46:29'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 51,
@@ -35,8 +37,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-26 07:36:10',
-                'updated_at' => '2020-07-26 07:36:10'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 52,
@@ -49,8 +51,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-26 03:00:00',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 53,
@@ -63,8 +65,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-26 16:16:07',
-                'updated_at' => '2020-07-26 16:16:07'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 54,
@@ -77,8 +79,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-26 17:49:28',
-                'updated_at' => '2020-07-26 17:49:28'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 55,
@@ -91,8 +93,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-27 02:57:38',
-                'updated_at' => '2020-07-27 02:57:38'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 56,
@@ -105,8 +107,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 57,
@@ -119,8 +121,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-27 13:01:56',
-                'updated_at' => '2020-07-27 13:01:56'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 58,
@@ -133,8 +135,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-27 13:30:48',
-                'updated_at' => '2020-07-27 13:30:48'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 59,
@@ -147,8 +149,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-27 14:37:31',
-                'updated_at' => '2020-07-27 14:37:31'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 60,
@@ -161,8 +163,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 02:20:52',
-                'updated_at' => '2020-07-29 02:20:52'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 61,
@@ -175,8 +177,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Adicionar Crédito',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 02:31:25',
-                'updated_at' => '2020-07-29 02:31:25'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 62,
@@ -189,8 +191,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Adicionar Crédito',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 02:58:48',
-                'updated_at' => '2020-07-29 02:58:48'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 63,
@@ -203,8 +205,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Adicionar Crédito',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 09:56:42',
-                'updated_at' => '2020-07-29 09:56:42'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 64,
@@ -217,8 +219,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 23:19:27',
-                'updated_at' => '2020-07-29 23:19:27'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 65,
@@ -231,8 +233,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 66,
@@ -245,8 +247,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 23:55:43',
-                'updated_at' => '2020-07-29 23:55:43'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 67,
@@ -259,8 +261,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-29 23:58:41',
-                'updated_at' => '2020-07-29 23:58:41'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 68,
@@ -273,8 +275,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-30 00:55:57',
-                'updated_at' => '2020-07-30 00:55:57'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 69,
@@ -287,8 +289,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 70,
@@ -301,8 +303,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-31 02:05:44',
-                'updated_at' => '2020-07-31 02:05:44'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 71,
@@ -315,8 +317,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-31 02:29:28',
-                'updated_at' => '2020-07-31 02:29:28'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 72,
@@ -329,8 +331,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-31 03:17:26',
-                'updated_at' => '2020-07-31 03:17:26'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 73,
@@ -343,8 +345,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-07-31 20:56:14',
-                'updated_at' => '2020-07-31 20:56:14'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 74,
@@ -357,8 +359,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-01 11:17:43',
-                'updated_at' => '2020-08-01 11:17:43'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 75,
@@ -371,8 +373,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-01 14:12:32',
-                'updated_at' => '2020-08-01 14:12:32'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 76,
@@ -385,8 +387,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-01 17:49:54',
-                'updated_at' => '2020-08-01 17:49:54'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 77,
@@ -399,8 +401,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 10:18:11',
-                'updated_at' => '2020-08-02 10:18:11'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 78,
@@ -413,8 +415,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 11:29:01',
-                'updated_at' => '2020-08-02 11:29:01'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 79,
@@ -427,8 +429,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 12:38:06',
-                'updated_at' => '2020-08-02 12:38:06'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 80,
@@ -441,8 +443,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 12:54:59',
-                'updated_at' => '2020-08-02 12:54:59'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 81,
@@ -455,8 +457,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 20:32:58',
-                'updated_at' => '2020-08-02 20:32:58'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 82,
@@ -469,8 +471,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-03 01:56:10',
-                'updated_at' => '2020-08-03 01:56:10'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 83,
@@ -483,8 +485,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cozinha',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-04 23:51:57',
-                'updated_at' => '2020-08-04 23:51:57'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 84,
@@ -497,8 +499,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cozinha',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 01:21:04',
-                'updated_at' => '2020-08-06 01:21:04'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 85,
@@ -511,8 +513,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 10:18:11',
-                'updated_at' => '2020-08-02 10:18:11'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 86,
@@ -525,8 +527,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 04:03:25',
-                'updated_at' => '2020-08-06 04:03:25'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 87,
@@ -539,8 +541,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 04:15:28',
-                'updated_at' => '2020-08-06 04:15:28'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 88,
@@ -553,8 +555,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 16:14:52',
-                'updated_at' => '2020-08-06 16:14:52'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 89,
@@ -567,8 +569,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-07 01:58:10',
-                'updated_at' => '2020-08-07 01:58:10'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 90,
@@ -581,8 +583,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-07 03:24:17',
-                'updated_at' => '2020-08-07 03:24:17'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 91,
@@ -595,8 +597,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-09 11:09:54',
-                'updated_at' => '2020-08-09 11:09:54'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 94,
@@ -609,8 +611,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Clinete',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-11 22:05:38',
-                'updated_at' => '2020-08-11 22:05:38'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 95,
@@ -623,8 +625,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-15 10:04:03',
-                'updated_at' => '2020-08-15 10:04:03'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 96,
@@ -637,8 +639,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-15 10:54:13',
-                'updated_at' => '2020-08-15 10:54:13'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 97,
@@ -651,8 +653,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-16 19:44:50',
-                'updated_at' => '2020-08-16 19:44:50'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 98,
@@ -665,8 +667,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 99,
@@ -679,8 +681,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 12:54:59',
-                'updated_at' => '2020-08-02 12:54:59'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 100,
@@ -693,8 +695,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-02 12:38:06',
-                'updated_at' => '2020-08-02 12:38:06'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 101,
@@ -707,8 +709,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 04:03:25',
-                'updated_at' => '2020-08-06 04:03:25'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 102,
@@ -721,8 +723,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-06 04:15:28',
-                'updated_at' => '2020-08-06 04:15:28'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 103,
@@ -735,8 +737,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-17 09:28:44',
-                'updated_at' => '2020-08-17 09:28:44'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 104,
@@ -749,8 +751,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-23 03:50:24',
-                'updated_at' => '2020-08-23 03:50:24'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 105,
@@ -763,8 +765,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-24 16:14:14',
-                'updated_at' => '2020-08-24 16:14:14'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 106,
@@ -777,8 +779,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-24 16:14:14',
-                'updated_at' => '2020-08-24 16:14:14'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 108,
@@ -791,8 +793,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-25 11:31:34',
-                'updated_at' => '2020-08-25 11:31:34'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 109,
@@ -805,8 +807,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-25 11:53:56',
-                'updated_at' => '2020-08-25 11:53:56'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 110,
@@ -819,8 +821,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-26 03:00:51',
-                'updated_at' => '2020-08-26 03:00:51'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 111,
@@ -833,8 +835,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-26 04:11:02',
-                'updated_at' => '2020-08-26 04:11:02'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 112,
@@ -847,8 +849,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cozinha',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 113,
@@ -861,8 +863,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cartão Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-08-31 04:10:11',
-                'updated_at' => '2020-08-31 04:10:11'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 114,
@@ -875,8 +877,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-02 20:57:41',
-                'updated_at' => '2020-09-02 20:57:41'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 115,
@@ -889,8 +891,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-03 16:12:52',
-                'updated_at' => '2020-09-03 16:12:52'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 116,
@@ -903,8 +905,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 117,
@@ -917,8 +919,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-04 15:42:02',
-                'updated_at' => '2020-09-04 15:42:02'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 118,
@@ -931,8 +933,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-04 16:19:43',
-                'updated_at' => '2020-09-04 16:19:43'
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 119,
@@ -945,8 +947,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-13 15:27:22',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 120,
@@ -959,8 +961,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-09-29 21:32:36',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 121,
@@ -973,8 +975,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Transferência',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-24 03:36:19',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 122,
@@ -987,8 +989,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Transferência',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-24 03:38:04',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 123,
@@ -1001,8 +1003,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Transferência',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-24 03:39:55',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 124,
@@ -1015,8 +1017,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Transferência',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 125,
@@ -1029,8 +1031,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-28 14:14:44',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 126,
@@ -1043,8 +1045,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-28 14:14:44',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 127,
@@ -1057,8 +1059,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-28 14:14:44',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 128,
@@ -1071,8 +1073,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2020-10-29 14:23:50',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 129,
@@ -1085,8 +1087,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-03-12 22:05:24',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 130,
@@ -1099,8 +1101,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-08-11 05:07:46',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 132,
@@ -1113,8 +1115,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-08-19 06:07:57',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 133,
@@ -1127,8 +1129,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'estoque',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-08-20 07:40:55',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 136,
@@ -1141,8 +1143,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-06 15:58:33',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 137,
@@ -1155,8 +1157,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-06 15:58:33',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 138,
@@ -1169,8 +1171,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-06 15:58:33',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 139,
@@ -1183,8 +1185,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 141,
@@ -1197,8 +1199,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 142,
@@ -1211,8 +1213,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-12 06:08:03',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 143,
@@ -1225,8 +1227,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-12 06:58:46',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 144,
@@ -1239,8 +1241,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cliente',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-12 06:58:46',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 145,
@@ -1253,8 +1255,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-13 17:19:40',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 146,
@@ -1267,8 +1269,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-13 17:19:40',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 147,
@@ -1281,8 +1283,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-13 17:21:19',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 148,
@@ -1295,8 +1297,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-13 17:21:19',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 149,
@@ -1309,8 +1311,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 150,
@@ -1323,8 +1325,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-14 17:36:46',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 151,
@@ -1337,8 +1339,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'portaria',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-17 05:18:49',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 152,
@@ -1351,8 +1353,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'portaria',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-11-18 04:24:17',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 153,
@@ -1365,8 +1367,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-12-02 04:26:54',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 154,
@@ -1379,8 +1381,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'financeiro',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2021-12-02 06:46:21',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 155,
@@ -1393,8 +1395,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Cardápio',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2022-03-04 01:51:21',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 156,
@@ -1407,8 +1409,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2022-03-06 13:28:41',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 157,
@@ -1421,8 +1423,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => NULL,
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2022-03-06 13:29:15',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 158,
@@ -1435,8 +1437,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Relatório',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2023-06-27 03:00:00',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 159,
@@ -1449,8 +1451,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Dashboard',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2023-08-17 01:47:45',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 160,
@@ -1463,8 +1465,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Dashboard',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => NULL,
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 161,
@@ -1477,8 +1479,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Dashboard',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2023-09-06 03:52:18',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 165,
@@ -1491,8 +1493,8 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2025-12-21 13:22:46',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
             ],
             [
                 'id' => 166,
@@ -1505,10 +1507,93 @@ class SegAcaoLocalSeeder extends Seeder
                 'grupo' => 'Pedido',
                 'log_acesso' => 0,
                 'rota_front' => 0,
-                'created_at' => '2026-01-09 00:00:00',
-                'updated_at' => NULL
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 167,
+                'nome' => 'cliente/cardapio/show/{id_tipo_cardapio}',
+                'method' => 'get',
+                'descricao' => 'Ver Cardápio Área do Cliente',
+                'destaque' => 0,
+                'nome_amigavel' => 'Ver Cardápio Área do Cliente',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 168,
+                'nome' => 'cliente/cardapio/add-pedido-cliente',
+                'method' => 'get',
+                'descricao' => 'Adicionar Item',
+                'destaque' => 0,
+                'nome_amigavel' => 'Adicionar Item',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 169,
+                'nome' => 'cliente/cardapio/remove-item-pedido-cliente',
+                'method' => 'get',
+                'descricao' => 'Excluir Item',
+                'destaque' => 0,
+                'nome_amigavel' => 'Excluir Item',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 170,
+                'nome' => 'cliente/confirmar-pedido',
+                'method' => 'get',
+                'descricao' => 'Confirmar Pedido',
+                'destaque' => 0,
+                'nome_amigavel' => 'Confirmar Pedido',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 171,
+                'nome' => 'cliente/pedido/finalizar',
+                'method' => 'get',
+                'descricao' => 'Finalizar Pedido',
+                'destaque' => 0,
+                'nome_amigavel' => 'Finalizar Pedido',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 172,
+                'nome' => 'cliente/meus-pedidos/pedido_id',
+                'method' => 'get',
+                'descricao' => 'Meus Pedidos',
+                'destaque' => 0,
+                'nome_amigavel' => 'Meus Pedidos',
+                'obrigatorio' => 0,
+                'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
             ]
-
         ];
 
         DB::table('seg_acao')->insert($items);

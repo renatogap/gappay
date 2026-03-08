@@ -152,7 +152,25 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         border: 2px solid transparent;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
+    }
+
+    .badge-pedidos-pendentes {
+        position: absolute;
+        bottom: -8px;
+        right: -8px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9em;
+        /* box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4); */
+        border: 3px solid white;
     }
 
     .atalho-card::before {
@@ -354,11 +372,16 @@
     </div>
 
     <div class="atalhos-grid">
-        <a href="{{ url('cliente/pedidos') }}" class="atalho-card">
+        <a href="{{ url('cliente/meus-pedidos/4') }}" class="atalho-card">
             <div class="atalho-icone">
                 <i class="material-icons">shopping_cart</i>
             </div>
             <div class="atalho-titulo">Meus Pedidos</div>
+            @if($pedidosPendentes > 0)
+            <div class="badge-pedidos-pendentes" title="{{ $pedidosPendentes }} pedido(s) pendente(s)">
+                {{ $pedidosPendentes }}
+            </div>
+            @endif
         </a>
 
         <a href="{{ url('cliente/extrato') }}" class="atalho-card">
@@ -366,6 +389,13 @@
                 <i class="material-icons">receipt_long</i>
             </div>
             <div class="atalho-titulo">Extrato</div>
+        </a>
+
+        <a href="{{ url('cliente/pedidos') }}" class="atalho-card">
+            <div class="atalho-icone">
+                <i class="material-icons">history</i>
+            </div>
+            <div class="atalho-titulo">Histórico de Consumo</div>
         </a>
 
         <a href="{{ url('cliente/cardapio/1') }}" class="atalho-card">

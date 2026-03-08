@@ -41,7 +41,13 @@ Route::middleware(['session.cliente'])->group(function () {
         Route::post('cliente/recarga/store', 'recargaStore');
         Route::get('cliente/recarga/success', 'recargaSuccess');
         Route::get('cliente/recarga/cancel', 'recargaCancel');
-        
+
+        Route::get('cliente/cardapio/show/{id_tipo_cardapio}', 'getCardapioDoPDV');
+        Route::post('cliente/cardapio/add-pedido-cliente', 'addPedidoCliente');
+        Route::post('cliente/cardapio/remove-item-pedido-cliente', 'removeItemPedidoCliente');
+        Route::get('cliente/confirmar-pedido', 'confirmarPedido');
+        Route::get('cliente/pedido/finalizar', 'finalizarPedido');
+        Route::get('cliente/meus-pedidos/{pedido_id}', 'meusPedidos');
     });
 });
 

@@ -23,7 +23,7 @@ class PedidoRegras
         ##############################################################################
 
         $mesa = isset(current($p->pedidoCliente)->mesa) ? current($p->pedidoCliente)->mesa : null;
-
+        
         $dataPedido = [
             'fk_cartao' => $p->cartao->id,
             'fk_cartao_cliente' => $p->cartaoCliente->id,
@@ -31,8 +31,13 @@ class PedidoRegras
             'taxa_servico' => $p->taxaServico,
             'valor_total' => $p->valorTotalPedido,
             'dt_pedido' => date('Y-m-d H:i:s'),
-            'status' => 3, //Entregue
-            'fk_usuario' => Auth::user()->id
+
+            //Se tiver usuário logado, salva o pedido como entregue, senão salva como pendente (pedido feito pelo cliente)
+            'status' => isset(Auth::user()->id) ? 3 : 1,
+
+            //se tiver usuário logado, salva o id do usuário, senão verifica se tem cliente na sessão (pedido feito pelo cliente), se sim, salva o id 2 (cliente), senão salva null (pedido sem identificação)
+            'fk_usuario' => isset(Auth::user()->id) ? Auth::user()->id : (session('cliente') ? 999 : null) 
+
         ];
 
         //Salva Pedido
@@ -64,8 +69,7 @@ class PedidoRegras
                 'valor' => $item->valor,
                 'quantidade' => $item->quantidade,
                 'observacao' => isset($item->observacao) ? $item->observacao : null,
-                'status' => 3 //Entregue
-                //'status' => ((isset($item->entregue) && $item->entregue == 'S') ? 3 : 1)
+                'status' => isset(Auth::user()->id) ? 3 : 1,
             ];
 
             $pedidoItem = PedidoItem::create($itemPedido);
@@ -90,7 +94,7 @@ class PedidoRegras
                     'quantidade' => $item->quantidade,
                     'fk_pedido_item' => $pedidoItem->id,
                     'observacao' => 'Venda nº '.$pedido->id,
-                    'fk_usuario' => Auth::user()->id,
+                    'fk_usuario' => isset(Auth::user()->id) ? Auth::user()->id : (session('cliente') ? 999 : null),
                     'created_at' => date('Y-m-d H:i:s')
                 ]);
                 
@@ -101,7 +105,7 @@ class PedidoRegras
                 
                 $estoque->qtd_atual = ($estoque->qtd_atual - $item->quantidade);
                 $estoque->dt_ultima_atualizacao = date('Y-m-d H:i:s');
-                $estoque->fk_usuario_alt = Auth::user()->id;
+                $estoque->fk_usuario_alt = isset(Auth::user()->id) ? Auth::user()->id : (session('cliente') ? 999 : null);
                 $estoque->save();
 
 
