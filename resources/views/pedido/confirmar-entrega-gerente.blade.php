@@ -6,13 +6,13 @@
             <div>Deseja realmente mudar a situação do pedido para <b>Entregue</b>?</div>
         </h4>
         <br>
-        <form method="POST" action="{{url('pedido/salvar-entrega-gerente/'.$id_pedido.'/'.$tipo)}}">
+        <form method="POST" action="{{url('pedido/salvar-entrega-gerente/'.$id_pedido)}}">
             {{ @csrf_field() }}
             <button type="submit" class="btn btn-success" style="text-shadow: 5px 5px 5px rbga(0,0,0,0.5); box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">
               <i class="material-icons">thumb_up</i> Sim
             </button> &nbsp;&nbsp;
             
-            <a href="{{ url('pedido/historico-pedido-gerente/'. $id_pedido.'/'.$tipo) }}" class="btn btn-danger" style="text-shadow: 5px 5px 5px rbga(0,0,0,0.5); box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">
+            <a href="{{ url('pedido/historico-pedido-gerente/'. $id_pedido) }}" class="btn btn-danger" style="text-shadow: 5px 5px 5px rbga(0,0,0,0.5); box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">
                 <i class="material-icons">thumb_down</i> Não
             </a>
         </form>

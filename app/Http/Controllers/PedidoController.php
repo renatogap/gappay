@@ -364,7 +364,7 @@ class PedidoController extends Controller
         return view('pedido.historico-pedido', compact('myDados', 'pedidos', 'perfisUsuario', 'statusItensPedido'));
     }
 
-    public function historicoPedidoGerente($id_pedido, $tipo)
+    public function historicoPedidoGerente($id_pedido)
     {
         $pedidos = DB::table('pedido as p')
             ->join('pedido_item as pi', 'p.id', '=', 'pi.fk_pedido')
@@ -373,33 +373,24 @@ class PedidoController extends Controller
             ->join('cardapio_categoria as cc', 'cc.id', '=', 'c.fk_categoria')
             ->join('situacao_pedido as s', 's.id', '=', 'p.status')
             ->join('usuario as u', 'u.id', '=', 'p.fk_usuario')
+            ->join('cartao_cliente as cc2', 'cc2.id', '=', 'p.fk_cartao_cliente')
             ->select([
                 'p.id', 't.nome as tipo_cardapio', 'p.mesa', 'p.dt_pedido', 's.nome as situacao', 'p.status as status_pedido',
                 'c.fk_tipo_cardapio', 'c.nome_item', 'c.valor as valor_unit', 'c.unid',
                 'cc.nome as categoria',
-                'pi.id as id_item_pedido', 'pi.quantidade', 'pi.valor as valor_total_item', 'pi.observacao', 'pi.status', 'pi.dt_pronto',
-                'u.nome as usuario'
+                'pi.id as id_item_pedido', 'pi.quantidade', 'pi.valor as valor_total_item', 'p.valor_total', 'pi.observacao', 'pi.status', 'pi.dt_pronto', 'u.nome as usuario', 'cc2.nome as nome_cliente'
             ])
-            ->where('c.fk_tipo_cardapio', $tipo)
             ->where('p.id', $id_pedido)
-            //->where('pi.status', '!=', 3) //Entregue
+            ->where('p.status', '=', 1) //Solicitado
             ->get();
 
-        $myDados = [];
-        if($pedidos->count() > 0){
-            foreach($pedidos as $i => $item) {
-                $myDados[$item->tipo_cardapio][] = $item;
-            }
-        }else {
+        if($pedidos->count() <= 0){
             return redirect('pedido/visualizacao-gerente');
         }
 
         $statusItensPedido = $pedidos->pluck('status')->toArray();
 
-        $perfisUsuario = SegGrupo::where('usuario_id', Auth::user()->id)->get()->pluck('perfil_id')->toArray();
-
-
-        return view('pedido.historico-pedido-gerente', compact('myDados', 'pedidos', 'perfisUsuario', 'statusItensPedido'));
+        return view('pedido.pedidos-pendentes-gerente', compact('pedidos', 'statusItensPedido'));
     }
 
 
@@ -526,9 +517,9 @@ class PedidoController extends Controller
         return view('pedido.confirmar-entrega', compact('id_pedido', 'tipo'));
     }
 
-    public function confirmarEntregaGerente($id_pedido, $tipo)
+    public function confirmarEntregaGerente($id_pedido)
     {
-        return view('pedido.confirmar-entrega-gerente', compact('id_pedido', 'tipo'));
+        return view('pedido.confirmar-entrega-gerente', compact('id_pedido'));
     }
 
     public function salvarEntrega($id_pedido, $tipo)
@@ -568,7 +559,7 @@ class PedidoController extends Controller
         }
     }
 
-    public function salvarEntregaGerente($id_pedido, $tipo)
+    public function salvarEntregaGerente($id_pedido)
     {
         DB::beginTransaction();
 
@@ -576,7 +567,6 @@ class PedidoController extends Controller
             $itens = DB::table('pedido_item as pi')
             ->join('cardapio as c', 'c.id', '=', 'fk_item_cardapio')
             ->where('fk_pedido', $id_pedido)
-            ->where('c.fk_tipo_cardapio', $tipo)
             ->where('pi.status', '!=', 4)
             ->select(['pi.*', 'c.fk_tipo_cardapio'])
             ->get();
@@ -595,16 +585,47 @@ class PedidoController extends Controller
                 Pedido::find($id_pedido)->update(['status' => 3, 'dt_entrega' => date('Y-m-d H:i:s')]);
             }
 
-            #PedidoItem::where('fk_pedido', $id_pedido)->update(['status' => 3]);
-            #Pedido::find($id_pedido)->update(['status' => 3, 'dt_entrega' => date('Y-m-d H:i:s')]);
             DB::commit();
-            return redirect('pedido/historico-pedido-gerente/'.$id_pedido.'/'.$tipo)->with('sucesso', 'O Pedido foi entregue.');
+            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('sucesso', 'O Pedido foi entregue.');
         } catch(\Exception $ex) {
             DB::rollback();
-            return redirect('pedido/historico-pedido-gerente/'.$id_pedido.'/'.$tipo)->with('error', 'Um erro ocorreu.<br>'. $ex->getMessage());
+            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('error', 'Um erro ocorreu.<br>'. $ex->getMessage());
         }
     }
 
+    public function salvarEntregaViaQrCode($id_pedido)
+    {
+        DB::beginTransaction();
+
+        try {
+            $itens = DB::table('pedido_item as pi')
+            ->join('cardapio as c', 'c.id', '=', 'fk_item_cardapio')
+            ->where('fk_pedido', $id_pedido)
+            ->where('pi.status', '!=', 4)
+            ->select(['pi.*', 'c.fk_tipo_cardapio'])
+            ->get();
+
+            foreach($itens as $item) {
+                $itemRow = PedidoItem::find($item->id);
+                $itemRow->status = 3;
+                $itemRow->dt_entregue = date('Y-m-d H:i:s');
+                $itemRow->save();
+            }
+
+
+            $itensPedidoSolicitados = PedidoItem::where('fk_pedido', $id_pedido)->where('status', '!=', 3)->get();
+
+            if($itensPedidoSolicitados->count() == 0) {
+                Pedido::find($id_pedido)->update(['status' => 3, 'dt_entrega' => date('Y-m-d H:i:s')]);
+            }
+
+            DB::commit();
+            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('sucesso', 'O Pedido foi entregue.');
+        } catch(\Exception $ex) {
+            DB::rollback();
+            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('error', 'Um erro ocorreu.<br>'. $ex->getMessage());
+        }
+    }
 
 
     //Visualização do Gerente
@@ -615,26 +636,21 @@ class PedidoController extends Controller
                     ->join('cardapio as c', 'c.id', '=', 'pi.fk_item_cardapio')
                     ->join('cardapio_tipo as ct', 'ct.id', '=', 'c.fk_tipo_cardapio')
                     ->join('usuario as u', 'u.id', '=', 'p.fk_usuario')
+                    ->join('cartao_cliente as cc', 'cc.id', '=', 'p.fk_cartao_cliente')
                     ->whereIn('pi.status', [1,2]) //Solicitado e Pronto
                     #->where('p.dt_pedido', '>=', date('Y-m-d 00:00:00'))
                     #->where('p.dt_pedido', '<=', date('Y-m-d 23:59:59'))
 
 //                    ->where('pi.status', '!=', 4) //Solicitado e Pronto
-                    ->select(['ct.nome as tipo_cardapio', 'c.fk_tipo_cardapio', 'p.mesa', 'p.id', 'p.dt_pedido', 'pi.status', 'u.nome as usuario', 'pi.dt_pronto'])
+                    ->select(['ct.nome as tipo_cardapio', 'c.fk_tipo_cardapio', 'p.mesa', 'p.valor_total', 'p.id', 'p.dt_pedido', 'pi.status', 'u.nome as usuario', 'pi.dt_pronto', 'cc.nome as nome_cliente'])
                     ->groupBy('c.fk_tipo_cardapio', 'p.mesa', 'p.id', 'p.dt_pedido', 'pi.status', 'pi.dt_pronto', 'u.nome')
                     ->orderBy('ct.nome')
                     ->orderBy('pi.status', 'DESC')
                     ->orderBy('p.dt_pedido')
                     ->get();       
 
-        $pedidosAll = [];
-        if($pedidos->count() > 0){
-            foreach($pedidos as $i => $item) {
-                $pedidosAll[$item->tipo_cardapio][] = $item;
-            }
-        }
         
-        return view('pedido.ver-todos-pedidos', compact('pedidosAll'));
+        return view('pedido.ver-todos-pedidos', compact('pedidos'));
     }
 
 

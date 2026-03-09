@@ -58,7 +58,7 @@ class SegMenuLocalSeeder extends Seeder
                 'acao_id' => 70,
                 'pai' => NULL,
                 'nome' => 'Registrar Pedido',
-                'icone' => '<span class="material-icons" style="font-size: 4em;">receipt_long</span>',
+                'icone' => '<span class="material-icons" style="font-size: 4em;">restaurant_menu</span>',
                 'ativo' => 1,
                 'ordem' =>  5,
                 'created_at' => $hoje
@@ -139,7 +139,7 @@ class SegMenuLocalSeeder extends Seeder
                 'pai' => NULL,
                 'nome' => 'Pedidos Pendentes',
                 'icone' => '<span class="material-icons" style="font-size: 4em;">food_bank</span>',
-                'ativo' => 0,
+                'ativo' => 1,
                 'ordem' =>  7,
                 'created_at' => $hoje
             ],

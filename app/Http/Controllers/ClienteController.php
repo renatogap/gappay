@@ -23,6 +23,7 @@ use App\Models\Regras\ClienteRegras;
 use App\Models\Regras\PedidoRegras;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use QRcode;
 
@@ -413,7 +414,7 @@ class ClienteController extends Controller
         // Gerar QR Code
         include_once 'lib/phpqrcode/qrlib.php';
 
-        $qrCodeUrl = url('cliente/pedido/' . $pedido_id . '/entregue');
+        $qrCodeUrl = url('pedido/salvar-entrega/via-qrcode/' . $pedido_id);
         $qrCodePath = storage_path() . '/qrcode/qrcode.png';
 
         //Gera a imagem qrcode baseado na url e salva na pasta qrcode do storage
@@ -426,35 +427,37 @@ class ClienteController extends Controller
         return view('cliente.meu-pedido', compact('pedidos', 'qrCode'));
     }
 
-    public function entregarPedido($pedido_id)
-    {
-        try {
-            $pedido = Pedido::find($pedido_id);
+    // public function entregarPedido($pedido_id)
+    // {
+    //     if(!Auth::check()) {
+    //         return redirect()->route('tela.login')->with('error', 'Faça primeiro login no app, depois volte e leia o QR Code novamente.');
+    //     }
 
-            if (!$pedido) {
-                return response()->json([
-                    'sucesso' => false,
-                    'mensagem' => 'Pedido não encontrado'
-                ], 404);
-            }
+    //     try {
+    //         $pedido = Pedido::where('id', $pedido_id)->where('status', 1) //Solicitado
+    //             ->first();
 
-            // Atualizar status para 3 (entregue) e registrar data/hora de entrega
-            $pedido->status = 3;
-            $pedido->dt_entrega = now();
-            $pedido->save();
+    //         if (!$pedido) {
+    //             redirect('pedido/visualizacao-gerente')->with('error', 'Este pedido já foi entregue.');
+    //         }
 
-            return response()->json([
-                'sucesso' => true,
-                'mensagem' => 'Pedido entregue com sucesso!',
-                'redirect' => url('cliente/meus-pedidos')
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'sucesso' => false,
-                'mensagem' => 'Erro ao entrega o pedido: ' . $e->getMessage()
-            ], 500);
-        }
-    }
+    //         // Atualizar status para 3 (entregue) e registrar data/hora de entrega
+    //         $pedido->status = 3;
+    //         $pedido->dt_entrega = now();
+    //         $pedido->save();
+
+    //         return response()->json([
+    //             'sucesso' => true,
+    //             'mensagem' => 'Pedido entregue com sucesso!',
+    //             'redirect' => url('cliente/meus-pedidos')
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'sucesso' => false,
+    //             'mensagem' => 'Erro ao entrega o pedido: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
     public function pedidoItem($id)
     {

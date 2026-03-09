@@ -658,7 +658,7 @@ class SegAcaoLocalSeeder extends Seeder
             ],
             [
                 'id' => 98,
-                'nome' => 'pedido/historico-pedido-gerente/{id_pedido}/{tipo}',
+                'nome' => 'pedido/historico-pedido-gerente/{id_pedido}',
                 'method' => 'get',
                 'descricao' => 'Histórico Pedido (Gerente)',
                 'destaque' => 1,
@@ -1595,7 +1595,7 @@ class SegAcaoLocalSeeder extends Seeder
                 'updated_at' => $agora
             ],
             [
-                'id' => 172,
+                'id' => 173,
                 'nome' => 'cliente/meu-pedido/{pedido_id}',
                 'method' => 'get',
                 'descricao' => 'Meu Pedido',
@@ -1603,6 +1603,34 @@ class SegAcaoLocalSeeder extends Seeder
                 'nome_amigavel' => 'Meu Pedido',
                 'obrigatorio' => 0,
                 'grupo' => 'Cliente',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 174,
+                'nome' => 'cliente/pedido/{pedido_id}/entregue',
+                'method' => 'get',
+                'descricao' => 'Pedido do Cliente Entregue',
+                'destaque' => 0,
+                'nome_amigavel' => 'Pedido do Cliente Entregue',
+                'obrigatorio' => 0,
+                'grupo' => 'Pedido',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 175,
+                'nome' => 'pedido/salvar-entrega/via-qrcode/{id_pedido}',
+                'method' => 'get',
+                'descricao' => 'Salvar Entrega via QR Code',
+                'destaque' => 0,
+                'nome_amigavel' => 'Salvar Entrega via QR Code',
+                'obrigatorio' => 0,
+                'grupo' => 'Pedido',
                 'log_acesso' => 1,
                 'rota_front' => 0,
                 'created_at' => $agora,

@@ -3,6 +3,7 @@
 use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\CartaoClienteController;
 use App\Http\Controllers\CartaoController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CozinhaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstoqueController;
@@ -114,7 +115,7 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::get('pedido/meus-pedidos', [PedidoController::class, 'meusPedidos']);
     Route::get('pedido/historico-pedidos/{mesa}', [PedidoController::class, 'historicoPedidos']);
     Route::get('pedido/historico-pedido/{id_pedido}/{tipo}', [PedidoController::class, 'historicoPedido']);
-    Route::get('pedido/historico-pedido-gerente/{id_pedido}/{tipo}', [PedidoController::class, 'historicoPedidoGerente']);
+    Route::get('pedido/historico-pedido-gerente/{id_pedido}', [PedidoController::class, 'historicoPedidoGerente']);
     Route::get('pedido/confirmar-cancelamento/{item}/{id_tipo_cardapio}', [PedidoController::class, 'confirmarCancelamento']);
     Route::post('pedido/cancelar/{item}/{id_tipo_cardapio}', [PedidoController::class, 'cancelarItem']);
 
@@ -126,8 +127,10 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::get('pedido/confirmar-entrega/{id_pedido}/{tipo}', [PedidoController::class, 'confirmarEntrega']);
     Route::post('pedido/salvar-entrega/{id_pedido}/{tipo}', [PedidoController::class, 'salvarEntrega']);
 
-    Route::get('pedido/confirmar-entrega-gerente/{id_pedido}/{tipo}', [PedidoController::class, 'confirmarEntregaGerente']);
-    Route::post('pedido/salvar-entrega-gerente/{id_pedido}/{tipo}', [PedidoController::class, 'salvarEntregaGerente']);
+    Route::get('pedido/confirmar-entrega-gerente/{id_pedido}', [PedidoController::class, 'confirmarEntregaGerente']);
+    Route::post('pedido/salvar-entrega-gerente/{id_pedido}', [PedidoController::class, 'salvarEntregaGerente']);
+    Route::get('pedido/salvar-entrega/via-qrcode/{id_pedido}', [PedidoController::class, 'salvarEntregaViaQrCode']);
+    
 
 
     //Cozinha
@@ -203,4 +206,7 @@ Route::group(['middleware' => ['seguranca']], function () {
     });
 
     Route::view('seguranca/perfis', 'layouts.vue');
+
+
+    Route::get('cliente/pedido/{pedido_id}/entregue', [ClienteController::class, 'entregarPedido']); //Público - QR Code
 });

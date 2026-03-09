@@ -25,7 +25,7 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
     Route::get('cliente/cardapio/ver-thumb/{id}', 'verThumb');
     Route::get('cliente/cardapio/{id_tipo_cardapio}', 'cardapio');
     Route::get('cliente/cardapio/item/{id}', 'pedidoItem');
-    Route::get('cliente/pedido/{pedido_id}/entregue', 'entregarPedido'); //Público - QR Code
+    
 });
 
 
