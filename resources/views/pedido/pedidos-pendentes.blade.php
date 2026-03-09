@@ -470,7 +470,7 @@
 <script>
     let scanner;
     let cameraAtiva = false;
-    let indexCameraQR = 0;
+    let indexCameraQR = 1;
     let todasAsCameras = [];
     let modalQrCode = document.getElementById('modalQRCode');
 
@@ -484,13 +484,13 @@
         pararScanner();
     }
 
+    scanner = new Instascan.Scanner({
+        video: document.getElementById('preview'),
+        mirror: false
+    });
+
     function inicializarScanner() {
         if (cameraAtiva) return;
-
-        scanner = new Instascan.Scanner({
-            video: document.getElementById('preview'),
-            mirror: false
-        });
 
         scanner.addListener('scan', function(content) {
             scanner.stop();
@@ -502,14 +502,12 @@
         });
 
         Instascan.Camera.getCameras().then(cameras => {
-            todasAsCameras = cameras;
-            if (cameras.length > 0) {
-                // Prefere câmera traseira se disponível
-                indexCameraQR = cameras.length > 1 ? 1 : 0;
-                scanner.start(cameras[indexCameraQR]);
-                cameraAtiva = true;
+            if (cameras.length == 1) {
+                scanner.start(cameras[0]);
+            } else if (cameras.length > 1) {
+                scanner.start(cameras[1]);
             } else {
-                alert('Nenhuma câmera encontrada no dispositivo!');
+                alert("There is no camera on the device!");
             }
         }).catch(err => {
             console.error('Erro ao acessar câmera:', err);
@@ -525,20 +523,19 @@
     }
 
     function trocarCameraQR() {
-        alert(todasAsCameras.length);
-        if (todasAsCameras.length <= 1) {
-            alert('Apenas uma câmera disponível');
-            return;
-        }
-
         scanner.stop();
         indexCameraQR++;
-
-        if (indexCameraQR > todasAsCameras.length) {
-            indexCameraQR = 0;
-        }
-
-        scanner.start(todasAsCameras[indexCameraQR]);
+        
+        Instascan.Camera.getCameras().then(cameras => 
+        {
+            if(cameras.length >= indexCameraQR){
+                scanner.start(cameras[indexCameraQR]);
+            }
+            else {
+                indexCameraQR = 0;
+                scanner.start(cameras[indexCameraQR]);
+            }
+        });
     }
 
     // Fechar modal ao pressionar ESC
