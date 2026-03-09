@@ -595,7 +595,6 @@ class PedidoController extends Controller
 
     public function salvarEntregaViaQrCode($id_pedido)
     {
-        dd('entrou');
         DB::beginTransaction();
 
         try {
