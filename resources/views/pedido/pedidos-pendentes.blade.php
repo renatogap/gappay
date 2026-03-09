@@ -525,6 +525,7 @@
     }
 
     function trocarCameraQR() {
+        alert(todasAsCameras.length);
         if (todasAsCameras.length <= 1) {
             alert('Apenas uma câmera disponível');
             return;
