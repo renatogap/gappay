@@ -185,6 +185,165 @@
         display: none;
     }
 
+    .btn-qrcode {
+        background: linear-gradient(135deg, #3153e7 0%, #043795 100%);
+        color: white;
+        border: none;
+        padding: 0.8em 1.5em;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-bottom: 1.5em;
+        transition: all 0.3s;
+        font-size: 0.95em;
+    }
+
+    .btn-qrcode:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(49, 83, 231, 0.3);
+    }
+
+    .btn-qrcode .material-icons {
+        font-size: 1.2em;
+    }
+
+    /* Modal QR Code */
+    .modal-qrcode {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-qrcode.ativo {
+        display: flex;
+    }
+
+    .modal-qrcode-conteudo {
+        background: white;
+        border-radius: 12px;
+        padding: 2em;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-qrcode-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5em;
+        padding-bottom: 1em;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .modal-qrcode-header h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 0.8em;
+    }
+
+    .modal-qrcode-header .material-icons {
+        color: #3153e7;
+        font-size: 1.5em;
+    }
+
+    .modal-qrcode-fechar {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #999;
+        transition: color 0.3s;
+    }
+
+    .modal-qrcode-fechar:hover {
+        color: #333;
+    }
+
+    #preview {
+        width: 100%;
+        height: 400px;
+        border-radius: 8px;
+        margin-bottom: 1.5em;
+        background: #000;
+    }
+
+    .modal-qrcode-info {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 1em;
+        border-radius: 8px;
+        font-size: 0.9em;
+        display: flex;
+        gap: 0.8em;
+        align-items: flex-start;
+    }
+
+    .modal-qrcode-info .material-icons {
+        flex-shrink: 0;
+        margin-top: 0.2em;
+    }
+
+    .btn-trocar-camera {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+    }
+
+    .btn-trocar-camera:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+    }
+
+    .btn-trocar-camera .material-icons {
+        color: white;
+        font-size: 1.5em;
+    }
+
+    .video-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
     @media (max-width: 768px) {
         .pedido-item {
             grid-template-columns: 1fr;
@@ -216,6 +375,7 @@
         keyboard_backspace
     </a>
 </h5>
+
 <hr>
 
 <div class="pedidos-lista">
@@ -246,6 +406,11 @@
     </div>
     @endif
 
+    <button class="btn-qrcode" onclick="abrirModalQRCode()">
+        <i class="material-icons">qr_code_scanner</i>
+        Ler QR Code do Pedido
+    </button>
+
     @if(count($pedidos) > 0)
     @foreach($pedidos as $pedido)
 
@@ -273,9 +438,122 @@
     @endif
 </div>
 
+<!-- Modal para ler QR Code -->
+<div id="modalQRCode" class="modal-qrcode">
+    <div class="modal-qrcode-conteudo">
+        <div class="modal-qrcode-header">
+            <h3>
+                <i class="material-icons">qr_code_scanner</i>
+                Ler QR Code do Pedido
+            </h3>
+            <button class="modal-qrcode-fechar" onclick="fecharModalQRCode()">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="video-container">
+            <button class="btn-trocar-camera" onclick="trocarCameraQR()" title="Trocar câmera">
+                <i class="material-icons">flip_camera_ios</i>
+            </button>
+            <video id="preview" style="width: 100%;"></video>
+        </div>
+        <div class="modal-qrcode-info">
+            <i class="material-icons">info</i>
+            <p style="margin: 0;">Aponte para o QR code para lê-lo. Ao detectar, o pedido será finalizado automaticamente.</p>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
+<script type="text/javascript" src="{{url('js/instascan.min.js')}}"></script>
+<script>
+    let scanner;
+    let cameraAtiva = false;
+    let indexCameraQR = 0;
+    let todasAsCameras = [];
+    let modalQrCode = document.getElementById('modalQRCode');
+
+    function abrirModalQRCode() {
+        modalQrCode.classList.add('ativo');
+        inicializarScanner();
+    }
+
+    function fecharModalQRCode() {
+        modalQrCode.classList.remove('ativo');
+        pararScanner();
+    }
+
+    function inicializarScanner() {
+        if (cameraAtiva) return;
+
+        scanner = new Instascan.Scanner({
+            video: document.getElementById('preview'),
+            mirror: false
+        });
+
+        scanner.addListener('scan', function(content) {
+            scanner.stop();
+            cameraAtiva = false;
+            fecharModalQRCode();
+
+            // Redirecionar para a URL decodificada (que é a URL de entrega do pedido)
+            window.location.href = content;
+        });
+
+        Instascan.Camera.getCameras().then(cameras => {
+            todasAsCameras = cameras;
+            if (cameras.length > 0) {
+                // Prefere câmera traseira se disponível
+                indexCameraQR = cameras.length > 1 ? 1 : 0;
+                scanner.start(cameras[indexCameraQR]);
+                cameraAtiva = true;
+            } else {
+                alert('Nenhuma câmera encontrada no dispositivo!');
+            }
+        }).catch(err => {
+            console.error('Erro ao acessar câmera:', err);
+            alert('Erro ao acessar a câmera do dispositivo.');
+        });
+    }
+
+    function pararScanner() {
+        if (scanner && cameraAtiva) {
+            scanner.stop();
+            cameraAtiva = false;
+        }
+    }
+
+    function trocarCameraQR() {
+        if (todasAsCameras.length <= 1) {
+            alert('Apenas uma câmera disponível');
+            return;
+        }
+
+        scanner.stop();
+        indexCameraQR++;
+
+        if (indexCameraQR >= todasAsCameras.length) {
+            indexCameraQR = 0;
+        }
+
+        scanner.start(todasAsCameras[indexCameraQR]);
+    }
+
+    // Fechar modal ao pressionar ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            fecharModalQRCode();
+        }
+    });
+
+    // Fechar modal ao clicar fora
+    modalQrCode.addEventListener('click', function(e) {
+        if (e.target === this) {
+            fecharModalQRCode();
+        }
+    });
+</script>
 <script>
     const inputPesquisa = document.getElementById('pesquisaPedido');
 

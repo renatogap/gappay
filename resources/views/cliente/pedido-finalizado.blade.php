@@ -19,8 +19,5 @@
         <a href="{{ url('cliente/cardapio/1') }}" class="btn btn-parque btn-block">Retornar para o cardápio</a>
     </div>
 
-
-
-
 </div>
 @endsection

@@ -595,6 +595,7 @@ class PedidoController extends Controller
 
     public function salvarEntregaViaQrCode($id_pedido)
     {
+        dd('entrou');
         DB::beginTransaction();
 
         try {
@@ -650,7 +651,7 @@ class PedidoController extends Controller
                     ->get();       
 
         
-        return view('pedido.ver-todos-pedidos', compact('pedidos'));
+        return view('pedido.pedidos-pendentes', compact('pedidos'));
     }
 
 
