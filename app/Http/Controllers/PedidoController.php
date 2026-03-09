@@ -637,7 +637,7 @@ class PedidoController extends Controller
                     ->join('cardapio_tipo as ct', 'ct.id', '=', 'c.fk_tipo_cardapio')
                     ->join('usuario as u', 'u.id', '=', 'p.fk_usuario')
                     ->join('cartao_cliente as cc', 'cc.id', '=', 'p.fk_cartao_cliente')
-                    ->whereIn('pi.status', [1,2]) //Solicitado e Pronto
+                    ->whereIn('p.status', [1]) //Solicitado e Pronto
                     #->where('p.dt_pedido', '>=', date('Y-m-d 00:00:00'))
                     #->where('p.dt_pedido', '<=', date('Y-m-d 23:59:59'))
 
