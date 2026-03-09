@@ -533,7 +533,7 @@
         scanner.stop();
         indexCameraQR++;
 
-        if (indexCameraQR >= todasAsCameras.length) {
+        if (indexCameraQR > todasAsCameras.length) {
             indexCameraQR = 0;
         }
 
