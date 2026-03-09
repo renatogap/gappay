@@ -411,6 +411,10 @@ class ClienteController extends Controller
             ->where('p.status', '=', 1) //SOLICITADO
             ->get();
 
+        if($pedidos->count() == 0) {
+            return redirect('cliente/meus-pedidos')->with('error', 'Pedido não encontrado ou já foi finalizado.');
+        }
+
         // Gerar QR Code
         include_once 'lib/phpqrcode/qrlib.php';
 
