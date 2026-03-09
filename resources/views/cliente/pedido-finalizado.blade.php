@@ -16,7 +16,7 @@
     </div>
 
     <div class="mt-3">
-        <a href="{{ url('pedido/cardapio/1') }}" class="btn btn-parque btn-block">Retornar para o cardápio</a>
+        <a href="{{ url('cliente/cardapio/1') }}" class="btn btn-parque btn-block">Retornar para o cardápio</a>
     </div>
 
 
