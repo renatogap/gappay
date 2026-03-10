@@ -158,6 +158,7 @@ class PedidoRegras
         $rowCartaoCliente->valor_atual = ($rowCartaoCliente->valor_atual - $p->valorTotalPedido);
         $rowCartaoCliente->save();
 
+        return $pedido;
     }
 
     public static function cancelarPedidoItem($item)

@@ -620,10 +620,10 @@ class PedidoController extends Controller
             }
 
             DB::commit();
-            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('sucesso', 'O Pedido foi entregue.');
+            return redirect('pedido/visualizacao-gerente')->with('sucesso', 'O Pedido foi entregue.');
         } catch(\Exception $ex) {
             DB::rollback();
-            return redirect('pedido/historico-pedido-gerente/'.$id_pedido)->with('error', 'Um erro ocorreu.<br>'. $ex->getMessage());
+            return redirect('pedido/visualizacao-gerente')->with('error', 'Um erro ocorreu.<br>'. $ex->getMessage());
         }
     }
 
@@ -637,13 +637,26 @@ class PedidoController extends Controller
                     ->join('cardapio_tipo as ct', 'ct.id', '=', 'c.fk_tipo_cardapio')
                     ->join('usuario as u', 'u.id', '=', 'p.fk_usuario')
                     ->join('cartao_cliente as cc', 'cc.id', '=', 'p.fk_cartao_cliente')
-                    ->whereIn('p.status', [1]) //Solicitado e Pronto
-                    #->where('p.dt_pedido', '>=', date('Y-m-d 00:00:00'))
-                    #->where('p.dt_pedido', '<=', date('Y-m-d 23:59:59'))
-
-//                    ->where('pi.status', '!=', 4) //Solicitado e Pronto
-                    ->select(['ct.nome as tipo_cardapio', 'c.fk_tipo_cardapio', 'p.mesa', 'p.valor_total', 'p.id', 'p.dt_pedido', 'pi.status', 'u.nome as usuario', 'pi.dt_pronto', 'cc.nome as nome_cliente'])
-                    ->groupBy('c.fk_tipo_cardapio', 'p.mesa', 'p.id', 'p.dt_pedido', 'pi.status', 'pi.dt_pronto', 'u.nome')
+                    ->whereIn('p.status', [1])
+                    ->select([
+                        'ct.nome as tipo_cardapio',
+                        'c.fk_tipo_cardapio',
+                        'p.mesa',
+                        'p.valor_total',
+                        'p.id',
+                        'p.dt_pedido',
+                        'pi.status',
+                        'u.nome as usuario',
+                        'pi.dt_pronto',
+                        'cc.nome as nome_cliente'])
+                    ->groupBy(
+                        'c.fk_tipo_cardapio',
+                        'p.mesa',
+                        'p.id',
+                        'p.dt_pedido',
+                        'pi.status',
+                        'pi.dt_pronto',
+                        'u.nome')
                     ->orderBy('ct.nome')
                     ->orderBy('pi.status', 'DESC')
                     ->orderBy('p.dt_pedido')

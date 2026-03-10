@@ -68,13 +68,9 @@
         </strong>
     </div>
 
-
-    <!-- Caso algum item do Pedido esteja como Pronto, este botão aparecerá  -->
-    @if(in_array(1, $statusItensPedido))
     <div class="float-left" style="font-size: 1.5em;">
         <a href="{{ url('pedido/confirmar-entrega-gerente/'.$pedidos[0]->id) }}" class="btn btn-parque" style="text-shadow: 5px 5px 5px rbga(0,0,0,0.5); box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">Entregue</a>
     </div>
-    @endif
     <br><br><br>
 </div>
 @endsection

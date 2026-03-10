@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UsuarioLocalController;
+use App\Http\Controllers\ClienteController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,27 +31,24 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
 
 
 Route::middleware(['session.cliente'])->group(function () {
-    Route::controller(\App\Http\Controllers\ClienteController::class)->group(function () {
+    Route::get('cliente/home', [ClienteController::class, 'home']);
+    Route::get('cliente/pedidos', [ClienteController::class, 'pedidos']);
+    Route::get('cliente/saldo', [ClienteController::class, 'saldo']);
+    Route::get('cliente/extrato', [ClienteController::class, 'extrato']);
+    Route::get('cliente/recarga', [ClienteController::class, 'recarga']);
+    Route::get('cliente/logout', [ClienteController::class, 'logout']);
 
-        Route::get('cliente/home', 'home');
-        Route::get('cliente/pedidos', 'pedidos');
-        Route::get('cliente/saldo', 'saldo');
-        Route::get('cliente/extrato', 'extrato');
-        Route::get('cliente/recarga', 'recarga');
-        Route::get('cliente/logout', 'logout');
+    Route::post('cliente/recarga/store', [ClienteController::class, 'recargaStore']);
+    Route::get('cliente/recarga/success', [ClienteController::class, 'recargaSuccess']);
+    Route::get('cliente/recarga/cancel', [ClienteController::class, 'recargaCancel']);
 
-        Route::post('cliente/recarga/store', 'recargaStore');
-        Route::get('cliente/recarga/success', 'recargaSuccess');
-        Route::get('cliente/recarga/cancel', 'recargaCancel');
-
-        Route::get('cliente/cardapio/show/{id_tipo_cardapio}', 'getCardapioDoPDV');
-        Route::post('cliente/cardapio/add-pedido-cliente', 'addPedidoCliente');
-        Route::post('cliente/cardapio/remove-item-pedido-cliente', 'removeItemPedidoCliente');
-        Route::get('cliente/confirmar-pedido', 'confirmarPedido');
-        Route::get('cliente/pedido/finalizar', 'finalizarPedido');
-        Route::get('cliente/meus-pedidos', 'meusPedidos');
-        Route::get('cliente/meu-pedido/{pedido_id}', 'meuPedido');
-    });
+    Route::get('cliente/cardapio/show/{id_tipo_cardapio}', [ClienteController::class, 'getCardapioDoPDV']);
+    Route::post('cliente/cardapio/add-pedido-cliente', [ClienteController::class, 'addPedidoCliente']);
+    Route::post('cliente/cardapio/remove-item-pedido-cliente', [ClienteController::class, 'removeItemPedidoCliente']);
+    Route::get('cliente/confirmar-pedido', [ClienteController::class, 'confirmarPedido']);
+    Route::get('cliente/pedido/finalizar', [ClienteController::class, 'finalizarPedido']);
+    Route::get('cliente/meus-pedidos', [ClienteController::class, 'meusPedidos']);
+    Route::get('cliente/meu-pedido/{pedido_id}', [ClienteController::class, 'meuPedido']);
 });
 
 
