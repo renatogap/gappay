@@ -3,6 +3,9 @@
 /packages/policiacivil
 /storage/*.key
 /storage/pail
+/storage/qrcode/qrcode.png
+/storage/logs/laravel.log
+/storage/framework/sessions
 /vendor
 .env
 composer.lock
