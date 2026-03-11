@@ -4,7 +4,7 @@ return [
     'codigo' => 1, //Código deste sistema na tabela de produção "sistema" no schema segurança. Não deixe como 35 no seu projeto
     'url_front' => env('URL_FRONT'),
     'expiracao_login' => 180, //tempo em dias para usuário perder acesso ao sistema por falta de uso
-    'registrar_log' => env('SEGURANCA_REGISTRAR_LOG', true), //habilita ou não o registro de log nos models (use apenas para teste)
+    'registrar_log' => env('SEGURANCA_REGISTRAR_LOG', false), //habilita ou não o registro de log nos models (use apenas para teste)
     'controle_acesso' => env('SEGURANCA_CONTROLE_ACESSO', true), //Se falso os usuários ficam com permissão total no sistema
     'dashboard' => '/home',
     //Esta chave permite ler o cookie criptografado de autenticação única.

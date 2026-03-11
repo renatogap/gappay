@@ -6,6 +6,7 @@ use App\Models\Entity\Cartao;
 use App\Models\Entity\CartaoCliente;
 use App\Models\Entity\Cliente;
 use App\Models\Entity\EntradaCredito;
+use App\Models\Entity\EstoqueEntrada;
 use App\Models\Facade\ClienteDB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -213,6 +214,44 @@ class ClienteRegras
 
 
         return $checkout_session;
+    }
+
+    public static function atualizarSaldoAposRecarga($session_id)
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = \Stripe\Checkout\Session::retrieve($session_id);
+
+        try {
+
+            if ($session->payment_status === 'paid') {
+                // Atualizar o saldo do cartão do cliente
+                $cartaoCliente = CartaoCliente::find(session('cliente')->id);
+                if ($cartaoCliente) {
+                    $cartaoCliente->valor_atual += $session->amount_total / 100;
+                    $cartaoCliente->desabilitarLog();
+                    $cartaoCliente->save();
+                }
+
+
+                $entradaCredito = new EntradaCredito();
+                $entradaCredito->fk_cartao_cliente = session('cliente')->id;
+                $entradaCredito->valor = $session->amount_total / 100;
+                $entradaCredito->fk_tipo_pagamento = 1;
+                $entradaCredito->observacao = 'Recarga de crédito pelo aluno';
+                $entradaCredito->data = date('Y-m-d H:i:s');
+                $entradaCredito->fk_usuario = 999; // ID do usuário fictício para recarga pelo aluno
+                $entradaCredito->desabilitarLog();
+                $entradaCredito->save();
+
+            } else {
+                throw new Exception('O pagamento não foi concluído. Por favor, tente novamente. ');
+            }
+            
+        } catch (Exception $e) {
+            // Log do erro ou tratamento adicional
+            throw new Exception('Erro ao atualizar saldo do cartão: ' . $e->getMessage());
+        }   
     }
 
 }

@@ -553,6 +553,29 @@ class ClienteController extends Controller
         }
     }
 
+    public function recargaSuccess(Request $request)
+    {
+        $session_id = $request->query('session_id');
+
+        if (!$session_id) {
+            return redirect('cliente/recarga')->with('error', 'Sessão de pagamento não encontrada.');
+        }
+
+        try {
+
+            ClienteRegras::atualizarSaldoAposRecarga($session_id);
+
+            return redirect('cliente/extrato')->with('sucesso', 'Recarga realizada com sucesso! O valor já está disponível no seu cartão.');
+        } catch (Exception $ex) {
+            return redirect('cliente/recarga')->with('error', 'Erro ao processar a recarga: ' . $ex->getMessage());
+        }
+    }
+
+    public function recargaCancel()
+    {
+        return redirect('cliente/recarga')->with('error', 'Recarga cancelada. Nenhuma cobrança foi realizada.');
+    }
+
     public function logout()
     {
         request()->session()->forget('cliente');

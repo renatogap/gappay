@@ -1635,7 +1635,36 @@ class SegAcaoLocalSeeder extends Seeder
                 'rota_front' => 0,
                 'created_at' => $agora,
                 'updated_at' => $agora
+            ],
+            [
+                'id' => 176,
+                'nome' => 'cliente/recarga/success',
+                'method' => 'get',
+                'descricao' => 'Recarga de Crédito após pagamento com sucesso',
+                'destaque' => 1,
+                'nome_amigavel' => 'Recarga de Crédito após pagamento com sucesso',
+                'obrigatorio' => 0,
+                'grupo' => 'Recarga',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 177,
+                'nome' => 'cliente/recarga/cancel',
+                'method' => 'get',
+                'descricao' => 'Pagamento cancelado',
+                'destaque' => 1,
+                'nome_amigavel' => 'Pagamento cancelado',
+                'obrigatorio' => 0,
+                'grupo' => 'Recarga',
+                'log_acesso' => 1,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
             ]
+            
         ];
 
         DB::table('seg_acao')->insert($items);
