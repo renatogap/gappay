@@ -17,4 +17,9 @@ class CartaoCliente extends AbstractSkeletonModel
         return $this->belongsTo(\App\Models\Entity\SituacaoCartao::class, 'status', 'id');
     }
 
+    public function responsavel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Responsavel::class, 'responsavel_id');
+    }
+
 }

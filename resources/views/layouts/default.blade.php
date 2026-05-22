@@ -123,6 +123,72 @@
             animation: spin 2s linear infinite;
         }
 
+        /* STEPPERS */
+        .cadastro-steps {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .cadastro-steps .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .cadastro-steps .circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #d9d9d9;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        .cadastro-steps .step.active .circle {
+            background: #195287ff;
+            color: white;
+        }
+
+        .cadastro-steps .step.done .circle {
+            background: #195287ff;
+            color: white;
+        }
+
+        .cadastro-steps .step .label {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .cadastro-steps .step.active .label,
+        .cadastro-steps .step.done .label {
+            color: #222;
+            font-weight: 600;
+        }
+
+        .cadastro-steps .line {
+            flex: 1;
+            height: 2px;
+            background: #d9d9d9;
+            margin: 20px 10px 0;
+            max-width: 80px;
+        }
+
+        .cadastro-steps .material-icons {
+            font-size: 18px;
+        }
+        /* FIM STEPPERS */
+
         @keyframes spin {
 
             /* 0% { transform: rotate(0deg); }

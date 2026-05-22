@@ -37,6 +37,8 @@ return new class extends Migration
             $table->foreign('fk_usuario')->references('id')->on('usuario');
             
             $table->index('fk_cartao');
+
+            $table->foreignId('responsavel_id')->nullable()->constrained('responsavel');
         });
     }
 

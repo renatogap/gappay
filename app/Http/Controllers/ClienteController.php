@@ -11,6 +11,8 @@ use App\Models\Entity\Cliente;
 use App\Models\Entity\Estoque;
 use App\Models\Entity\GrauParentesco;
 use App\Models\Entity\Pedido;
+use App\Models\Entity\Responsavel;
+use App\Models\Entity\Aluno;
 use App\Models\Entity\SituacaoCartao;
 use App\Models\Facade\CardapioDB;
 use App\Models\Facade\CartaoClienteDB;
@@ -21,10 +23,14 @@ use App\Models\Facade\EstoqueDB;
 use App\Models\Facade\FormasPagamentoDB;
 use App\Models\Regras\ClienteRegras;
 use App\Models\Regras\PedidoRegras;
+use App\Mail\ResponsavelTokenMail;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use QRcode;
 
 class ClienteController extends Controller
@@ -587,6 +593,98 @@ class ClienteController extends Controller
     public function listarCliente()
     {
         return response()->json(ClienteDB::todos());
+    }
+
+    public function cadastro(Request $request)
+    {
+        $step = intval($request->query('step', 1));
+        $step = in_array($step, [1, 2, 3]) ? $step : 1;
+
+        return view('cliente.cadastro-cliente', compact('step'));
+    }
+
+    public function cadastroStore(Request $request)
+    {
+        $step = intval($request->input('step', 1));
+
+        if ($step === 1) {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $responsavel = Responsavel::firstOrNew(['email' => $request->email]);
+            $responsavel->token = strtoupper(Str::random(6));
+            $responsavel->validado = false;
+            $responsavel->save();
+
+            try {
+                Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
+            } catch (Exception $ex) {
+                return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
+            }
+
+            return redirect()->route('cliente.cadastro', ['step' => 2, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
+                ->with('success', 'Token enviado por e-mail. Verifique a caixa de entrada.');
+        }
+
+        if ($step === 2) {
+            $request->validate([
+                'email' => 'required|email',
+                'token' => 'required|string',
+            ]);
+
+            $responsavel = Responsavel::where('email', $request->email)
+                ->where('token', $request->token)
+                ->first();
+
+            if (!$responsavel) {
+                return redirect()->back()->with('error', 'E-mail ou token inválido.')->withInput();
+            }
+
+            $responsavel->validado = true;
+            $responsavel->save();
+
+            return redirect()->route('cliente.cadastro', ['step' => 3, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
+                ->with('success', 'E-mail validado. Agora complete os dados pessoais e dos alunos.');
+        }
+
+        if ($step === 3) {
+            $request->validate([
+                'responsavel_id'      => 'required|integer|exists:responsavel,id',
+                'nome'                => 'required|string|max:255',
+                'telefone'            => 'required|string|max:20',
+                'senha'               => 'required|string|min:6|confirmed',
+                'termos'              => 'accepted',
+                'alunos'              => 'required|array|min:1',
+                'alunos.*.nome'       => 'required|string|max:255',
+                'alunos.*.serie'      => 'required|string|max:50',
+                'alunos.*.matricula'  => 'required|string|max:50',
+            ]);
+
+            $responsavel = Responsavel::find($request->responsavel_id);
+
+            if (!$responsavel || !$responsavel->validado) {
+                return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
+            }
+
+            $responsavel->nome = $request->nome;
+            $responsavel->telefone = $request->telefone;
+            $responsavel->senha = Hash::make($request->senha);
+            $responsavel->save();
+
+            foreach ($request->alunos as $alunoData) {
+                CartaoCliente::create([
+                    'responsavel_id' => $responsavel->id,
+                    'nome'           => $alunoData['nome'],
+                    'serie'          => $alunoData['serie'],
+                    'matricula'      => $alunoData['matricula'],
+                ]);
+            }
+
+            return redirect('cliente')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
+        }
+
+        return redirect()->route('cliente.cadastro')->with('error', 'Passo de cadastro inválido.');
     }
 
 }
