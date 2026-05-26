@@ -189,6 +189,163 @@
         }
         /* FIM STEPPERS */
 
+        /* Login Responsável */
+         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@700;800&display=swap');
+        .login-wrapper {
+                min-height: 80vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px 0;
+            }
+
+            .login-card {
+                width: 100%;
+                max-width: 420px;
+                background: #132236;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+            }
+
+            .login-header {
+                background: linear-gradient(135deg, #1a3a5c 0%, #0f2540 100%);
+                padding: 36px 40px 28px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .login-header::before {
+                content: '';
+                position: absolute;
+                top: -40px; right: -40px;
+                width: 180px; height: 180px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.04);
+            }
+
+            .login-header::after {
+                content: '';
+                position: absolute;
+                bottom: -60px; left: 30px;
+                width: 240px; height: 240px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.03);
+            }
+
+            .login-logo {
+                font-family: 'Sora', sans-serif;
+                font-size: 32px;
+                font-weight: 800;
+                color: #ffffff;
+                letter-spacing: -0.5px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .login-logo span {
+                color: #4fc3f7;
+            }
+
+            .login-subtitle {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                color: rgba(255,255,255,0.45);
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                margin-top: 6px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .login-body {
+                padding: 36px 40px 32px;
+            }
+
+            .login-body .form-label {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+                color: rgba(232,237,242,0.6);
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                margin-bottom: 6px;
+            }
+
+            .login-body .form-control {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 8px;
+                color: #e8edf2;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 15px;
+                padding: 10px 14px;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            .login-body .form-control:focus {
+                background: rgba(255,255,255,0.07);
+                border-color: rgba(79,195,247,0.5);
+                box-shadow: 0 0 0 3px rgba(79,195,247,0.1);
+                color: #e8edf2;
+                outline: none;
+            }
+
+            .login-body .form-control::placeholder {
+                color: rgba(232,237,242,0.25);
+            }
+
+            .login-body .form-control.is-invalid {
+                border-color: #e57373;
+            }
+
+            .btn-login {
+                width: 100%;
+                background: linear-gradient(135deg, #4fc3f7, #0288d1);
+                border: none;
+                border-radius: 8px;
+                color: #0d1b2a;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 15px;
+                font-weight: 700;
+                padding: 12px;
+                cursor: pointer;
+                transition: opacity 0.2s, transform 0.1s;
+                margin-top: 8px;
+            }
+
+            .btn-login:hover {
+                opacity: 0.92;
+                transform: translateY(-1px);
+            }
+
+            .btn-login:active {
+                transform: translateY(0);
+            }
+
+            .login-links {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(255,255,255,0.06);
+            }
+
+            .login-links a {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                color: rgba(79,195,247,0.8);
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+
+            .login-links a:hover {
+                color: #4fc3f7;
+            }
+        /* Fim Login Responsável */
+
         @keyframes spin {
 
             /* 0% { transform: rotate(0deg); }

@@ -121,6 +121,9 @@
       color: #ffffff;
       letter-spacing: 10px;
       text-shadow: 0 0 24px rgba(79,195,247,0.4);
+      user-select: text;
+      position: relative;
+      z-index: 1;
     }
 
     .token-exp {

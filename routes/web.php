@@ -26,12 +26,19 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
     Route::get('cliente/cardapio/ver-thumb/{id}', 'verThumb');
     Route::get('cliente/cardapio/{id_tipo_cardapio}', 'cardapio');
     Route::get('cliente/cardapio/item/{id}', 'pedidoItem');
-
-    // Cadastro de cliente
-    Route::get('cliente/cadastro', 'cadastro')->name('cliente.cadastro');
-    Route::post('cliente/cadastro/store', 'cadastroStore')->name('cliente.cadastro.store');
-    
 });
+
+    
+// Cadastro de cliente
+Route::get('cliente/login', [ClienteController::class, 'loginResponsavelTela'] )->name('tela.login.responsavel');
+Route::post('cliente/login', [ClienteController::class, 'loginResponsavel'] )->name('login.responsavel');
+Route::get('cliente/cadastro', [ClienteController::class, 'cadastro'] )->name('tela.cadastro');
+Route::post('cliente/cadastro/store', [ClienteController::class, 'cadastroStore'] )->name('cliente.cadastro.store');
+
+Route::get('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarTela']);
+Route::post('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarCliente']);
+Route::get('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirTela']);
+Route::post('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirCliente']);
 
 
 Route::middleware(['session.cliente'])->group(function () {
@@ -53,6 +60,10 @@ Route::middleware(['session.cliente'])->group(function () {
     Route::get('cliente/pedido/finalizar', [ClienteController::class, 'finalizarPedido']);
     Route::get('cliente/meus-pedidos', [ClienteController::class, 'meusPedidos']);
     Route::get('cliente/meu-pedido/{pedido_id}', [ClienteController::class, 'meuPedido']);
+
+    Route::get('debug/session', function () {
+        dd(session('cliente'));
+    });
 });
 
 
@@ -60,3 +71,4 @@ Route::get('locale/{lang}', function ($lang) {
     session(['locale' => $lang]);
     return redirect()->back();
 })->name('set-locale');
+

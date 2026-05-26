@@ -595,6 +595,36 @@ class ClienteController extends Controller
         return response()->json(ClienteDB::todos());
     }
 
+    public function loginResponsavelTela()
+    {
+        return view('cliente.login-responsavel');
+    }
+
+    public function loginResponsavel(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'senha' => 'required|string'
+        ]);
+
+        $responsavel = Responsavel::where('email', $request->email)->first();
+
+        if (!$responsavel || !Hash::check($request->senha, $responsavel->senha)) {
+            return redirect()->back()->with('error', 'E-mail ou senha inválidos.')->withInput();
+        }
+
+        if (!$responsavel->validado) {
+            return redirect()->back()->with('error', 'E-mail ainda não validado. Verifique sua caixa de entrada para validar o e-mail antes de fazer login.')->withInput();
+        }
+
+        if (!request()->session()->exists('cliente')) {
+            request()->session()->put('cliente', $responsavel);
+        }
+        session(['locale' => 'PT']);
+
+        return redirect('cliente/home');
+    }
+
     public function cadastro(Request $request)
     {
         $step = intval($request->query('step', 1));
@@ -612,12 +642,17 @@ class ClienteController extends Controller
                 'email' => 'required|email',
             ]);
 
-            $responsavel = Responsavel::firstOrNew(['email' => $request->email]);
-            $responsavel->token = strtoupper(Str::random(6));
-            $responsavel->validado = false;
-            $responsavel->save();
-
             try {
+                $responsavel = Responsavel::where('email', $request->email)->first();
+
+                if(!$responsavel){
+                    $responsavel = new Responsavel();
+                    $responsavel->email = $request->email;
+                    $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                    $responsavel->save();
+                }
+                    
+
                 Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
             } catch (Exception $ex) {
                 return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
@@ -635,7 +670,12 @@ class ClienteController extends Controller
 
             $responsavel = Responsavel::where('email', $request->email)
                 ->where('token', $request->token)
-                ->first();
+                ->update([
+                    'token' => null,
+                    'validado' => true
+                ]);
+
+            $responsavel = Responsavel::where('email', $request->email)->first();
 
             if (!$responsavel) {
                 return redirect()->back()->with('error', 'E-mail ou token inválido.')->withInput();
@@ -653,12 +693,14 @@ class ClienteController extends Controller
                 'responsavel_id'      => 'required|integer|exists:responsavel,id',
                 'nome'                => 'required|string|max:255',
                 'telefone'            => 'required|string|max:20',
-                'senha'               => 'required|string|min:6|confirmed',
+                'senha'               => 'required|string|min:6|same:confirmar_senha',
                 'termos'              => 'accepted',
-                'alunos'              => 'required|array|min:1',
-                'alunos.*.nome'       => 'required|string|max:255',
-                'alunos.*.serie'      => 'required|string|max:50',
-                'alunos.*.matricula'  => 'required|string|max:50',
+                // 'alunos'              => 'required|array|min:1',
+                // 'alunos.*.nome'       => 'required|string|max:255',
+                // 'alunos.*.serie'      => 'required|string|max:50',
+                // 'alunos.*.matricula'  => 'required|string|max:50',
+            ],[
+                'senha.same' => 'As senhas não estão iguais.',
             ]);
 
             $responsavel = Responsavel::find($request->responsavel_id);
@@ -667,24 +709,81 @@ class ClienteController extends Controller
                 return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
             }
 
-            $responsavel->nome = $request->nome;
-            $responsavel->telefone = $request->telefone;
+            $responsavel->nome = strtoupper($request->nome);
+            $responsavel->telefone = preg_replace('/\D/', '', $request->telefone);
             $responsavel->senha = Hash::make($request->senha);
             $responsavel->save();
 
-            foreach ($request->alunos as $alunoData) {
-                CartaoCliente::create([
-                    'responsavel_id' => $responsavel->id,
-                    'nome'           => $alunoData['nome'],
-                    'serie'          => $alunoData['serie'],
-                    'matricula'      => $alunoData['matricula'],
-                ]);
-            }
+            // foreach ($request->alunos as $alunoData) {
+            //     CartaoCliente::create([
+            //         'responsavel_id' => $responsavel->id,
+            //         'nome'           => $alunoData['nome'],
+            //         'serie'          => $alunoData['serie'],
+            //         'matricula'      => $alunoData['matricula'],
+            //     ]);
+            // }
 
-            return redirect('cliente')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
+            return redirect()->route('tela.login.responsavel')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
         }
 
-        return redirect()->route('cliente.cadastro')->with('error', 'Passo de cadastro inválido.');
+        return redirect()->route('tela.cadastro')->with('error', 'Passo de cadastro inválido.');
+    }
+
+    public function senhaRecuperarTela()
+    {
+        return view('cliente.senha-recuperar');
+    }
+
+    public function senhaRecuperarCliente(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $responsavel = Responsavel::where('email', $request->email)->first();
+
+        if ($responsavel) {
+            $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $responsavel->save();
+
+            Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
+        }
+
+        return redirect('cliente/senha/redefinir')
+            ->with('success', 'Se este e-mail estiver cadastrado, você receberá um código em breve.')
+            ->with('email', $request->email);
+    }
+
+    public function senhaRedefinirTela()
+    {
+        return view('cliente.senha-redefinir');
+    }
+
+    public function senhaRedefinirCliente(Request $request)
+    {
+        $request->validate([
+            'email'            => 'required|email',
+            'token'            => 'required',
+            'senha'            => 'required|min:6|same:confirmar_senha',
+            'confirmar_senha'  => 'required',
+        ], [
+            'senha.same' => 'As senhas não estão iguais.',
+        ]);
+
+        $responsavel = Responsavel::where('email', $request->email)
+            ->where('token', $request->token)
+            ->first();
+
+        if (!$responsavel) {
+            return redirect()->back()
+                ->with('error', 'Código inválido. Verifique e tente novamente.')
+                ->withInput();
+        }
+
+        $responsavel->senha = Hash::make($request->senha);
+        $responsavel->token = null; 
+        $responsavel->save();
+
+        return redirect('cliente/login')
+            ->with('success', 'Senha redefinida com sucesso. Faça seu login.');
     }
 
 }
