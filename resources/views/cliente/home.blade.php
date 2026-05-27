@@ -419,7 +419,8 @@
     <div class="boas-vindas">
         <h2>
             <i class="material-icons">person</i>
-            {{ $cartaoCliente->nome }}
+            {{-- {{ $cartaoCliente->nome }} --}}
+            {{ $responsavel->nome }}
         </h2>
         <p>Bem-vindo(a) de volta! Acompanhe seu consumo abaixo.</p>
     </div>
