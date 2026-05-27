@@ -29,17 +29,25 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
 });
 
     
-// Cadastro de cliente
+// Cadastro de cliente (Responsável)
 Route::get('cliente/login', [ClienteController::class, 'loginResponsavelTela'] )->name('tela.login.responsavel');
 Route::post('cliente/login', [ClienteController::class, 'loginResponsavel'] )->name('login.responsavel');
 Route::get('cliente/cadastro', [ClienteController::class, 'cadastro'] )->name('tela.cadastro');
 Route::post('cliente/cadastro/store', [ClienteController::class, 'cadastroStore'] )->name('cliente.cadastro.store');
 
+
+//Cadastrar cartão cliente (aluno)
+Route::middleware(['session.responsavel'])->group(function () {
+    Route::get('cliente/aluno', [ClienteController::class, 'cadastroAluno'] )->name('tela.cadastro.aluno');
+    Route::post('cliente/aluno/store', [ClienteController::class, 'cadastroAlunoStore']);
+    Route::post('cliente/trocar-aluno', [ClienteController::class, 'trocarAluno']);
+});
+
 Route::get('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarTela']);
 Route::post('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarCliente']);
 Route::get('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirTela']);
 Route::post('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirCliente']);
-
+// Fim Cadastro de cliente (Responsável)
 
 Route::middleware(['session.cliente'])->group(function () {
     Route::get('cliente/home', [ClienteController::class, 'home']);
@@ -60,6 +68,8 @@ Route::middleware(['session.cliente'])->group(function () {
     Route::get('cliente/pedido/finalizar', [ClienteController::class, 'finalizarPedido']);
     Route::get('cliente/meus-pedidos', [ClienteController::class, 'meusPedidos']);
     Route::get('cliente/meu-pedido/{pedido_id}', [ClienteController::class, 'meuPedido']);
+
+ 
 
     Route::get('debug/session', function () {
         dd(session('cliente'));

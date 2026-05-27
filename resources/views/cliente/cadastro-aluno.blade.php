@@ -274,72 +274,6 @@
         font-size: 1.3em;
     }
 
-    .seletor-aluno-container {
-        background: white;
-        border-radius: 12px;
-        padding: 1em 1.5em;
-        margin-bottom: 1.5em;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        border-left: 4px solid #3153e7;
-    }
-
-    .seletor-label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        color: #666;
-        font-size: 0.85em;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
-        margin: 0;
-    }
-
-    .seletor-label .material-icons {
-        font-size: 1.1em;
-        color: #3153e7;
-    }
-
-    .seletor-wrapper {
-        position: relative;
-        flex: 1;
-    }
-
-    .seletor-aluno {
-        width: 100%;
-        appearance: none;
-        background: #f5f7ff;
-        border: 2px solid #e8ecff;
-        border-radius: 8px;
-        padding: 0.6em 2.5em 0.6em 1em;
-        font-size: 0.95em;
-        font-weight: 600;
-        color: #333;
-        cursor: pointer;
-        transition: border-color 0.2s ease;
-        outline: none;
-    }
-
-    .seletor-aluno:hover,
-    .seletor-aluno:focus {
-        border-color: #3153e7;
-        background: #eef1ff;
-    }
-
-    .seletor-icone {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #3153e7;
-        pointer-events: none;
-        font-size: 1.2em;
-    }
-
     @media (max-width: 768px) {
         .atalhos-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -419,88 +353,77 @@
     <div class="boas-vindas">
         <h2>
             <i class="material-icons">person</i>
-            {{ $cartaoCliente->nome }}
+            {{ $responsavel->nome }}
         </h2>
-        <p>Bem-vindo(a) de volta! Acompanhe seu consumo abaixo.</p>
+        <p>Bem-vindo(a)! Cadastre seus dependentes antes de prossegui.</p>
     </div>
 
-    {{-- Só exibe se houver mais de 1 aluno --}}
-    @if($alunos->count() > 1)
-    <div class="seletor-aluno-container">
-        <form action="{{ url('cliente/trocar-aluno') }}" method="POST" id="form-trocar-aluno">
-            @csrf
-            <label class="seletor-label">
-                <i class="material-icons">school</i>
-                Visualizando como:
-            </label>
-            <div class="seletor-wrapper">
-                <select name="aluno_id" class="seletor-aluno" onchange="document.getElementById('form-trocar-aluno').submit()">
-                    @foreach($alunos as $aluno)
-                        <option value="{{ $aluno->id }}" {{ $aluno->id == $cartaoCliente->id ? 'selected' : '' }}>
-                            {{ $aluno->nome }}
-                        </option>
-                    @endforeach
-                </select>
-                <i class="material-icons seletor-icone">expand_more</i>
-            </div>
-        </form>
-    </div>
-    @endif
+    <h6 class="mb-2" style="font-weight: 600;">
+        <span class="material-icons" style="font-size: 1em; vertical-align: middle;">school</span>
+        Alunos
+    </h6>
 
-    <div class="alert alert-info">
-        Saldo atual:
-
-        <a href="#" id="btn-toggle-saldo" title="Mostrar/Esconder saldo">
-            <i class="material-icons">visibility</i>
-        </a>
-
-        <br>
-
-        <b id="saldo">R$ {{ number_format($cartaoCliente->valor_atual, 2, ',', '.') }}</b>
-        <span id="saldo-oculto" style="display:none;">R$ •••••</span>
-    </div>
-
-    <div class="atalhos-grid">
-        <a href="{{ url('cliente/meus-pedidos') }}" class="atalho-card">
-            <div class="atalho-icone">
-                <i class="material-icons">shopping_cart</i>
-            </div>
-            <div class="atalho-titulo">Meus Pedidos</div>
-            @if($pedidosPendentes > 0)
-            <div class="badge-pedidos-pendentes" title="{{ $pedidosPendentes }} pedido(s) pendente(s)">
-                {{ $pedidosPendentes }}
-            </div>
+    <form action="{{ url('cliente/aluno/store') }}" method="POST">
+        @csrf
+        <div id="lista-alunos">
+            @if(old('alunos'))
+                @foreach(old('alunos') as $index => $aluno)
+                    <div class="aluno-item card card-body mb-3 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Aluno #{{ $index + 1 }}</strong>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
+                                <span class="material-icons" style="font-size: 1em;">delete</span>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome do aluno</label>
+                            <input type="text" class="form-control" name="alunos[{{ $index }}][nome]" value="{{ $aluno['nome'] ?? '' }}" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Série</label>
+                                <input type="text" class="form-control" name="alunos[{{ $index }}][serie]" value="{{ $aluno['serie'] ?? '' }}" required>
+                            </div>
+                            {{-- <div class="form-group col-md-6">
+                                <label>Matrícula</label>
+                                <input type="text" class="form-control" name="alunos[{{ $index }}][matricula]" value="{{ $aluno['matricula'] ?? '' }}" required>
+                            </div> --}}
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="aluno-item card card-body mb-3 p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong>Aluno #1</strong>
+                    </div>
+                    <input type="hidden" class="form-control" name="responsavel_id" value="{{ $responsavel->id }}" required>
+                    <div class="form-group">
+                        <label>Nome do aluno</label>
+                        <input type="text" class="form-control" name="alunos[0][nome]" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Série</label>
+                            <input type="text" class="form-control" name="alunos[0][serie]" required>
+                        </div>
+                        {{-- <div class="form-group col-md-6">
+                            <label>Matrícula</label>
+                            <input type="text" class="form-control" name="alunos[0][matricula]" required>
+                        </div> --}}
+                    </div>
+                </div>
             @endif
-        </a>
-
-        <a href="{{ url('cliente/extrato') }}" class="atalho-card">
-            <div class="atalho-icone">
-                <i class="material-icons">receipt_long</i>
-            </div>
-            <div class="atalho-titulo">Extrato</div>
-        </a>
-
-        <a href="{{ url('cliente/pedidos') }}" class="atalho-card">
-            <div class="atalho-icone">
-                <i class="material-icons">history</i>
-            </div>
-            <div class="atalho-titulo">Histórico de Consumo</div>
-        </a>
-
-        <a href="{{ url('cliente/cardapio/1') }}" class="atalho-card">
-            <div class="atalho-icone">
-                <i class="material-icons">restaurant_menu</i>
-            </div>
-            <div class="atalho-titulo">Cardápio</div>
-        </a>
-
-        <a href="{{ url('cliente/recarga') }}" class="atalho-card">
-            <div class="atalho-icone">
-                <i class="material-icons">currency_exchange</i>
-            </div>
-            <div class="atalho-titulo">Recarga</div>
-        </a>
-    </div>
+        </div>
+    
+        <button type="button" class="btn btn-outline-primary btn-block mb-3" id="btn-add-aluno">
+            <span class="material-icons" style="font-size: 1em; vertical-align: middle;">add</span>
+            Adicionar aluno
+        </button>
+    
+        <button type="submit" class="btn btn-success btn-block">
+            Concluir cadastro
+        </button>
+    </form>
 
     <div class="sair-container">
         <a href="{{ url('cliente/logout') }}" class="btn-sair">
@@ -511,19 +434,37 @@
 </div>
 
 <script>
-    document.getElementById('btn-toggle-saldo').addEventListener('click', function() {
-        const saldo = document.getElementById('saldo');
-        const saldoOculto = document.getElementById('saldo-oculto');
-        const icon = document.getElementById('icon-toggle');
+    var indexAluno = {{ old('alunos') ? count(old('alunos')) : 1 }};
 
-        if (saldo.style.display === 'none') {
-            saldo.style.display = 'block';
-            saldoOculto.style.display = 'none';
-            icon.textContent = 'visibility';
-        } else {
-            saldo.style.display = 'none';
-            saldoOculto.style.display = 'block';
-            icon.textContent = 'visibility_off';
+    document.getElementById('btn-add-aluno').addEventListener('click', function () {
+        var i = indexAluno++;
+        var html = `
+            <div class="aluno-item card card-body mb-3 p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>Aluno #${i + 1}</strong>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
+                        <span class="material-icons" style="font-size: 1em;">delete</span>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Nome do aluno</label>
+                    <input type="text" class="form-control" name="alunos[${i}][nome]" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Série</label>
+                        <input type="text" class="form-control" name="alunos[${i}][serie]" required>
+                    </div>
+                </div>
+            </div>`;
+
+        document.getElementById('lista-alunos').insertAdjacentHTML('beforeend', html);
+    });
+
+    document.getElementById('lista-alunos').addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-remover-aluno');
+        if (btn) {
+            btn.closest('.aluno-item').remove();
         }
     });
 </script>

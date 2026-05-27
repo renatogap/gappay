@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Registar aliases de middleware
         $middleware->alias([
             'session.cliente' => \App\Http\Middleware\SessaoClienteMiddleware::class,
+            'session.responsavel' => \App\Http\Middleware\SessaoResponsavelMiddleware::class,
         ]);
         
         $middleware->group('seguranca', [

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SessaoClienteMiddleware
+class SessaoResponsavelMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,10 @@ class SessaoClienteMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!session('cliente')) {
-            return redirect('cliente')->with('error', 'Tempo expirado, por favor entre novamente.');
+        if (!session('responsavel')) {
+            return redirect('cliente/login')->with('error', 'Sessão expirada. Faça login novamente.');
         }
-        
+
         return $next($request);
     }
 }
- 

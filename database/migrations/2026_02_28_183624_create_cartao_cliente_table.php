@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('fk_cliente_titular')->nullable();
             $table->integer('fk_dependente')->nullable();
             $table->integer('fk_tipo_cliente')->unsigned();
-            $table->integer('fk_tipo_pagamento')->unsigned();
+            $table->integer('fk_tipo_pagamento')->unsigned()->nullable();
             $table->decimal('valor_atual', 10, 2);
             $table->decimal('valor_cartao', 10, 2)->nullable();
             $table->char('devolvido', 1)->default('N');

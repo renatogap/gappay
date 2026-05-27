@@ -24,6 +24,8 @@ use App\Models\Facade\FormasPagamentoDB;
 use App\Models\Regras\ClienteRegras;
 use App\Models\Regras\PedidoRegras;
 use App\Mail\ResponsavelTokenMail;
+use App\Models\Entity\EntradaCredito;
+use App\Models\Entity\SaidaCredito;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -97,12 +99,15 @@ class ClienteController extends Controller
     public function home()
     {
         $cartaoCliente = session('cliente');
+        $responsavel   = session('responsavel'); // Responsável do cartão cliente (aluno)
+
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get(); // Todos os alunos vinculados ao responsável
         
         $pedidosPendentes = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
             ->where('status', 1) // status que representa pedido não finalizado
             ->count();
 
-        return view('cliente.home', compact('cartaoCliente', 'pedidosPendentes'));
+        return view('cliente.home', compact('cartaoCliente', 'pedidosPendentes', 'responsavel', 'alunos'));
     }
 
     public function saldo()
@@ -616,11 +621,18 @@ class ClienteController extends Controller
         if (!$responsavel->validado) {
             return redirect()->back()->with('error', 'E-mail ainda não validado. Verifique sua caixa de entrada para validar o e-mail antes de fazer login.')->withInput();
         }
+        
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get();
 
-        if (!request()->session()->exists('cliente')) {
-            request()->session()->put('cliente', $responsavel);
+        if ($alunos->isEmpty()) {
+            session(['responsavel' => $responsavel]);
+            return redirect()->route('tela.cadastro.aluno');
         }
-        session(['locale' => 'PT']);
+
+        session([
+            'responsavel' => $responsavel,
+            'cliente'     => $alunos->first(),
+        ]);
 
         return redirect('cliente/home');
     }
@@ -658,7 +670,7 @@ class ClienteController extends Controller
                 return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
             }
 
-            return redirect()->route('cliente.cadastro', ['step' => 2, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
+            return redirect()->route('tela.cadastro', ['step' => 2, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
                 ->with('success', 'Token enviado por e-mail. Verifique a caixa de entrada.');
         }
 
@@ -684,7 +696,7 @@ class ClienteController extends Controller
             $responsavel->validado = true;
             $responsavel->save();
 
-            return redirect()->route('cliente.cadastro', ['step' => 3, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
+            return redirect()->route('tela.cadastro', ['step' => 3, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
                 ->with('success', 'E-mail validado. Agora complete os dados pessoais e dos alunos.');
         }
 
@@ -695,10 +707,6 @@ class ClienteController extends Controller
                 'telefone'            => 'required|string|max:20',
                 'senha'               => 'required|string|min:6|same:confirmar_senha',
                 'termos'              => 'accepted',
-                // 'alunos'              => 'required|array|min:1',
-                // 'alunos.*.nome'       => 'required|string|max:255',
-                // 'alunos.*.serie'      => 'required|string|max:50',
-                // 'alunos.*.matricula'  => 'required|string|max:50',
             ],[
                 'senha.same' => 'As senhas não estão iguais.',
             ]);
@@ -714,19 +722,98 @@ class ClienteController extends Controller
             $responsavel->senha = Hash::make($request->senha);
             $responsavel->save();
 
-            // foreach ($request->alunos as $alunoData) {
-            //     CartaoCliente::create([
-            //         'responsavel_id' => $responsavel->id,
-            //         'nome'           => $alunoData['nome'],
-            //         'serie'          => $alunoData['serie'],
-            //         'matricula'      => $alunoData['matricula'],
-            //     ]);
-            // }
-
             return redirect()->route('tela.login.responsavel')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
+
+            // session(['responsavel' => $responsavel]);
+            // return redirect()->route('tela.cadastro.aluno');
         }
 
         return redirect()->route('tela.cadastro')->with('error', 'Passo de cadastro inválido.');
+    }
+
+    public function cadastroAluno()
+    {
+        $responsavel = session('responsavel');
+
+        return view('cliente.cadastro-aluno', compact('responsavel'));
+    }
+
+    public function cadastroAlunoStore(Request $request)
+    {
+        $request->validate([
+            'responsavel_id' => 'required|integer|exists:responsavel,id',
+            'alunos' => 'required|array',
+            'alunos.*.nome' => 'required|string|max:255',
+            'alunos.*.serie' => 'required|string|max:50',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->alunos as $alunoData) {
+                //Cadastrar cartão para o aluno
+                $codigo = rand(1, 999999).date('dmyHis');
+                $codigo = str_pad($codigo, 15, "0", STR_PAD_RIGHT);
+
+                if(!Cartao::where('codigo', $codigo)->first()) {
+                    $cartao = Cartao::create([
+                        'codigo' => $codigo,
+                        'hash' => md5($codigo),
+                        'data' => date('Y-m-d'),
+                        'fk_situacao' => 2, //Ativo
+                        'cartao_gerado' => 1
+                    ]);
+                }
+                // dd($cartao);
+
+                // Cadastrar Aluno
+                $aluno = CartaoCliente::create([
+                    'fk_cartao'         => $cartao->id,
+                    'responsavel_id'    => $request->responsavel_id,
+                    'nome'              => $alunoData['nome'].' - '.$alunoData['serie'],
+                    'cpf'               => null,
+                    'telefone'          => null,
+                    'fk_tipo_cliente'   => 1,
+                    'valor_atual'       => 0,
+                    'valor_cartao'      => 0,
+                    'fk_tipo_pagamento' => null,
+                    'observacao'        => 'Cadastro de aluno',
+                    'devolvido'         => 'N',
+                    'status'            => 2,
+                    'created_at'        => date('Y-m-d H:i:s'),
+	                'fk_usuario'        => 1
+                ]);
+
+                // EntradaCredito::create([
+                //     'fk_cartao_cliente' => $aluno->id,
+                //     'valor' => 0,
+                //     'fk_tipo_pagamento' => null,
+                //     'observacao' => 'Crédito de entrada do aluno',
+                //     'data' => date('Y-m-d H:i:s'),
+                //     'fk_usuario' => Auth::user()->id
+                // ]);
+
+                // SaidaCredito::create([
+                //     'fk_pedido' => null,
+                //     'fk_cartao_cliente' => $aluno->id,
+                //     'valor' => 0,
+                //     'observacao' => 'Caução do cartão',
+                //     'data' => date('Y-m-d H:i:s')
+                // ]);
+
+            }
+
+            DB::commit();
+
+            $aluno = CartaoCliente::where('responsavel_id', $request->responsavel_id)->latest()->first();
+
+            session(['cliente' => $aluno]);
+
+            return redirect('cliente/home')->with('success', 'Aluno(s) cadastrado(s) com sucesso!');
+        } catch (Exception $ex) {
+            DB::rollback();
+            // dd($ex->getMessage(), $ex->getLine(), $ex->getFile());
+            return redirect()->back()->with('error', 'Erro ao cadastrar aluno(s): ' . $ex->getMessage())->withInput();
+        }
     }
 
     public function senhaRecuperarTela()
@@ -784,6 +871,19 @@ class ClienteController extends Controller
 
         return redirect('cliente/login')
             ->with('success', 'Senha redefinida com sucesso. Faça seu login.');
+    }
+
+    public function trocarAluno(Request $request)
+    {
+        $request->validate(['aluno_id' => 'required|integer']);
+
+        $responsavel = session('responsavel');
+
+        $aluno = CartaoCliente::where('id', $request->aluno_id)->where('responsavel_id', $responsavel->id)->firstOrFail();
+
+        session(['cliente' => $aluno]);
+
+        return redirect('cliente/home')->with('success', 'Aluno alterado para ' . $aluno->nome);
     }
 
 }

@@ -136,65 +136,6 @@
                 @error('termos') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
             </div>
 
-            {{-- <h6 class="mb-2" style="font-weight: 600;">
-                <span class="material-icons" style="font-size: 1em; vertical-align: middle;">school</span>
-                Alunos
-            </h6>
-
-            <div id="lista-alunos">
-                @if(old('alunos'))
-                    @foreach(old('alunos') as $index => $aluno)
-                        <div class="aluno-item card card-body mb-3 p-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <strong>Aluno #{{ $index + 1 }}</strong>
-                                <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                                    <span class="material-icons" style="font-size: 1em;">delete</span>
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <label>Nome do aluno</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][nome]" value="{{ $aluno['nome'] ?? '' }}" required>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label>Série</label>
-                                    <input type="text" class="form-control" name="alunos[{{ $index }}][serie]" value="{{ $aluno['serie'] ?? '' }}" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Matrícula</label>
-                                    <input type="text" class="form-control" name="alunos[{{ $index }}][matricula]" value="{{ $aluno['matricula'] ?? '' }}" required>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="aluno-item card card-body mb-3 p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong>Aluno #1</strong>
-                        </div>
-                        <div class="form-group">
-                            <label>Nome do aluno</label>
-                            <input type="text" class="form-control" name="alunos[0][nome]" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Série</label>
-                                <input type="text" class="form-control" name="alunos[0][serie]" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Matrícula</label>
-                                <input type="text" class="form-control" name="alunos[0][matricula]" required>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
-
-            <button type="button" class="btn btn-outline-primary btn-block mb-3" id="btn-add-aluno">
-                <span class="material-icons" style="font-size: 1em; vertical-align: middle;">add</span>
-                Adicionar aluno
-            </button> --}}
-
             <button type="submit" class="btn btn-success btn-block">
                 Concluir cadastro
             </button>
@@ -262,45 +203,4 @@
 </script>
 @endif
 
-{{-- @if($step === 3)
-<script>
-    var indexAluno = {{ old('alunos') ? count(old('alunos')) : 1 }};
-
-    document.getElementById('btn-add-aluno').addEventListener('click', function () {
-        var i = indexAluno++;
-        var html = `
-            <div class="aluno-item card card-body mb-3 p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>Aluno #${i + 1}</strong>
-                    <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                        <span class="material-icons" style="font-size: 1em;">delete</span>
-                    </button>
-                </div>
-                <div class="form-group">
-                    <label>Nome do aluno</label>
-                    <input type="text" class="form-control" name="alunos[${i}][nome]" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Série</label>
-                        <input type="text" class="form-control" name="alunos[${i}][serie]" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Matrícula</label>
-                        <input type="text" class="form-control" name="alunos[${i}][matricula]" required>
-                    </div>
-                </div>
-            </div>`;
-
-        document.getElementById('lista-alunos').insertAdjacentHTML('beforeend', html);
-    });
-
-    document.getElementById('lista-alunos').addEventListener('click', function (e) {
-        var btn = e.target.closest('.btn-remover-aluno');
-        if (btn) {
-            btn.closest('.aluno-item').remove();
-        }
-    });
-</script>
-@endif --}}
 @endsection
