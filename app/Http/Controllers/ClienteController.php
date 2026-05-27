@@ -711,21 +711,30 @@ class ClienteController extends Controller
                 'senha.same' => 'As senhas não estão iguais.',
             ]);
 
-            $responsavel = Responsavel::find($request->responsavel_id);
+            DB::beginTransaction();
+            try{
+                $responsavel = Responsavel::find($request->responsavel_id);
+    
+                if (!$responsavel || !$responsavel->validado) {
+                    return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
+                }
+    
+                $responsavel->nome = strtoupper($request->nome);
+                $responsavel->telefone = preg_replace('/\D/', '', $request->telefone);
+                $responsavel->senha = Hash::make($request->senha);
+                $responsavel->save();
 
-            if (!$responsavel || !$responsavel->validado) {
-                return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
+                DB::commit();
+                // return redirect()->route('tela.login.responsavel')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
+    
+                session(['responsavel' => $responsavel]);
+
+                return redirect()->route('tela.cadastro.aluno');
+            } catch (Exception $ex) {
+                DB::rollback();
+                // dd($ex->getMessage(), $ex->getLine(), $ex->getFile());
+                return redirect()->back()->with('error', 'Erro ao finalizar cadastro: ' . $ex->getMessage())->withInput();
             }
-
-            $responsavel->nome = strtoupper($request->nome);
-            $responsavel->telefone = preg_replace('/\D/', '', $request->telefone);
-            $responsavel->senha = Hash::make($request->senha);
-            $responsavel->save();
-
-            return redirect()->route('tela.login.responsavel')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
-
-            // session(['responsavel' => $responsavel]);
-            // return redirect()->route('tela.cadastro.aluno');
         }
 
         return redirect()->route('tela.cadastro')->with('error', 'Passo de cadastro inválido.');
