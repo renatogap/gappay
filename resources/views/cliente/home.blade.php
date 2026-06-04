@@ -340,6 +340,88 @@
         font-size: 1.2em;
     }
 
+    .seletor-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #eef1ff;
+        border: 1.5px solid #3153e7;
+        border-radius: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.15s;
+    }
+    .seletor-trigger:active { background: #dde2ff; }
+    .seletor-trigger-info { display: flex; align-items: center; gap: 10px; }
+    .seletor-avatar {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: #3153e7;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .seletor-nome { font-size: 15px; font-weight: 600; color: #333; }
+    .seletor-sub  { font-size: 12px; color: #999; }
+
+    .bs-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 9999;
+        align-items: flex-end;
+    }
+    .bs-overlay.open { display: flex; }
+    .bs-sheet {
+        background: white;
+        border-radius: 20px 20px 0 0;
+        width: 100%;
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+        animation: bsSlideUp 0.28s cubic-bezier(0.25,0.8,0.25,1);
+    }
+    @keyframes bsSlideUp {
+        from { transform: translateY(100%); }
+        to   { transform: translateY(0); }
+    }
+    .bs-handle {
+        width: 38px; height: 4px;
+        background: #ddd;
+        border-radius: 2px;
+        margin: 12px auto 0;
+    }
+    .bs-title {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 12px; font-weight: 600;
+        color: #999; text-transform: uppercase; letter-spacing: 0.6px;
+        padding: 14px 20px 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .bs-option {
+        display: flex; align-items: center; gap: 14px;
+        padding: 14px 20px;
+        width: 100%;
+        background: none; border: none;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer; transition: background 0.1s;
+    }
+    .bs-option:active { background: #f5f7ff; }
+    .bs-option.selected { background: #eef1ff; }
+    .bs-opt-avatar {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: #3153e7;
+        color: white;
+        font-size: 14px; font-weight: 600;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .bs-opt-nome { font-size: 15px; font-weight: 600; color: #333; }
+    .bs-option-form:last-child .bs-option { border-bottom: none; }
+
     @media (max-width: 768px) {
         .atalhos-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -427,25 +509,45 @@
 
     {{-- Só exibe se houver mais de 1 aluno --}}
     @if($alunos->count() > 1)
-    <div class="seletor-aluno-container">
-        <form action="{{ url('cliente/trocar-aluno') }}" method="POST" id="form-trocar-aluno">
-            @csrf
-            <label class="seletor-label">
-                <i class="material-icons">school</i>
-                Visualizando como:
-            </label>
-            <div class="seletor-wrapper">
-                <select name="aluno_id" class="seletor-aluno" onchange="document.getElementById('form-trocar-aluno').submit()">
-                    @foreach($alunos as $aluno)
-                        <option value="{{ $aluno->id }}" {{ $aluno->id == $cartaoCliente->id ? 'selected' : '' }}>
-                            {{ $aluno->nome }}
-                        </option>
-                    @endforeach
-                </select>
-                <i class="material-icons seletor-icone">expand_more</i>
+        <button class="seletor-trigger" id="open-bs" type="button" style="margin-bottom: 1.5em;">
+            <div class="seletor-trigger-info">
+                <div class="seletor-avatar" id="trigger-avatar">
+                    {{ strtoupper(substr($cartaoCliente->nome, 0, 1)) }}{{ strtoupper(substr(explode(' ', $cartaoCliente->nome)[1] ?? 'A', 0, 1)) }}
+                </div>
+                <div>
+                    <div class="seletor-nome" id="trigger-nome">{{ $cartaoCliente->nome }}</div>
+                    <div class="seletor-sub">Toque para alterar aluno</div>
+                </div>
             </div>
-        </form>
-    </div>
+            <i class="material-icons" style="color:#3153e7">expand_less</i>
+        </button>
+
+        <div class="bs-overlay" id="bs-overlay">
+            <div class="bs-sheet">
+                <div class="bs-handle"></div>
+                <div class="bs-title">
+                    <i class="material-icons" style="font-size:16px">group</i>
+                    Selecionar aluno
+                </div>
+                @foreach($alunos as $aluno)
+                <form action="{{ url('cliente/trocar-aluno') }}" method="POST" class="bs-option-form">
+                    @csrf
+                    <input type="hidden" name="aluno_id" value="{{ $aluno->id }}">
+                    <button type="submit" class="bs-option {{ $aluno->id == $cartaoCliente->id ? 'selected' : '' }}">
+                        <div class="bs-opt-avatar">
+                            {{ strtoupper(substr($aluno->nome, 0, 1)) }}{{ strtoupper(substr(explode(' ', $aluno->nome)[1] ?? 'A', 0, 1)) }}
+                        </div>
+                        <div style="flex:1; text-align:left">
+                            <div class="bs-opt-nome">{{ $aluno->nome }}</div>
+                        </div>
+                        @if($aluno->id == $cartaoCliente->id)
+                        <i class="material-icons" style="color:#3153e7">check</i>
+                        @endif
+                    </button>
+                </form>
+                @endforeach
+            </div>
+        </div>
     @endif
 
     <div class="alert alert-info">
@@ -501,6 +603,20 @@
             </div>
             <div class="atalho-titulo">Recarga</div>
         </a>
+
+        <a href="{{ url('cliente/aluno') }}" class="atalho-card">
+            <div class="atalho-icone">
+                <i class="material-icons">person_add</i>
+            </div>
+            <div class="atalho-titulo">Adicionar Aluno</div>
+        </a>
+
+        <a href="{{ url('cliente/senha/redefinir') }}" class="atalho-card">
+            <div class="atalho-icone">
+                <i class="material-icons">lock_reset</i>
+            </div>
+            <div class="atalho-titulo">Alterar Senha</div>
+        </a>
     </div>
 
     <div class="sair-container">
@@ -526,6 +642,13 @@
             saldoOculto.style.display = 'block';
             icon.textContent = 'visibility_off';
         }
+    });
+
+    document.getElementById('open-bs').addEventListener('click', function() {
+        document.getElementById('bs-overlay').classList.add('open');
+    });
+    document.getElementById('bs-overlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('open');
     });
 </script>
 @endsection

@@ -590,7 +590,8 @@ class ClienteController extends Controller
     public function logout()
     {
         request()->session()->forget('cliente');
-        return redirect('cliente');
+        request()->session()->forget('responsavel');
+        return redirect('cliente/login');
     }
 
 
@@ -772,7 +773,6 @@ class ClienteController extends Controller
                         'cartao_gerado' => 1
                     ]);
                 }
-                // dd($cartao);
 
                 // Cadastrar Aluno
                 $aluno = CartaoCliente::create([
@@ -791,23 +791,6 @@ class ClienteController extends Controller
                     'created_at'        => date('Y-m-d H:i:s'),
 	                'fk_usuario'        => 1
                 ]);
-
-                // EntradaCredito::create([
-                //     'fk_cartao_cliente' => $aluno->id,
-                //     'valor' => 0,
-                //     'fk_tipo_pagamento' => null,
-                //     'observacao' => 'Crédito de entrada do aluno',
-                //     'data' => date('Y-m-d H:i:s'),
-                //     'fk_usuario' => Auth::user()->id
-                // ]);
-
-                // SaidaCredito::create([
-                //     'fk_pedido' => null,
-                //     'fk_cartao_cliente' => $aluno->id,
-                //     'valor' => 0,
-                //     'observacao' => 'Caução do cartão',
-                //     'data' => date('Y-m-d H:i:s')
-                // ]);
 
             }
 
@@ -836,50 +819,116 @@ class ClienteController extends Controller
 
         $responsavel = Responsavel::where('email', $request->email)->first();
 
-        if ($responsavel) {
-            $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            $responsavel->save();
+        try {
+            DB::beginTransaction();
+            if ($responsavel) {
+                $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $responsavel->save();
+                $responsavel->recuperarSenha = true;
+    
+                Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
 
-            Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
+                session(['email' => $responsavel->email]);
+            }
+            DB::commit();
+
+            return redirect('cliente/senha/redefinir')
+                ->with('success', 'Você receberá um código em breve.');
+        } catch (Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
         }
-
-        return redirect('cliente/senha/redefinir')
-            ->with('success', 'Se este e-mail estiver cadastrado, você receberá um código em breve.')
-            ->with('email', $request->email);
     }
 
     public function senhaRedefinirTela()
     {
-        return view('cliente.senha-redefinir');
+        $modo = 'alteracao';
+        $email = null;
+
+        if (session()->has('email')) {
+            $modo = 'recuperacao';
+            $email = session('email');
+        }
+
+        elseif (session()->has('responsavel')) {
+            $modo = 'alteracao';
+            $email = session('responsavel')->email;
+        }
+
+        return view('cliente.senha-redefinir', compact('modo', 'email',));
     }
 
     public function senhaRedefinirCliente(Request $request)
     {
         $request->validate([
-            'email'            => 'required|email',
-            'token'            => 'required',
-            'senha'            => 'required|min:6|same:confirmar_senha',
-            'confirmar_senha'  => 'required',
+            'email' => 'required|email',
+            'senha' => 'required|min:6|same:confirmar_senha',
+            'confirmar_senha' => 'required',
         ], [
             'senha.same' => 'As senhas não estão iguais.',
         ]);
 
-        $responsavel = Responsavel::where('email', $request->email)
-            ->where('token', $request->token)
-            ->first();
+        try {
+            DB::beginTransaction();
 
-        if (!$responsavel) {
+            if (session()->has('email')) {
+                $request->validate([
+                    'token' => 'required'
+                ]);
+
+                $responsavel = Responsavel::where('email', $request->email)
+                    ->where('token', $request->token)
+                    ->first();
+
+                if (!$responsavel) {
+                    return redirect()->back()
+                        ->with('error', 'Código inválido. Verifique e tente novamente.')
+                        ->withInput();
+                }
+
+                $responsavel->senha = Hash::make($request->senha);
+                $responsavel->token = null;
+                $responsavel->save();
+
+                session()->forget('email');
+
+                DB::commit();
+
+                return redirect('cliente/login')
+                    ->with('success', 'Senha redefinida com sucesso. Faça seu login.');
+            }
+
+            if (session()->has('responsavel')) {
+                $request->validate([
+                    'senha_atual' => 'required'
+                ]);
+                $responsavel = Responsavel::where('email', $request->email)
+                    ->first();
+
+                if (!$responsavel || !Hash::check($request->senha_atual, $responsavel->senha)) {
+                    return redirect()->back()->with('error', 'Senha atual inválida.')->withInput();
+                }
+
+                $responsavel->senha = Hash::make($request->senha);
+                $responsavel->save();
+
+                DB::commit();
+
+                return redirect()->back()->with('success', 'Senha alterada com sucesso.');
+            }
+
+            DB::rollBack();
+
+            return redirect('cliente/login')
+                ->with('error', 'Sessão inválida.');
+
+        } catch (Exception $ex) {
+            DB::rollBack();
+
             return redirect()->back()
-                ->with('error', 'Código inválido. Verifique e tente novamente.')
+                ->with('error', 'Erro ao redefinir senha: ' . $ex->getMessage())
                 ->withInput();
         }
-
-        $responsavel->senha = Hash::make($request->senha);
-        $responsavel->token = null; 
-        $responsavel->save();
-
-        return redirect('cliente/login')
-            ->with('success', 'Senha redefinida com sucesso. Faça seu login.');
     }
 
     public function trocarAluno(Request $request)

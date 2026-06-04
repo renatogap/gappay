@@ -20,11 +20,20 @@ class ResponsavelTokenMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Seu token de validação Gappay')
-            ->view('emails.responsavel-token')
-            ->with([
-                'token' => $this->responsavel->token,
-                'email' => $this->responsavel->email,
-            ]);
+        if($this->responsavel->recuperarSenha){
+            return $this->subject('Recuperar Senha - Gappay')
+                ->view('emails.responsavel-recuperar-senha')
+                ->with([
+                    'token' => $this->responsavel->token,
+                    'email' => $this->responsavel->email,
+                ]);
+        } else {
+            return $this->subject('Seu token de validação Gappay')
+                ->view('emails.responsavel-token')
+                ->with([
+                    'token' => $this->responsavel->token,
+                    'email' => $this->responsavel->email,
+                ]);
+        }
     }
 }

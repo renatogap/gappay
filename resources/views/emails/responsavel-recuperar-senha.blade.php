@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Validação de E-mail – GapPay</title>
+  <title>Recuperar senha – GapPay</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@700;800&display=swap');
 
@@ -190,7 +190,7 @@
 
       <p class="greeting">Olá!</p>
       <p class="intro">
-        Para concluir seu cadastro no <strong>GapPay</strong>, utilize o código de validação
+        Para recuperar sua senha no <strong>GapPay</strong>, utilize o código de validação
         abaixo no formulário de confirmação de e-mail.
       </p>
 
@@ -202,7 +202,7 @@
       </div>
 
       <div class="note">
-        Se você não solicitou este cadastro, ignore este e-mail. Nenhuma ação será necessária
+        Se você não solicitou recuperação de senha, ignore este e-mail. Nenhuma ação será necessária
         e sua conta não será criada.
       </div>
 

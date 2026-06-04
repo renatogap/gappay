@@ -136,6 +136,18 @@
             <?php endif; ?>
         </div>
         <div class="corpo">
+            @if (session('success'))
+                <div class="card-panel green lighten-4" style="color: #1b5e20; font-size: 14px; margin-bottom: 2em;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="card-panel red lighten-4" style="color: #b71c1c; font-size: 14px; margin-bottom: 2em;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form id="form" class="form-signin mt-5" action="{{ route('login.responsavel') }}" method="post">
                 <div class="content-wrap">
                     <div class="input-field">
@@ -151,11 +163,11 @@
                             <i class="material-icons right">warning</i>
                         </div>
                     </div>
-                    @if (session('error'))
+                    {{-- @if (session('error'))
                         <div class="card-panel red lighten-4" style="color: #b71c1c">
                             {{ session('error') }}
                         </div>
-                    @endif
+                    @endif --}}
                     <div class="row" style="margin-top: 16px;">
                         <button class="btn btn-parque waves-effect blue darken-3 right hide-on-small-only" type="submit">
                             Entrar
