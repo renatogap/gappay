@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.default-cliente-new')
 @section('conteudo')
 <style>
     .pedidos-header {
