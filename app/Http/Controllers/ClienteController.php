@@ -552,11 +552,12 @@ class ClienteController extends Controller
     {
         $request->validate([
             'price' => 'required|numeric|min:1',
-            'product_name' => 'required|string'
+            'product_name' => 'required|string',
+            'price_recarga' => 'required|numeric|min:1'
         ]);
 
         try {
-            $checkout_session = ClienteRegras::processarRecarga(session('cliente'), $request->product_name, $request->price);
+            $checkout_session = ClienteRegras::processarRecarga(session('cliente'), $request->product_name, $request->price, $request->price_recarga);
 
             return redirect($checkout_session->url);
         } catch (Exception $ex) {
@@ -574,7 +575,7 @@ class ClienteController extends Controller
 
         try {
 
-            ClienteRegras::atualizarSaldoAposRecarga($session_id);
+            ClienteRegras::atualizarSaldoAposRecarga($session_id, $request->query('price_recarga'));
 
             return redirect('cliente/extrato')->with('sucesso', 'Recarga realizada com sucesso! O valor já está disponível no seu cartão.');
         } catch (Exception $ex) {

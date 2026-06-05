@@ -445,6 +445,7 @@
                 name="price"
                 placeholder="R$ 0,00"
                 required>
+            <input type="hidden" id="price_recarga" name="price_recarga" value="">
 
         </div>
 
@@ -548,6 +549,8 @@
         }
 
         let valorRecarga = parseInt(valorStr) / 100;
+        
+        document.getElementById('price_recarga').value = valorRecarga.toFixed(2);
 
         // Calcular taxa: 3,99% + R$0,39
         let taxaPercentual = valorRecarga * 0.0399;

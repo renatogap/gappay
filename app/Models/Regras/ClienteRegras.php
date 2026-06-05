@@ -173,7 +173,7 @@ class ClienteRegras
         return $cartao;
     }
 
-    public static function processarRecarga($cartaoCliente, $productName, $price, $currency = 'brl')
+    public static function processarRecarga($cartaoCliente, $productName, $price, $price_recarga, $currency = 'brl')
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -193,7 +193,7 @@ class ClienteRegras
             ]],
             'payment_method_types' => ['card', 'boleto'],
             'mode' => 'payment',
-            'success_url' => url('cliente/recarga/success?session_id={CHECKOUT_SESSION_ID}'),
+            'success_url' => url('cliente/recarga/success?session_id={CHECKOUT_SESSION_ID}&price_recarga='.$price_recarga),
             'cancel_url' => url('cliente/recarga/cancel'),
         ]);
 
@@ -216,7 +216,7 @@ class ClienteRegras
         return $checkout_session;
     }
 
-    public static function atualizarSaldoAposRecarga($session_id)
+    public static function atualizarSaldoAposRecarga($session_id, $price_recarga = null)
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -228,7 +228,7 @@ class ClienteRegras
                 // Atualizar o saldo do cartão do cliente
                 $cartaoCliente = CartaoCliente::find(session('cliente')->id);
                 if ($cartaoCliente) {
-                    $cartaoCliente->valor_atual += $session->amount_total / 100;
+                    $cartaoCliente->valor_atual += $price_recarga ?? ($session->amount_total / 100);
                     $cartaoCliente->desabilitarLog();
                     $cartaoCliente->save();
                 }
@@ -236,11 +236,11 @@ class ClienteRegras
 
                 $entradaCredito = new EntradaCredito();
                 $entradaCredito->fk_cartao_cliente = session('cliente')->id;
-                $entradaCredito->valor = $session->amount_total / 100;
+                $entradaCredito->valor = $price_recarga ?? ($session->amount_total / 100);
                 $entradaCredito->fk_tipo_pagamento = 1;
                 $entradaCredito->observacao = 'Recarga de crédito pelo aluno';
                 $entradaCredito->data = date('Y-m-d H:i:s');
-                $entradaCredito->fk_usuario = 999; // ID do usuário fictício para recarga pelo aluno
+                $entradaCredito->fk_usuario = 1; // ID do usuário fictício para recarga pelo aluno
                 $entradaCredito->desabilitarLog();
                 $entradaCredito->save();
 
