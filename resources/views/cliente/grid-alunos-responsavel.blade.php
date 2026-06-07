@@ -421,8 +421,6 @@
         Adicionar aluno
     </a>
 
-   
-
     @forelse($alunos as $aluno)
         <div class="aluno-card">
             <div class="avatar">
@@ -438,9 +436,9 @@
                 <a href="{{ url('cliente/aluno/'.$aluno->id.'/edit') }}" class="btn-action btn-edit" title="Editar">
                     <span class="material-icons" style="font-size:1.1em;">edit</span>
                 </a>
-                <form action="{{ url('cliente/aluno/'.$aluno->id) }}" method="POST" onsubmit="return confirm('Excluir este aluno?')">
+                <form action="{{ url('cliente/aluno/'.$aluno->id.'/delete') }}" method="POST" class="form-excluir">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn-action btn-del" title="Excluir">
+                    <button type="button" class="btn-action btn-del" title="Excluir" onclick="abrirModalExcluir(this, '{{ $aluno->nome }}')">
                         <span class="material-icons" style="font-size:1.1em;">delete</span>
                     </button>
                 </form>
@@ -452,50 +450,55 @@
             <p>Nenhum aluno cadastrado ainda.</p>
         </div>
     @endforelse
+</div>
 
-    
+<div id="modal-excluir" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding:1em;">
+    <div style="background:white; border-radius:16px; padding:2em 1.5em; max-width:380px; width:100%; text-align:center; position:relative;">
 
-    <div class="sair-container">
-        <a href="{{ url('cliente/logout') }}" class="btn-sair">
-            <i class="material-icons">power_settings_new</i> Sair da Conta
-        </a>
+        <div style="width:64px; height:64px; border-radius:50%; background:#fef2f2; display:flex; align-items:center; justify-content:center; margin:0 auto 1em;">
+            <span class="material-icons" style="font-size:2em; color:#a32d2d;">delete_forever</span>
+        </div>
+
+        <h5 style="font-weight:700; color:#333; margin:0 0 .4em;">Excluir aluno</h5>
+        <p style="color:#666; font-size:.9em; margin:0 0 .3em;">Tem certeza que deseja excluir</p>
+        <p id="modal-nome-aluno" style="color:#3153e7; font-weight:600; font-size:.95em; margin:0 0 1.5em;"></p>
+        <p style="color:#999; font-size:.8em; margin:-1em 0 1.5em;">Esta ação não poderá ser desfeita.</p>
+
+        <div style="display:flex; gap:.8em; justify-content:center;">
+            <button onclick="fecharModalExcluir()"
+                style="flex:1; padding:.8em; border-radius:50px; border:1px solid #ddd; background:white; color:#555; font-size:.95em; cursor:pointer; font-weight:500; transition:background .2s;">
+                Cancelar
+            </button>
+            <button id="btn-confirmar-excluir"
+                style="flex:1; padding:.8em; border-radius:50px; border:none; background:linear-gradient(135deg,#ff6b6b,#ee5a6f); color:white; font-size:.95em; cursor:pointer; font-weight:600; box-shadow:0 4px 12px rgba(255,107,107,.3); transition:transform .2s;">
+                <span class="material-icons" style="font-size:1em; vertical-align:middle;">delete</span>
+                Excluir
+            </button>
+        </div>
     </div>
 </div>
 
 
 <script>
-    var indexAluno = {{ old('alunos') ? count(old('alunos')) : 1 }};
+    var formExcluir = null;
 
-    document.getElementById('btn-add-aluno').addEventListener('click', function () {
-        var i = indexAluno++;
-        var html = `
-            <div class="aluno-item card card-body mb-3 p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>Aluno #${i + 1}</strong>
-                    <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                        <span class="material-icons" style="font-size: 1em;">delete</span>
-                    </button>
-                </div>
-                <div class="form-group">
-                    <label>Nome do aluno</label>
-                    <input type="text" class="form-control" name="alunos[${i}][nome]" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Série</label>
-                        <input type="text" class="form-control" name="alunos[${i}][serie]" required>
-                    </div>
-                </div>
-            </div>`;
+    function abrirModalExcluir(btn, nomeAluno) {
+        formExcluir = btn.closest('.form-excluir');
+        document.getElementById('modal-nome-aluno').textContent = nomeAluno;
+        document.getElementById('modal-excluir').style.display = 'flex';
+    }
 
-        document.getElementById('lista-alunos').insertAdjacentHTML('beforeend', html);
+    function fecharModalExcluir() {
+        document.getElementById('modal-excluir').style.display = 'none';
+        formExcluir = null;
+    }
+
+    document.getElementById('btn-confirmar-excluir').addEventListener('click', function () {
+        if (formExcluir) formExcluir.submit();
     });
 
-    document.getElementById('lista-alunos').addEventListener('click', function (e) {
-        var btn = e.target.closest('.btn-remover-aluno');
-        if (btn) {
-            btn.closest('.aluno-item').remove();
-        }
+    document.getElementById('modal-excluir').addEventListener('click', function (e) {
+        if (e.target === this) fecharModalExcluir();
     });
 </script>
 @endsection

@@ -101,7 +101,14 @@ class ClienteController extends Controller
         $cartaoCliente = session('cliente');
         $responsavel   = session('responsavel'); // Responsável do cartão cliente (aluno)
 
-        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get(); // Todos os alunos vinculados ao responsável
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
+            ->where('status', 2) // Cartão em uso ativo
+            ->get(); // Todos os alunos vinculados ao responsável
+
+        if ($alunos->isEmpty()) {
+            session(['responsavel' => $responsavel]);
+            return redirect()->route('tela.cadastro.aluno');
+        }
         
         $pedidosPendentes = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
             ->where('status', 1) // status que representa pedido não finalizado
@@ -624,7 +631,9 @@ class ClienteController extends Controller
             return redirect()->back()->with('error', 'E-mail ainda não validado. Verifique sua caixa de entrada para validar o e-mail antes de fazer login.')->withInput();
         }
         
-        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get();
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
+            ->where('status', 2) // Cartão em uso
+            ->get();
 
         if ($alunos->isEmpty()) {
             session(['responsavel' => $responsavel]);
@@ -742,7 +751,6 @@ class ClienteController extends Controller
                 return redirect()->route('tela.cadastro.aluno');
             } catch (Exception $ex) {
                 DB::rollback();
-                // dd($ex->getMessage(), $ex->getLine(), $ex->getFile());
                 return redirect()->back()->with('error', 'Erro ao finalizar cadastro: ' . $ex->getMessage())->withInput();
             }
         }
@@ -754,7 +762,9 @@ class ClienteController extends Controller
     {
         $responsavel = session('responsavel');
 
-        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get();
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
+                                ->where('status', 2) // Cartão em uso (ativo)
+                                ->get();
 
         $alunos->each(function ($aluno) {
             $partes = explode(' - ', $aluno->nome, 2);
@@ -883,6 +893,28 @@ class ClienteController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', 'Erro ao atualizar aluno: ' . $ex->getMessage())->withInput();
         }
+    }
+
+    public function deleteAluno(string $id)
+    {
+        $responsavel = session('responsavel');
+        $aluno = CartaoCliente::where('id', $id)->where('responsavel_id', $responsavel->id)->first();
+
+        if (!$aluno) {
+            return redirect()->back()->with('error', 'Aluno não encontrado.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $aluno->update(['status' => 3]); // Bloqueado
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Aluno excluído com sucesso!');
+        } catch (Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Erro ao excluir aluno: ' . $ex->getMessage());
+        }
+        // return redirect()->back()->with('error', 'Exclusão de aluno não permitida no momento. Entre em contato com a administração para solicitar a exclusão.');
     }
 
     public function  dadosResponsavel()

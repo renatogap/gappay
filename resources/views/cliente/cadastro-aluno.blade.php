@@ -392,10 +392,6 @@
                                 <label>Ano</label>
                                 <input type="text" class="form-control" name="alunos[{{ $index }}][serie]" value="{{ $aluno['serie'] ?? '' }}" required>
                             </div>
-                            {{-- <div class="form-group col-md-6">
-                                <label>Matrícula</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][matricula]" value="{{ $aluno['matricula'] ?? '' }}" required>
-                            </div> --}}
                         </div>
                     </div>
                 @endforeach
@@ -414,10 +410,6 @@
                             <label>Ano</label>
                             <input type="text" class="form-control" name="alunos[0][serie]" required>
                         </div>
-                        {{-- <div class="form-group col-md-6">
-                            <label>Matrícula</label>
-                            <input type="text" class="form-control" name="alunos[0][matricula]" required>
-                        </div> --}}
                     </div>
                 </div>
             @endif
@@ -433,12 +425,6 @@
         </button>
     </form>
 
-    <div class="sair-container">
-        <a href="{{ url('cliente/logout') }}" class="btn-sair">
-            <i class="material-icons">power_settings_new</i>
-            Sair da Conta
-        </a>
-    </div>
 </div>
 
 <script>

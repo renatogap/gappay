@@ -132,13 +132,6 @@
             </button>
         </form>
     </div>
-
-    <div class="sair-container">
-        <a href="{{ url('cliente/logout') }}" class="btn-sair">
-            <i class="material-icons">power_settings_new</i>
-            Sair da Conta
-        </a>
-    </div>
 </div>
 
 <script>
