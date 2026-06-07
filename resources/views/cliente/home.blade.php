@@ -651,11 +651,13 @@
         }
     });
 
-    document.getElementById('open-bs').addEventListener('click', function() {
-        document.getElementById('bs-overlay').classList.add('open');
-    });
-    document.getElementById('bs-overlay').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('open');
-    });
+    @if($alunos->count() > 1)
+        document.getElementById('open-bs').addEventListener('click', function() {
+            document.getElementById('bs-overlay').classList.add('open');
+        });
+        document.getElementById('bs-overlay').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('open');
+        });
+    @endif
 </script>
 @endsection

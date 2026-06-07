@@ -244,6 +244,8 @@ class ClienteRegras
                 $entradaCredito->desabilitarLog();
                 $entradaCredito->save();
 
+                session(['cliente' => $cartaoCliente->fresh()]); // Atualiza a sessão cliente com o novo saldo
+
             } else {
                 throw new Exception('O pagamento não foi concluído. Por favor, tente novamente. ');
             }

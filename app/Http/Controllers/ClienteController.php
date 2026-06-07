@@ -542,7 +542,7 @@ class ClienteController extends Controller
         $dtInicio  = (request('dtInicio') ? request('dtInicio') : date('Y-m-d'));
         $dtTermino = (request('dtTermino') ? request('dtTermino') : date('Y-m-d'));
         $horaInicio  = (request('horaInicio') ? request('horaInicio') : date('00:00'));
-        $horaTermino = (request('horaTermino') ? request('horaTermino') : date('H:i'));
+        $horaTermino = (request('horaTermino') ? request('horaTermino') : date('H:i', strtotime('+1 minute')));
         $cartaoCliente = session('cliente');
 
         $extrato = CartaoClienteDB::extratoCartaoCliente($cartaoCliente->id, $dtInicio, $dtTermino, $horaInicio, $horaTermino);

@@ -352,7 +352,7 @@
 <div class="home-container">
     <h4>
         <i class="material-icons">edit</i>
-        Editar dados de Aluno
+        Dados do Aluno
         <a href="{{url('cliente/alunos')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>
