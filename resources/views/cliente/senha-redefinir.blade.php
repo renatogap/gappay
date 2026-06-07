@@ -170,7 +170,10 @@
                 <!-- <h1 style="color: darkblue; text-decoration: blink;">DESENVOLVIMENTO</h1> -->
             <?php endif; ?>
             <h1>Redefinir senha</h1>
-            <p>Digite o código que enviamos para o seu e-mail e cadastre uma nova senha.</p>
+            
+            @if($modo === 'recuperacao')
+                <p>Digite o código que enviamos para o seu e-mail e cadastre uma nova senha.</p>
+            @endif
         </div>
 
         <div class="corpo">

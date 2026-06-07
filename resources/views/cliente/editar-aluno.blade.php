@@ -351,9 +351,9 @@
 
 <div class="home-container">
     <h4>
-        <i class="material-icons">add_circle</i>
-        Cadastro de Alunos
-        <a href="{{url('cliente/home')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
+        <i class="material-icons">edit</i>
+        Editar dados de Aluno
+        <a href="{{url('cliente/alunos')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>
     </h4>
@@ -363,117 +363,52 @@
             <i class="material-icons">person</i>
             {{ $responsavel->nome }}
         </h2>
-        <p>Bem-vindo(a)! Realize o cadastro de alunos.</p>
+        <p>Alterar dados do aluno.</p>
     </div>
+
+    @if (session('success'))
+        <div class="card-panel green lighten-4" style="color: #1b5e20; font-size: 14px; background-color: #ccf5d8 !important; padding: 10px; border-radius: 5px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="card-panel red lighten-4" style="color: #b71c1c; font-size: 14px; background-color: #ffcdd2 !important; padding: 10px; border-radius: 5px;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <h6 class="mb-2" style="font-weight: 600;">
         <span class="material-icons" style="font-size: 1em; vertical-align: middle;">school</span>
         Alunos
     </h6>
 
-    <form action="{{ url('cliente/aluno/store') }}" method="POST">
+    <form action="{{ url('cliente/aluno/' . $aluno['id'] . '/update') }}" method="POST">
         @csrf
+        @method('PUT')
         <div id="lista-alunos">
-            @if(old('alunos'))
-                @foreach(old('alunos') as $index => $aluno)
-                    <div class="aluno-item card card-body mb-3 p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong>Aluno #{{ $index + 1 }}</strong>
-                            <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                                <span class="material-icons" style="font-size: 1em;">delete</span>
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label>Nome do aluno</label>
-                            <input type="text" class="form-control" name="alunos[{{ $index }}][nome]" value="{{ $aluno['nome'] ?? '' }}" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Ano</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][serie]" value="{{ $aluno['serie'] ?? '' }}" required>
-                            </div>
-                            {{-- <div class="form-group col-md-6">
-                                <label>Matrícula</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][matricula]" value="{{ $aluno['matricula'] ?? '' }}" required>
-                            </div> --}}
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="aluno-item card card-body mb-3 p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <strong>Aluno #1</strong>
-                    </div>
-                    <input type="hidden" class="form-control" name="responsavel_id" value="{{ $responsavel->id }}" required>
-                    <div class="form-group">
-                        <label>Nome do aluno</label>
-                        <input type="text" class="form-control" name="alunos[0][nome]" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Ano</label>
-                            <input type="text" class="form-control" name="alunos[0][serie]" required>
-                        </div>
-                        {{-- <div class="form-group col-md-6">
-                            <label>Matrícula</label>
-                            <input type="text" class="form-control" name="alunos[0][matricula]" required>
-                        </div> --}}
-                    </div>
-                </div>
-            @endif
-        </div>
-    
-        <button type="button" class="btn btn-outline-primary btn-block mb-3" id="btn-add-aluno">
-            <span class="material-icons" style="font-size: 1em; vertical-align: middle;">add</span>
-            Adicionar aluno
-        </button>
-    
-        <button type="submit" class="btn btn-success btn-block">
-            Concluir cadastro
-        </button>
-    </form>
-
-    <div class="sair-container">
-        <a href="{{ url('cliente/logout') }}" class="btn-sair">
-            <i class="material-icons">power_settings_new</i>
-            Sair da Conta
-        </a>
-    </div>
-</div>
-
-<script>
-    var indexAluno = {{ old('alunos') ? count(old('alunos')) : 1 }};
-
-    document.getElementById('btn-add-aluno').addEventListener('click', function () {
-        var i = indexAluno++;
-        var html = `
             <div class="aluno-item card card-body mb-3 p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>Aluno #${i + 1}</strong>
-                    <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                        <span class="material-icons" style="font-size: 1em;">delete</span>
-                    </button>
+                    <strong>Aluno</strong>
                 </div>
+                <input type="hidden" class="form-control" name="id" value="{{ $aluno['id'] ?? '' }}" required>
                 <div class="form-group">
                     <label>Nome do aluno</label>
-                    <input type="text" class="form-control" name="alunos[${i}][nome]" required>
+                    <input type="text" class="form-control" name="nome" value="{{ $aluno['nome'] ?? '' }}" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label>Série</label>
-                        <input type="text" class="form-control" name="alunos[${i}][serie]" required>
+                        <label>Ano</label>
+                        <input type="text" class="form-control" name="serie" value="{{ $aluno['serie'] ?? '' }}" required>
                     </div>
                 </div>
-            </div>`;
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-success btn-block">
+            Alterar
+        </button>
+    </form>
+</div>
 
-        document.getElementById('lista-alunos').insertAdjacentHTML('beforeend', html);
-    });
-
-    document.getElementById('lista-alunos').addEventListener('click', function (e) {
-        var btn = e.target.closest('.btn-remover-aluno');
-        if (btn) {
-            btn.closest('.aluno-item').remove();
-        }
-    });
-</script>
 @endsection

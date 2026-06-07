@@ -604,11 +604,11 @@
             <div class="atalho-titulo">Recarga</div>
         </a>
 
-        <a href="{{ url('cliente/aluno') }}" class="atalho-card">
+        <a href="{{ url('cliente/alunos') }}" class="atalho-card">
             <div class="atalho-icone">
                 <i class="material-icons">person_add</i>
             </div>
-            <div class="atalho-titulo">Adicionar Aluno</div>
+            <div class="atalho-titulo">Alunos</div>
         </a>
 
         <a href="{{ url('cliente/senha/redefinir') }}" class="atalho-card">

@@ -347,99 +347,121 @@
     .sair-container {
         animation-delay: 0.4s;
     }
+
+    .aluno-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        border: 2px solid transparent;
+        transition: border-color .2s;
+    }
+    .aluno-card:hover { border-color: #3153e7; }
+    .avatar {
+        width: 42px; height: 42px; border-radius: 50%;
+        background: #e6f1fb; color: #185fa5;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 600; font-size: 14px; flex-shrink: 0;
+    }
+    .aluno-info { flex: 1; min-width: 0; }
+    .aluno-nome { font-weight: 600; font-size: .95em; color: #333; }
+    .badge-serie {
+        display: inline-block; background: #eaf3de; color: #3b6d11;
+        border-radius: 4px; padding: 2px 8px; font-size: .8em; font-weight: 500;
+    }
+    .actions { display: flex; gap: 6px; }
+    .btn-action {
+        width: 34px; height: 34px; border-radius: 8px;
+        border: 1px solid #ddd; background: white;
+        display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .btn-edit:hover { background: #e6f1fb; border-color: #3153e7; color: #3153e7; }
+    .btn-del:hover  { background: #fcebeb; border-color: #a32d2d; color: #a32d2d; }
 </style>
+
 
 <div class="home-container">
     <h4>
-        <i class="material-icons">add_circle</i>
-        Cadastro de Alunos
-        <a href="{{url('cliente/home')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
+        <i class="material-icons">school</i>
+        Meus Alunos
+        <a href="{{ url('cliente/home') }}" class="material-icons float-right" style="font-size:1.3em;color:#333;">
             keyboard_backspace
         </a>
     </h4>
     <hr>
+
     <div class="boas-vindas">
-        <h2>
-            <i class="material-icons">person</i>
-            {{ $responsavel->nome }}
-        </h2>
-        <p>Bem-vindo(a)! Realize o cadastro de alunos.</p>
+        <h2><i class="material-icons">person</i> {{ $responsavel->nome }}</h2>
+        <p>Gerencie os alunos vinculados à sua conta.</p>
     </div>
 
-    <h6 class="mb-2" style="font-weight: 600;">
-        <span class="material-icons" style="font-size: 1em; vertical-align: middle;">school</span>
+    <h6 class="mb-2" style="font-weight:600;">
+        <span class="material-icons" style="font-size:1em;vertical-align:middle;">school</span>
         Alunos
     </h6>
 
-    <form action="{{ url('cliente/aluno/store') }}" method="POST">
-        @csrf
-        <div id="lista-alunos">
-            @if(old('alunos'))
-                @foreach(old('alunos') as $index => $aluno)
-                    <div class="aluno-item card card-body mb-3 p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong>Aluno #{{ $index + 1 }}</strong>
-                            <button type="button" class="btn btn-sm btn-outline-danger btn-remover-aluno">
-                                <span class="material-icons" style="font-size: 1em;">delete</span>
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label>Nome do aluno</label>
-                            <input type="text" class="form-control" name="alunos[{{ $index }}][nome]" value="{{ $aluno['nome'] ?? '' }}" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Ano</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][serie]" value="{{ $aluno['serie'] ?? '' }}" required>
-                            </div>
-                            {{-- <div class="form-group col-md-6">
-                                <label>Matrícula</label>
-                                <input type="text" class="form-control" name="alunos[{{ $index }}][matricula]" value="{{ $aluno['matricula'] ?? '' }}" required>
-                            </div> --}}
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="aluno-item card card-body mb-3 p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <strong>Aluno #1</strong>
-                    </div>
-                    <input type="hidden" class="form-control" name="responsavel_id" value="{{ $responsavel->id }}" required>
-                    <div class="form-group">
-                        <label>Nome do aluno</label>
-                        <input type="text" class="form-control" name="alunos[0][nome]" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Ano</label>
-                            <input type="text" class="form-control" name="alunos[0][serie]" required>
-                        </div>
-                        {{-- <div class="form-group col-md-6">
-                            <label>Matrícula</label>
-                            <input type="text" class="form-control" name="alunos[0][matricula]" required>
-                        </div> --}}
-                    </div>
-                </div>
-            @endif
+    @if (session('success'))
+        <div class="card-panel green lighten-4" style="color: #1b5e20; font-size: 14px; background-color: #ccf5d8 !important; padding: 10px; border-radius: 5px;">
+            {{ session('success') }}
         </div>
+    @endif
+
+    @if (session('error'))
+        <div class="card-panel red lighten-4" style="color: #b71c1c; font-size: 14px; background-color: #ffcdd2 !important; padding: 10px; border-radius: 5px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <a href="{{ url('cliente/aluno/create') }}" class="btn btn-outline-primary btn-block mt-3">
+        <span class="material-icons" style="font-size:1em;vertical-align:middle;">add</span>
+        Adicionar aluno
+    </a>
+
+   
+
+    @forelse($alunos as $aluno)
+        <div class="aluno-card">
+            <div class="avatar">
+                {{ strtoupper(substr($aluno->nome, 0, 1)) }}{{ strtoupper(substr(strstr($aluno->nome, ' '), 1, 1)) }}
+            </div>
+            <div class="aluno-info">
+                <div class="aluno-nome">{{ $aluno->nome }}</div>
+                <div class="mt-1">
+                    <span class="badge-serie">{{ $aluno->serie }}</span>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="{{ url('cliente/aluno/'.$aluno->id.'/edit') }}" class="btn-action btn-edit" title="Editar">
+                    <span class="material-icons" style="font-size:1.1em;">edit</span>
+                </a>
+                <form action="{{ url('cliente/aluno/'.$aluno->id) }}" method="POST" onsubmit="return confirm('Excluir este aluno?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn-action btn-del" title="Excluir">
+                        <span class="material-icons" style="font-size:1.1em;">delete</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    @empty
+        <div class="text-center text-muted py-5">
+            <span class="material-icons" style="font-size:3em;opacity:.4;">school</span>
+            <p>Nenhum aluno cadastrado ainda.</p>
+        </div>
+    @endforelse
+
     
-        <button type="button" class="btn btn-outline-primary btn-block mb-3" id="btn-add-aluno">
-            <span class="material-icons" style="font-size: 1em; vertical-align: middle;">add</span>
-            Adicionar aluno
-        </button>
-    
-        <button type="submit" class="btn btn-success btn-block">
-            Concluir cadastro
-        </button>
-    </form>
 
     <div class="sair-container">
         <a href="{{ url('cliente/logout') }}" class="btn-sair">
-            <i class="material-icons">power_settings_new</i>
-            Sair da Conta
+            <i class="material-icons">power_settings_new</i> Sair da Conta
         </a>
     </div>
 </div>
+
 
 <script>
     var indexAluno = {{ old('alunos') ? count(old('alunos')) : 1 }};

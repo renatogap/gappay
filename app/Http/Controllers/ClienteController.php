@@ -742,6 +742,21 @@ class ClienteController extends Controller
         return redirect()->route('tela.cadastro')->with('error', 'Passo de cadastro inválido.');
     }
 
+    public function gridAlunosResponsavel()
+    {
+        $responsavel = session('responsavel');
+
+        $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)->get();
+
+        $alunos->each(function ($aluno) {
+            $partes = explode(' - ', $aluno->nome, 2);
+            $aluno->nome  = trim($partes[0]);
+            $aluno->serie = isset($partes[1]) ? trim($partes[1]) : '';
+        });
+
+        return view('cliente.grid-alunos-responsavel', compact('alunos', 'responsavel'));
+    }
+
     public function cadastroAluno()
     {
         $responsavel = session('responsavel');
@@ -754,8 +769,13 @@ class ClienteController extends Controller
         $request->validate([
             'responsavel_id' => 'required|integer|exists:responsavel,id',
             'alunos' => 'required|array',
-            'alunos.*.nome' => 'required|string|max:255',
+            'alunos.*.nome' => 'required|string|min:3|max:255|regex:/^[^\d]+$/',
             'alunos.*.serie' => 'required|string|max:50',
+        ], [
+            'alunos.*.nome.required' => 'O nome do aluno é obrigatório.',
+            'alunos.*.nome.min'      => 'O nome deve ter pelo menos 3 caracteres.',
+            'alunos.*.nome.regex'    => 'O nome não pode conter números.',
+            'alunos.*.serie.required'=> 'A série do aluno é obrigatória.',
         ]);
 
         DB::beginTransaction();
@@ -801,11 +821,59 @@ class ClienteController extends Controller
 
             session(['cliente' => $aluno]);
 
-            return redirect('cliente/home')->with('success', 'Aluno(s) cadastrado(s) com sucesso!');
+            return redirect('cliente/alunos')->with('success', 'Aluno(s) cadastrado(s) com sucesso!');
         } catch (Exception $ex) {
             DB::rollback();
             // dd($ex->getMessage(), $ex->getLine(), $ex->getFile());
             return redirect()->back()->with('error', 'Erro ao cadastrar aluno(s): ' . $ex->getMessage())->withInput();
+        }
+    }
+
+    public function editAluno($id)
+    {
+        $responsavel = session('responsavel');
+        $aluno = CartaoCliente::where('id', $id)->where('responsavel_id', $responsavel->id)->first();
+
+        if (!$aluno) {
+            return redirect()->back()->with('error', 'Aluno não encontrado.');
+        }
+
+        $partes = explode(' - ', $aluno->nome, 2); // POG para separa o nome do aluno da série.
+        $aluno->nome = trim($partes[0]); 
+        $aluno->serie      = isset($partes[1]) ? trim($partes[1]) : '';
+
+        return view('cliente.editar-aluno', compact('aluno', 'responsavel'));
+    }
+
+    public function updateAluno(Request $request, string $id)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'nome' => 'required|string|min:3|max:255|regex:/^[^\d]+$/',
+            'serie' => 'required|string|max:50',
+        ], [
+            'nome.min'   => 'O nome deve ter pelo menos 3 caracteres.',
+            'nome.regex' => 'O nome não pode conter números.',
+            'serie.required' => 'A série do aluno é obrigatória.',
+        ]);
+
+        $responsavel = session('responsavel');
+        $aluno = CartaoCliente::where('id', $id)->where('responsavel_id', $responsavel->id)->first();
+
+        if (!$aluno) {
+            return redirect()->back()->with('error', 'Não foi possível alterar os dados do aluno.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $aluno->nome = $request->nome . ' - ' . $request->serie;
+            $aluno->save();
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Aluno atualizado com sucesso!');
+        } catch (Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Erro ao atualizar aluno: ' . $ex->getMessage())->withInput();
         }
     }
 

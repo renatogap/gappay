@@ -18,6 +18,8 @@
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('iconfont/material-icons.css') }}">
+    <link href="{{ asset('materialize-css/materialize.min.css') }}" rel="stylesheet">
+    
     <style>
         html,
         body {

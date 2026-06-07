@@ -38,8 +38,12 @@ Route::post('cliente/cadastro/store', [ClienteController::class, 'cadastroStore'
 
 //Cadastrar cartão cliente (aluno)
 Route::middleware(['session.responsavel'])->group(function () {
-    Route::get('cliente/aluno', [ClienteController::class, 'cadastroAluno'] )->name('tela.cadastro.aluno');
+    Route::get('cliente/alunos', [ClienteController::class, 'gridAlunosResponsavel'] )->name('tela.alunos');
+    Route::get('cliente/aluno/create', [ClienteController::class, 'cadastroAluno'] )->name('tela.cadastro.aluno');
     Route::post('cliente/aluno/store', [ClienteController::class, 'cadastroAlunoStore']);
+    Route::get('cliente/aluno/{id}/edit', [ClienteController::class, 'editAluno'] )->name('tela.edit.aluno');
+    Route::put('cliente/aluno/{id}/update', [ClienteController::class, 'updateAluno'] )->name('tela.update.aluno');
+    Route::delete('cliente/aluno/{id}/delete', [ClienteController::class, 'deleteAluno'] )->name('tela.delete.aluno');
     Route::post('cliente/trocar-aluno', [ClienteController::class, 'trocarAluno']);
 });
 
