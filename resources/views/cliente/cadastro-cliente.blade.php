@@ -189,17 +189,32 @@
 
 @if($step === 3)
 <script>
-    document.getElementById('telefone').addEventListener('input', function () {
-        var v = this.value.replace(/\D/g, '').slice(0, 11);
-        var r = '';
+   var telInput = document.getElementById('telefone');
 
-        if (v.length > 0) r += '(' + v.slice(0, 2);
-        if (v.length >= 2) r += ') ' + v.slice(2, 3);
-        if (v.length >= 3) r += ' ' + v.slice(3, 7);
-        if (v.length >= 7) r += '-' + v.slice(7, 11);
+    function mascararTelefone(valor) {
+        var v = valor.replace(/\D/g, '').slice(0, 11);
+        if (v.length <= 10) {
+            v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else {
+            v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        }
+        return v;
+    }
 
-        this.value = r;
+    telInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace') {
+            var v = this.value;
+            if (/[\s\-\(\)]$/.test(v)) {
+                this.value = v.slice(0, -1);
+            }
+        }
     });
+
+    telInput.addEventListener('input', function () {
+        this.value = mascararTelefone(this.value);
+    });
+
+    telInput.value = mascararTelefone(telInput.value);
 </script>
 @endif
 

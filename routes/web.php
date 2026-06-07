@@ -29,29 +29,30 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
 });
 
     
-// Cadastro de cliente (Responsável)
+// (Responsável)
 Route::get('cliente/login', [ClienteController::class, 'loginResponsavelTela'] )->name('tela.login.responsavel');
 Route::post('cliente/login', [ClienteController::class, 'loginResponsavel'] )->name('login.responsavel');
 Route::get('cliente/cadastro', [ClienteController::class, 'cadastro'] )->name('tela.cadastro');
 Route::post('cliente/cadastro/store', [ClienteController::class, 'cadastroStore'] )->name('cliente.cadastro.store');
 
-
-//Cadastrar cartão cliente (aluno)
 Route::middleware(['session.responsavel'])->group(function () {
-    Route::get('cliente/alunos', [ClienteController::class, 'gridAlunosResponsavel'] )->name('tela.alunos');
-    Route::get('cliente/aluno/create', [ClienteController::class, 'cadastroAluno'] )->name('tela.cadastro.aluno');
-    Route::post('cliente/aluno/store', [ClienteController::class, 'cadastroAlunoStore']);
-    Route::get('cliente/aluno/{id}/edit', [ClienteController::class, 'editAluno'] )->name('tela.edit.aluno');
-    Route::put('cliente/aluno/{id}/update', [ClienteController::class, 'updateAluno'] )->name('tela.update.aluno');
-    Route::delete('cliente/aluno/{id}/delete', [ClienteController::class, 'deleteAluno'] )->name('tela.delete.aluno');
+    Route::get('cliente/alunos', [ClienteController::class, 'gridAlunosResponsavel'] )->name('tela.alunos'); // Listar alunos do responsável
+    Route::get('cliente/aluno/create', [ClienteController::class, 'cadastroAluno'] )->name('tela.cadastro.aluno'); // Tela de cadastro de alunos do responsável
+    Route::post('cliente/aluno/store', [ClienteController::class, 'cadastroAlunoStore']); // Store do cadastro de alunos do responsável
+    Route::get('cliente/aluno/{id}/edit', [ClienteController::class, 'editAluno'] )->name('tela.edit.aluno'); // Tela de edição de aluno do responsável
+    Route::put('cliente/aluno/{id}/update', [ClienteController::class, 'updateAluno'] )->name('tela.update.aluno'); // Update de aluno do responsável   
+    Route::delete('cliente/aluno/{id}/delete', [ClienteController::class, 'deleteAluno'] )->name('tela.delete.aluno'); 
     Route::post('cliente/trocar-aluno', [ClienteController::class, 'trocarAluno']);
+
+    Route::get('cliente/meus-dados', [ClienteController::class, 'dadosResponsavel'] )->name('tela.meus-dados'); // Tela de dados do responsável
+    Route::put('cliente/meus-dados/update', [ClienteController::class, 'updateDadosResponsavel'] )->name('update.meus-dados'); // Update dos dados do responsável
 });
 
 Route::get('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarTela']);
 Route::post('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarCliente']);
 Route::get('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirTela']);
 Route::post('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirCliente']);
-// Fim Cadastro de cliente (Responsável)
+// Fim (Responsável)
 
 Route::middleware(['session.cliente'])->group(function () {
     Route::get('cliente/home', [ClienteController::class, 'home']);

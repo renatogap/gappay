@@ -611,6 +611,13 @@
             <div class="atalho-titulo">Alunos</div>
         </a>
 
+        <a href="{{ url('cliente/meus-dados') }}" class="atalho-card">
+            <div class="atalho-icone">
+                <i class="material-icons">settings</i>
+            </div>
+            <div class="atalho-titulo">Meus Dados</div>
+        </a>
+
         <a href="{{ url('cliente/senha/redefinir') }}" class="atalho-card">
             <div class="atalho-icone">
                 <i class="material-icons">lock_reset</i>

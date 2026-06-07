@@ -665,7 +665,14 @@ class ClienteController extends Controller
                     $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                     $responsavel->save();
                 }
-                    
+                 
+                if ($responsavel->validado) {
+                    return redirect()->route('tela.cadastro', [
+                        'step'           => 3,
+                        'email'          => $responsavel->email,
+                        'responsavel_id' => $responsavel->id,
+                    ])->with('success', 'E-mail validado. Agora complete os dados pessoais do responsável.');
+                }
 
                 Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
             } catch (Exception $ex) {
@@ -699,7 +706,7 @@ class ClienteController extends Controller
             $responsavel->save();
 
             return redirect()->route('tela.cadastro', ['step' => 3, 'email' => $responsavel->email, 'responsavel_id' => $responsavel->id])
-                ->with('success', 'E-mail validado. Agora complete os dados pessoais e dos alunos.');
+                ->with('success', 'E-mail validado. Agora complete os dados pessoais do responsável.');
         }
 
         if ($step === 3) {
@@ -711,6 +718,7 @@ class ClienteController extends Controller
                 'termos'              => 'accepted',
             ],[
                 'senha.same' => 'As senhas não estão iguais.',
+                'termos.accepted' => 'Você deve concordar com os termos de uso.',
             ]);
 
             DB::beginTransaction();
@@ -721,13 +729,13 @@ class ClienteController extends Controller
                     return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
                 }
     
-                $responsavel->nome = strtoupper($request->nome);
+                $responsavel->nome = $request->nome;
                 $responsavel->telefone = preg_replace('/\D/', '', $request->telefone);
                 $responsavel->senha = Hash::make($request->senha);
+                $responsavel->concordo = $request->termos;
                 $responsavel->save();
 
                 DB::commit();
-                // return redirect()->route('tela.login.responsavel')->with('success', 'Cadastro finalizado com sucesso. Você já pode fazer login.');
     
                 session(['responsavel' => $responsavel]);
 
@@ -874,6 +882,48 @@ class ClienteController extends Controller
         } catch (Exception $ex) {
             DB::rollback();
             return redirect()->back()->with('error', 'Erro ao atualizar aluno: ' . $ex->getMessage())->withInput();
+        }
+    }
+
+    public function  dadosResponsavel()
+    {
+        $responsavel = session('responsavel');
+        return view('cliente.dados-responsavel', compact('responsavel'));
+    }
+
+    public function updateDadosResponsavel(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email',
+            'telefone' => 'required|string|max:20',
+        ]);
+
+        $responsavel = session('responsavel'); // Responsável da Sessão
+
+        $responsavelModel = Responsavel::find($request->id); // Responsável editado
+
+        if ($responsavel->id != $responsavelModel->id) { // Garantir que o usuário logado seja quem está editando
+            return redirect()->back()->with('error', 'Não foi possível alterar os dados do responsável.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $responsavelModel->update([
+                'nome' => $request->nome,
+                'email' => $request->email,
+                'telefone' => preg_replace('/\D/', '', $request->telefone),
+            ]);
+            $responsavelModel->fresh();
+            DB::commit();
+
+            session(['responsavel' => $responsavelModel]);
+
+            return redirect()->back()->with('success', 'Dados atualizados com sucesso!');
+        } catch (Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Erro ao atualizar dados do responsável: ' . $ex->getMessage())->withInput();
         }
     }
 

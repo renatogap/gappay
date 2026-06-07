@@ -14,149 +14,149 @@
 
     <link href="{{ asset('materialize-css/materialize.min.css') }}" rel="stylesheet">
 
-<style>
-    html,
-    body {
-        height: 100%;
-        background: <?= config('policia.background') ?>;
-        width: 100%;
-    }
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: <?= config('policia.background') ?>;
+            width: 100%;
+        }
 
-    .box {
-        background: #ffffff;
-        border: 1px solid #dadce0;
-        border-radius: 10px;
-        padding: 30px 0;
-        float: none;
-        max-width: 400px;
-        width: 96%;
-        margin: 3em auto;
-    }
+        .box {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 30px 0;
+            float: none;
+            max-width: 400px;
+            width: 96%;
+            margin: 3em auto;
+        }
 
-    .cabeca {
-        text-align: center;
-        padding: 0 20px;
-    }
+        .cabeca {
+            text-align: center;
+            padding: 0 20px;
+        }
 
-    .cabeca .material-icons {
-        font-size: 3em;
-        color: #1565c0;
-        margin-bottom: 8px;
-    }
+        .cabeca .material-icons {
+            font-size: 3em;
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
 
-    .logo {
-        width: 18em !important;
-        margin-top: 1em;
-    }
+        .logo {
+            width: 18em !important;
+            margin-top: 1em;
+        }
 
-    .logo-sistema {
-        width: 10em !important;
-        margin-top: 2em;
-    }
+        .logo-sistema {
+            width: 10em !important;
+            margin-top: 2em;
+        }
 
-    .cabeca img {
-        width: 10em;
-    }
+        .cabeca img {
+            width: 10em;
+        }
 
-    .cabeca h1 {
-        color: #333;
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0 0 8px;
-    }
+        .cabeca h1 {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 8px;
+        }
 
-    .cabeca h2 {
-        color: #3c3c3c;
-        font-weight: 300;
-        font-size: 18px;
-        margin: 0 0 15px;
-    }
+        .cabeca h2 {
+            color: #3c3c3c;
+            font-weight: 300;
+            font-size: 18px;
+            margin: 0 0 15px;
+        }
 
-    .cabeca p {
-        color: #777;
-        font-size: 14px;
-        margin: 0 0 20px;
-        line-height: 1.5;
-    }
+        .cabeca p {
+            color: #777;
+            font-size: 14px;
+            margin: 0 0 20px;
+            line-height: 1.5;
+        }
 
-    .corpo {
-        padding: 15px 20px 0;
-    }
+        .corpo {
+            padding: 15px 20px 0;
+        }
 
-    .corpo input {
-        padding: 15px;
-        font-size: 16px;
-        height: 20px;
-        color: #777;
-        border: 1px solid #ccc;
-    }
+        .corpo input {
+            padding: 15px;
+            font-size: 16px;
+            height: 20px;
+            color: #777;
+            border: 1px solid #ccc;
+        }
 
-    .corpo a {
-        font-size: 14px;
-    }
+        .corpo a {
+            font-size: 14px;
+        }
 
-    .token-grid {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin: 8px 0 4px;
-    }
+        .token-grid {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0 4px;
+        }
 
-    .token-grid input {
-        width: 44px !important;
-        height: 52px !important;
-        text-align: center;
-        font-size: 1.4em !important;
-        font-weight: bold;
-        border: 2px solid #ccc !important;
-        border-radius: 8px !important;
-        padding: 0 !important;
-        color: #333 !important;
-        transition: border-color 0.2s;
-    }
+        .token-grid input {
+            width: 44px !important;
+            height: 52px !important;
+            text-align: center;
+            font-size: 1.4em !important;
+            font-weight: bold;
+            border: 2px solid #ccc !important;
+            border-radius: 8px !important;
+            padding: 0 !important;
+            color: #333 !important;
+            transition: border-color 0.2s;
+        }
 
-    .token-grid input:focus {
-        border-color: #1565c0 !important;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
-    }
+        .token-grid input:focus {
+            border-color: #1565c0 !important;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+        }
 
-    .pe {
-        padding: 0 40px;
-        text-align: center;
-    }
+        .pe {
+            padding: 0 40px;
+            text-align: center;
+        }
 
-    .pe div {
-        padding: 10px 0;
-        clear: both;
-        color: #555;
-        font-size: 12px;
-    }
+        .pe div {
+            padding: 10px 0;
+            clear: both;
+            color: #555;
+            font-size: 12px;
+        }
 
-    .pe .letreiro {
-        text-align: justify !important;
-    }
+        .pe .letreiro {
+            text-align: justify !important;
+        }
 
-    .pe .letreiro i,
-    .pdtp {
-        padding-top: 10px;
-    }
+        .pe .letreiro i,
+        .pdtp {
+            padding-top: 10px;
+        }
 
-    .indicator {
-        display: none;
-        height: 30px;
-        padding: 8px;
-        position: absolute;
-        right: 5px;
-        text-align: center;
-        top: 5px;
-        width: 30px;
-    }
+        .indicator {
+            display: none;
+            height: 30px;
+            padding: 8px;
+            position: absolute;
+            right: 5px;
+            text-align: center;
+            top: 5px;
+            width: 30px;
+        }
 
-    .indicator.on {
-        display: block;
-    }
-</style>
+        .indicator.on {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
