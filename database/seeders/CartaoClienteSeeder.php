@@ -26,8 +26,41 @@ class CartaoClienteSeeder extends Seeder
                 'observacao' => 'Crédito cadastro inicial',
                 'status' => 2, //EM USO
                 'fk_usuario' => 1,
-                'created_at' => $agora
-            ]
+                'created_at' => $agora,
+                'responsavel_id' => null
+            ],
+            [
+                'id' => 2,
+                'fk_cartao' => 2,
+                'nome' => 'William Moraes - 1˚ano A',
+                'telefone' => null,
+                'fk_tipo_cliente' => 1, //ALUNO
+                'fk_tipo_pagamento' => 6,
+                'valor_atual' => 100.00,
+                'valor_cartao' => 10.00,
+                'devolvido' => 'N',
+                'observacao' => 'Crédito cadastro inicial',
+                'status' => 2, //EM USO
+                'fk_usuario' => 1,
+                'created_at' => $agora,
+                'responsavel_id' => 1
+            ],
+            [
+                'id' => 3,
+                'fk_cartao' => 3,
+                'nome' => 'Sophia Anchieta - 2˚ano B',
+                'telefone' => null,
+                'fk_tipo_cliente' => 1, //ALUNO
+                'fk_tipo_pagamento' => 6,
+                'valor_atual' => 100.00,
+                'valor_cartao' => 10.00,
+                'devolvido' => 'N',
+                'observacao' => 'Crédito cadastro inicial',
+                'status' => 2, //EM USO
+                'fk_usuario' => 1,
+                'created_at' => $agora,
+                'responsavel_id' => 1
+            ],
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');

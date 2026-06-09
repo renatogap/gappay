@@ -55,7 +55,7 @@ class SegMenuLocalSeeder extends Seeder
             ],
             [
                 'id' => 9,
-                'acao_id' => 70,
+                'acao_id' => 195,// era 70
                 'pai' => NULL,
                 'nome' => 'Registrar Pedido',
                 'icone' => '<span class="material-icons" style="font-size: 4em;">restaurant_menu</span>',

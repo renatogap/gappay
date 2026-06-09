@@ -22,4 +22,9 @@ class CartaoCliente extends AbstractSkeletonModel
         return $this->belongsTo(Responsavel::class, 'responsavel_id');
     }
 
+    public function cartao()
+    {
+        return $this->belongsTo(Cartao::class, 'fk_cartao', 'id');
+    }
+
 }

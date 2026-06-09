@@ -11,10 +11,18 @@ class SegGrupoSeeder extends Seeder
     {
         $agora = date('Y-m-d H:i:s');
         $items = [
-            'usuario_id' => 1,
-            'perfil_id' => 2,
-            'created_at' => $agora,
-            'updated_at' => $agora
+            [
+                'usuario_id' => 1,
+                'perfil_id' => 2,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'usuario_id' => 2,
+                'perfil_id' => 2,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
         ];
 
         DB::table('seg_grupo')->insert($items);

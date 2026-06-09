@@ -12,6 +12,7 @@ use App\Models\Entity\Pedido;
 use App\Models\Entity\PedidoItem;
 use App\Models\Entity\SituacaoCartao;
 use App\Models\Facade\CardapioDB;
+use App\Models\Facade\CartaoClienteDB;
 use App\Models\Facade\EstoqueDB;
 use App\Models\Regras\PedidoRegras;
 use Illuminate\Http\Request;
@@ -47,10 +48,24 @@ class PedidoController extends Controller
     }
 
     //public function cardapio($id_tipo_cardapio)
-    public function cardapio()
+    public function cardapio(Request $request)
     {
-        $id_tipo_cardapio = 1; //
-        return view('pedido.cardapio', compact('id_tipo_cardapio'));
+        $id_tipo_cardapio = 1; 
+
+        $cartaoCliente = CartaoCliente::where('id', $request->aluno)->with('responsavel')->with('cartao')->first();
+        session(['cliente' => $cartaoCliente]);
+
+        return view('pedido.cardapio', compact('id_tipo_cardapio', 'cartaoCliente'));
+    }
+
+    public function pedidoSelecionarAluno(Request $request)
+    {
+        $id_tipo_cardapio = 1; 
+        session()->forget('cliente');
+
+        $lista = CartaoClienteDB::gridPedido($request);
+
+        return view('pedido.selecionar-aluno', compact('lista', 'request', 'id_tipo_cardapio'));
     }
 
     public function getCardapioDoPDV($id_tipo_cardapio)

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Hash;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -11,15 +12,29 @@ class UsuarioSeeder extends Seeder
     {
         $agora = date('Y-m-d H:i:s');
         $items = [
-            'id' => '1',
-            'nome' => 'RENATO PEREIRA',
-            'email' => 'renato.19gp@gmail.com',
-            'cpf' => '88330796272',
-            'nascimento' => null,
-            'senha' => null,
-            'senha2' => '$2y$10$N.3I0/jG17stEsRhCC4dDu7TZVi8K1dR.0n11zSnrUJ/3kVeZGF72',
-            'created_at' => $agora,
-            'updated_at' => $agora
+            [
+                'id' => '1',
+                'nome' => 'RENATO PEREIRA',
+                'email' => 'renato.19gp@gmail.com',
+                'cpf' => '88330796272',
+                'nascimento' => null,
+                'senha' => null,
+                'senha2' => '$2y$10$N.3I0/jG17stEsRhCC4dDu7TZVi8K1dR.0n11zSnrUJ/3kVeZGF72',
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => '2',
+                'nome' => 'RENAN ANCHIETA',
+                'email' => 'renangap18@gmail.com',
+                'cpf' => '01143718224',
+                'nascimento' => null,
+                'senha' => null,
+                'senha2' => Hash::make('123456789'),
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');

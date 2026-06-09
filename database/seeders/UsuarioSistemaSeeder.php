@@ -13,13 +13,24 @@ class UsuarioSistemaSeeder extends Seeder
         $agora = date('Y-m-d H:i:s');
         
         $items = [
-            'usuario_id' => 1,
-            'sistema_id' => 1,
-            'ultimo_acesso' => $agora,
-            'ativo' => true,
-            'status' => true,
-            'created_at' => $agora,
-            'fk_usuario_cadastro' => 1,
+            [
+                'usuario_id' => 1,
+                'sistema_id' => 1,
+                'ultimo_acesso' => $agora,
+                'ativo' => true,
+                'status' => true,
+                'created_at' => $agora,
+                'fk_usuario_cadastro' => 1,
+            ],
+            [
+                'usuario_id' => 2,
+                'sistema_id' => 1,
+                'ultimo_acesso' => $agora,
+                'ativo' => true,
+                'status' => true,
+                'created_at' => $agora,
+                'fk_usuario_cadastro' => 1,
+            ],
         ];
 
         DB::table('usuario_sistema')->insert($items);

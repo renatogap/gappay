@@ -28,7 +28,7 @@ class CartaoSeeder extends Seeder
                 'codigo' => '80724211225111926',
                 'hash' => '1db1b03c17b566e488b40a1e7ab03a1b',
                 'data' => $agora,
-                'fk_situacao' => 1,
+                'fk_situacao' => 2,
                 'cartao_gerado' => 1,
                 'dt_geracao_cartao' => '2026-01-08 10:34:09'
             ],
@@ -38,7 +38,7 @@ class CartaoSeeder extends Seeder
                 'codigo' => '230317211225111926',
                 'hash' => 'e0d96a8feb1323722c26e712fb18c272',
                 'data' => $agora,
-                'fk_situacao' => 1,
+                'fk_situacao' => 2,
                 'cartao_gerado' => 1,
                 'dt_geracao_cartao' => '2026-01-08 10:34:10'
             ],

@@ -1,14 +1,59 @@
 @extends('layouts.default')
+<style>
+    .boas-vindas {
+        background: linear-gradient(135deg, #3153e7 0%, #043795 100%);
+        color: white;
+        padding: 2em;
+        border-radius: 10px;
+        margin-bottom: 2em;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .boas-vindas h2 {
+        margin: 0 0 0.5em 0;
+        font-size: 1.6em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .boas-vindas .material-icons {
+        font-size: 2em;
+    }
+
+    .boas-vindas p {
+        margin: 0;
+        opacity: 0.95;
+        font-size: 0.95em;
+    }
+</style>
+
 @section('conteudo')
+
 <div>
     <h4>
         <span class="material-icons icone" style="color: green;">check_circle_outline</span>
         Confirmar pedido
-        <a href="{{url('pedido/cardapio/1')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
+        <a href="{{url('pedido/cardapio/1?aluno='.session('cliente')->id)}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>
     </h4>
     <br>
+
+    <div class="boas-vindas">
+        <h2>
+            <i class="material-icons">person</i>
+            {{ session('cliente')->nome }} <br/>
+            
+        </h2>
+        <p style="display: flex; justify-content: space-between; align-items: center; margin: 0;">
+            <span>Responsável: {{ session('cliente')->responsavel->nome }}</span>
+            <span style="font-weight: 600; color: {{ (session('cliente')->valor_atual > 0 ? '#4caf50' : '#f44336') }};">
+                R$ {{ number_format(session('cliente')->valor_atual, 2, ',', '.') }}
+            </span>
+        </p>
+    </div>
 
     @if (session('error'))
     <div class="alert alert-danger">
@@ -70,7 +115,8 @@
 
     <br><br><br>
     <div style="clear: both;">
-        <a href="#" data-url="{{ url('pedido/finalizar/leitor') }}" onclick="abrirLeitorCartao(this)" class="btn btn-parque btn-lg btn-block">Finalizar pedido</a>
+        {{-- <a href="#" data-url="{{ url('pedido/finalizar/leitor') }}" onclick="abrirLeitorCartao(this)" class="btn btn-parque btn-lg btn-block">Finalizar pedido</a> --}}
+        <a href="#" data-url="{{ url('pedido/finalizar/'.session('cliente')->cartao->codigo) }}" onclick="abrirLeitorCartao(this)" class="btn btn-parque btn-lg btn-block">Finalizar pedido</a>
     </div>
 </div>
 @endsection

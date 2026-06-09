@@ -12,6 +12,34 @@
     .categoria-cardapio {
         background: <?= config('policia.background') ?>;
     }
+
+    .boas-vindas {
+        background: linear-gradient(135deg, #3153e7 0%, #043795 100%);
+        color: white;
+        padding: 2em;
+        border-radius: 10px;
+        margin-bottom: 2em;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .boas-vindas h2 {
+        margin: 0 0 0.5em 0;
+        font-size: 1.6em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .boas-vindas .material-icons {
+        font-size: 2em;
+    }
+
+    .boas-vindas p {
+        margin: 0;
+        opacity: 0.95;
+        font-size: 0.95em;
+    }
 </style>
 
 @section('conteudo')
@@ -19,11 +47,26 @@
     <span class="material-icons icone">receipt_long</span>
     Cardápio
 
-    <a href="{{url('')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
+    <a href="{{url('pedido/selecionar-aluno')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
         keyboard_backspace
     </a>
 </h4>
 <hr>
+
+<div class="boas-vindas">
+    <h2>
+        <i class="material-icons">person</i>
+        {{ $cartaoCliente->nome }} <br/>
+        
+    </h2>
+    <p style="display: flex; justify-content: space-between; align-items: center; margin: 0;">
+        <span>Responsável: {{ $cartaoCliente->responsavel->nome }}</span>
+        <span style="font-weight: 600; color: {{ ($cartaoCliente->valor_atual > 0 ? '#4caf50' : '#f44336') }};">
+            R$ {{ number_format($cartaoCliente->valor_atual, 2, ',', '.') }}
+        </span>
+    </p>
+</div>
+
 @if (session('sucesso'))
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -77,6 +77,51 @@ class CartaoClienteDB extends Model
         return $sql->get();
     }
 
+    public static function gridPedido($request)
+    {
+        $sql = DB::table('cartao_cliente as cc')
+                //>join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
+                ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')   
+                ->join('situacao_cartao as s', 's.id', '=', 'cc.status')
+                ->join('responsavel as r', 'r.id', '=', 'cc.responsavel_id')             
+                ->select([
+                    'cc.id', 
+                    'cc.nome', 
+                    'cc.cpf',
+                    'cc.telefone',
+                    'cc.valor_atual', 
+                    'cc.fk_cliente_titular',
+                    //'tc.nome as tipo', 
+                    DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"), 
+                    //'s.nome as status_desc'
+                    DB::raw("CASE WHEN cc.status = 1 THEN '<span class=\"badge badge-info\">DEVOLVIDO</span>'
+                                WHEN cc.status = 2 THEN '<span class=\"badge badge-success\">EM USO</span>'
+                                WHEN cc.status = 3 THEN '<span class=\"badge badge-danger\">BLOQUEADO</span>'
+                            END AS status_desc"),
+                    'r.nome as responsavel'
+                ]);
+
+        // if(!$request->data && !$request->telefone && !$request->nome) {
+        //     $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), date('Y-m-d'));
+        // }
+        // else 
+        if($request->data) {
+            $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), $request->data);
+        }
+
+        if($request->nome) {
+            $sql->where('cc.nome', 'LIKE', "%{$request->nome}%");
+        }
+
+        if($request->telefone) {
+            $sql->where('cc.telefone', preg_replace('/[^0-9]/', '', $request->telefone));
+        }
+
+        $sql->orderBy('cc.created_at', 'DESC');
+
+        return $sql->get();
+    }
+
     public static function extratoCartaoCliente($id_cartao_cliente, $dtInicio = null, $dtTermino = null, $horaInicio = null, $horaTermino = null)
     {
         $sql1 = DB::table('entrada_credito as e')

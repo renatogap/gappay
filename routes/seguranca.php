@@ -97,6 +97,7 @@ Route::group(['middleware' => ['seguranca']], function () {
 
     //Cardápio PDV
     Route::get('pedido/cardapios', [PedidoController::class, 'cardapios']);
+    Route::get('pedido/selecionar-aluno', [PedidoController::class, 'pedidoSelecionarAluno']);
     Route::get('pedido/cardapio/1', [PedidoController::class, 'cardapio']);
     #Route::get('pedido/cardapio/{id_tipo_cardapio}', [PedidoController::class, 'cardapio']);
     Route::get('pedido/cardapio/show/{id_tipo_cardapio}', [PedidoController::class, 'getCardapioDoPDV']);
