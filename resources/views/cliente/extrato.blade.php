@@ -329,7 +329,7 @@
                 <div class="descricao">{{ $transacao->observacao ?? 'Sem descrição' }}</div>
                 <!-- <span class="subtitulo float-right">{{ $dataRelativa }}</span> -->
                 <div class="subtitulo">{{ $dataFormatada }}</div>
-                <span class="tipo">{{ $isEntrada ? $transacao->tipo_pagamento : 'CONSUMO' }}</span>
+                {{-- <span class="tipo">{{ $isEntrada ? $transacao->tipo_pagamento : 'CONSUMO' }}</span> --}}
             </div>
         </div>
 

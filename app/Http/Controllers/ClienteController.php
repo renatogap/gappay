@@ -109,6 +109,9 @@ class ClienteController extends Controller
             session(['responsavel' => $responsavel]);
             return redirect()->route('tela.cadastro.aluno');
         }
+
+        //Saldo do Cartão Cliente (aluno)
+        session('cliente')->valor_atual = (CartaoCliente::where('id', $cartaoCliente->id)->first()->valor_atual);
         
         $pedidosPendentes = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
             ->where('status', 1) // status que representa pedido não finalizado
@@ -887,6 +890,8 @@ class ClienteController extends Controller
             $aluno->nome = $request->nome . ' - ' . $request->serie;
             $aluno->save();
             DB::commit();
+            
+            session(['cliente' => $aluno]);
 
             return redirect()->back()->with('success', 'Aluno atualizado com sucesso!');
         } catch (Exception $ex) {

@@ -128,6 +128,14 @@ class SegDependenciaSeeder extends Seeder
                 'acao_atual_id' => 31,
                 'acao_dependencia_id' => 33,
             ],
+            [
+                'acao_atual_id' => 98,
+                'acao_dependencia_id' => 196,
+            ],
+            [
+                'acao_atual_id' => 98,
+                'acao_dependencia_id' => 197,
+            ],
         ];
 
         SegDependencia::insert($items);

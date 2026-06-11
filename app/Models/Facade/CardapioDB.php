@@ -45,10 +45,10 @@ class CardapioDB extends Model
             foreach($itens as $i => $item){
 
                 if(!$item->categoria_en) {
-                    $deepl = new DeepLService();
+                    // $deepl = new DeepLService();
 
                     $categoria = CardapioCategoria::find($item->fk_categoria);
-                    $categoria->nome_en = $deepl->translate($item->categoria, 'EN');
+                    // $categoria->nome_en = $deepl->translate($item->categoria, 'EN');
                     $categoria->desabilitarLog();
                     $categoria->save();
 
@@ -56,10 +56,10 @@ class CardapioDB extends Model
                 }
 
                 if(!$item->nome_item_en) {
-                    $deepl = new DeepLService();
+                    // $deepl = new DeepLService();
 
                     $cardapio = Cardapio::find($item->id);
-                    $cardapio->nome_item_en = $deepl->translate($item->nome_item, 'EN');
+                    // $cardapio->nome_item_en = $deepl->translate($item->nome_item, 'EN');
                     $cardapio->desabilitarLog();
                     $cardapio->save();
 
@@ -67,10 +67,10 @@ class CardapioDB extends Model
                 }
 
                 if(!$item->detalhe_item_en) {
-                    $deepl = new DeepLService();
+                    // $deepl = new DeepLService();
 
                     $cardapio = Cardapio::find($item->id);
-                    $cardapio->detalhe_item_en = $item->detalhe_item ? $deepl->translate($item->detalhe_item, 'EN') : '';
+                    // $cardapio->detalhe_item_en = $item->detalhe_item ? $deepl->translate($item->detalhe_item, 'EN') : '';
                     $cardapio->desabilitarLog();
                     $cardapio->save();
 

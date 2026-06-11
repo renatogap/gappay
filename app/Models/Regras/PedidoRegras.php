@@ -36,6 +36,10 @@ class PedidoRegras
             'status' => isset(Auth::user()->id) ? 3 : 1,
 
             //se tiver usuário logado, salva o id do usuário, senão verifica se tem cliente na sessão (pedido feito pelo cliente), se sim, salva o id 2 (cliente), senão salva null (pedido sem identificação)
+            /**
+             * Removido a condição que salva o fk_usuario 999 pois não foi gerado usuário com id = 999.
+             * Foi criado um usuário genérico com o id=999 direto na seeder de usuário com o nome 'USUÁRIO GENÉRICO' para referenciar corretamente o id aqui e não apelar para o id do root
+             */
             'fk_usuario' => isset(Auth::user()->id) ? Auth::user()->id : (session('cliente') ? 999 : null) 
 
         ];

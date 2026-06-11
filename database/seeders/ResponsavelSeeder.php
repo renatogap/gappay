@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class ResponsavelSeeder extends Seeder
 {
@@ -23,7 +23,7 @@ class ResponsavelSeeder extends Seeder
                 'concordo' => true,
                 'validado' => true,
                 'telefone' => '91993039532',
-                'senha' => '$2y$12$cdRDtyuv2vSxjTkj1d2sE.I74bk4ReNgKBgtb/fBC/Tz5cGmtcQM6',
+                'senha' => Hash::make('123456789'),
                 'created_at' => $agora,
                 'updated_at' => $agora,
                 'deleted_at' => null

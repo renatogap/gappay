@@ -19,7 +19,7 @@ class UsuarioSeeder extends Seeder
                 'cpf' => '88330796272',
                 'nascimento' => null,
                 'senha' => null,
-                'senha2' => '$2y$10$N.3I0/jG17stEsRhCC4dDu7TZVi8K1dR.0n11zSnrUJ/3kVeZGF72',
+                'senha2' => Hash::make('re240987'),
                 'created_at' => $agora,
                 'updated_at' => $agora
             ],
@@ -31,6 +31,17 @@ class UsuarioSeeder extends Seeder
                 'nascimento' => null,
                 'senha' => null,
                 'senha2' => Hash::make('123456789'),
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => '999',
+                'nome' => 'USUÁRIO GENÉRICO',
+                'email' => 'usuariogenerico@email.com',
+                'cpf' => '70778637000',
+                'nascimento' => null,
+                'senha' => null,
+                'senha2' => Hash::make('ugenerico321'),
                 'created_at' => $agora,
                 'updated_at' => $agora
             ],

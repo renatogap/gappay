@@ -113,7 +113,7 @@ class CartaoController extends Controller
 
     public function edit($codigo)
     {
-        $cartao = Cartao::where('codigo', $codigo)->first();
+        $cartao = Cartao::where('hash', $codigo)->first();
         return view('cartao.edit', compact('cartao'));
     }
 

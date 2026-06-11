@@ -41,7 +41,7 @@ class CartaoClienteSeeder extends Seeder
                 'devolvido' => 'N',
                 'observacao' => 'Crédito cadastro inicial',
                 'status' => 2, //EM USO
-                'fk_usuario' => 1,
+                'fk_usuario' => 999, // usuário genérico
                 'created_at' => $agora,
                 'responsavel_id' => 1
             ],
@@ -57,7 +57,7 @@ class CartaoClienteSeeder extends Seeder
                 'devolvido' => 'N',
                 'observacao' => 'Crédito cadastro inicial',
                 'status' => 2, //EM USO
-                'fk_usuario' => 1,
+                'fk_usuario' => 999, // usuário genérico
                 'created_at' => $agora,
                 'responsavel_id' => 1
             ],

@@ -1918,6 +1918,34 @@ class SegAcaoLocalSeeder extends Seeder
                 'created_at' => $agora,
                 'updated_at' => $agora
             ],
+            [
+                'id' => 196,
+                'nome' => 'pedido/confirmar-entrega-gerente/{id_pedido}',
+                'method' => 'get',
+                'descricao' => 'Confirmar Entrega de pedido',
+                'destaque' => 0,
+                'nome_amigavel' => 'Confirmar Entrega de pedido',
+                'obrigatorio' => 0,
+                'grupo' => 'Pedido',
+                'log_acesso' => 0,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
+            [
+                'id' => 197,
+                'nome' => 'pedido/salvar-entrega-gerente/{id_pedido}',
+                'method' => 'post',
+                'descricao' => 'Salvar Entrega de pedido Admin',
+                'destaque' => 0,
+                'nome_amigavel' => 'Salvar Entrega de pedido Admin',
+                'obrigatorio' => 0,
+                'grupo' => 'Pedido',
+                'log_acesso' => 0,
+                'rota_front' => 0,
+                'created_at' => $agora,
+                'updated_at' => $agora
+            ],
         ];
 
         DB::table('seg_acao')->insert($items);
