@@ -411,4 +411,37 @@
     </form>
 </div>
 
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        // Limpar erros anteriores
+        document.querySelectorAll('.erro-nome').forEach(function (el) { el.remove(); });
+
+        var nomeInput = document.querySelector('input[name="nome"]');
+        var nome = nomeInput ? nomeInput.value.trim() : '';
+        var tokens = nome.replace(/\s+/g, ' ').split(' ').filter(function (t) { return t.length > 0; });
+        var primeiro = tokens[0] || '';
+        var ultimo = tokens[tokens.length - 1] || '';
+        var mensagem = null;
+
+        nomeInput.classList.remove('is-invalid');
+
+        if (tokens.length < 2) {
+            mensagem = 'Informe o nome e sobrenome do aluno.';
+        } else if (primeiro.length < 3) {
+            mensagem = 'O nome deve ter pelo menos 3 letras.';
+        } else if (ultimo.length < 3) {
+            mensagem = 'O sobrenome deve ter pelo menos 3 letras.';
+        }
+
+        if (mensagem) {
+            e.preventDefault();
+            nomeInput.classList.add('is-invalid');
+            var div = document.createElement('div');
+            div.className = 'invalid-feedback erro-nome';
+            div.textContent = mensagem;
+            nomeInput.after(div);
+            nomeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
 @endsection
