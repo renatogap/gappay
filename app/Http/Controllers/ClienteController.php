@@ -677,6 +677,10 @@ class ClienteController extends Controller
                     $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                     $responsavel->save();
                 }
+
+                if ($responsavel->validado && CartaoCliente::where('responsavel_id', $responsavel->id)->where('status', 2)->exists()) {
+                    return redirect()->route('tela.login.responsavel')->with('success', 'E-mail já cadastrado. Faça login para acessar sua conta.');
+                }
                  
                 if ($responsavel->validado) {
                     return redirect()->route('tela.cadastro', [
@@ -724,11 +728,21 @@ class ClienteController extends Controller
         if ($step === 3) {
             $request->validate([
                 'responsavel_id'      => 'required|integer|exists:responsavel,id',
-                'nome'                => 'required|string|max:255',
+                'nome'                => [
+                    'required',
+                    'string',
+                    'min:3',
+                    'max:255',
+                    'regex:/^[^\d]+$/',
+                    'regex:/^\S{3,}(\s+\S+)*\s+\S{3,}$/',
+                ],
                 'telefone'            => 'required|string|max:20',
                 'senha'               => 'required|string|min:6|same:confirmar_senha',
                 'termos'              => 'accepted',
             ],[
+                'nome.required' => 'O nome é obrigatório.',
+                'nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
+                'nome.regex' => 'Informe o nome completo do responsável.',
                 'senha.same' => 'As senhas não estão iguais.',
                 'termos.accepted' => 'Você deve concordar com os termos de uso.',
             ]);
