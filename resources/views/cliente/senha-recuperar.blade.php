@@ -131,7 +131,7 @@
             <h1 style="font-weight: bold; margin-top: 1em;">Sistema {{config('policia.nome')}}</h1>
             <img class="logo" src="{{ url(config('policia.logo')) }}" />
              <h1>Recuperar senha</h1>
-            <p>Enviaremos um código para redefinir sua senha.</p>
+            <p>Enviaremos um código para o seu e-mail para redefinir sua senha.</p>
         </div>
         {{-- <div class="cabeca">
             <i class="material-icons">lock_reset</i>

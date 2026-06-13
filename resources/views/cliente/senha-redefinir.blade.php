@@ -195,8 +195,8 @@
 
                 {{-- E-mail --}}
                 <div class="input-field">
-                    <label for="email" class="active">E-mail</label>
-                    <input type="email" name="email" id="email"
+                    {{-- <label for="email" class="active">E-mail</label> --}}
+                    <input type="hidden" name="email" id="email"
                            value="{{ $email }}"
                            readonly required>
                     @error('email')
