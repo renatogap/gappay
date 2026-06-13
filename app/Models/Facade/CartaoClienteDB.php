@@ -13,62 +13,62 @@ class CartaoClienteDB extends Model
     public function pesquisa($p)
     {
         return DB::table('cartao_cliente as cc')
-                ->join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
-                ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')   
-                ->join('situacao_cartao as s', 's.id', '=', 'c.fk_situacao') 
-                ->select([
-                    'cc.id', 
-                    'cc.nome', 
-                    'cc.cpf', 
-                    'cc.valor_atual', 
-                    'tc.nome as tipo', 
-                    DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"), 
-                    //'cc.status',
-                    DB::raw("CASE WHEN c.fk_situacao = 1 THEN '<span class=\"badge badge-info\">DISPONÍVEL NO CAIXA</span>'
+            ->join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
+            ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')
+            ->join('situacao_cartao as s', 's.id', '=', 'c.fk_situacao')
+            ->select([
+                'cc.id',
+                'cc.nome',
+                'cc.cpf',
+                'cc.valor_atual',
+                'tc.nome as tipo',
+                DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"),
+                //'cc.status',
+                DB::raw("CASE WHEN c.fk_situacao = 1 THEN '<span class=\"badge badge-info\">DISPONÍVEL NO CAIXA</span>'
                                 WHEN c.fk_situacao = 2 THEN '<span class=\"badge badge-success\">EM USO</span>'
                                 WHEN c.fk_situacao = 3 THEN '<span class=\"badge badge-danger\">BLOQUEADO</span>'
                                 WHEN c.fk_situacao = 4 THEN '<span class=\"badge badge-danger\">PERDIDO</span>'
                             END AS status_desc")
-                ])
-                ->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), date('Y-m-d'))
-                ->get();
+            ])
+            ->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), date('Y-m-d'))
+            ->get();
     }
 
     public static function grid($request)
     {
         $sql = DB::table('cartao_cliente as cc')
-                //>join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
-                ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')   
-                ->join('situacao_cartao as s', 's.id', '=', 'cc.status')             
-                ->select([
-                    'cc.id', 
-                    'cc.nome', 
-                    'cc.cpf',
-                    'cc.telefone',
-                    'cc.valor_atual', 
-                    'cc.fk_cliente_titular',
-                    //'tc.nome as tipo', 
-                    DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"), 
-                    //'s.nome as status_desc'
-                    DB::raw("CASE WHEN cc.status = 1 THEN '<span class=\"badge badge-info\">DEVOLVIDO</span>'
+            //>join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
+            ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')
+            ->join('situacao_cartao as s', 's.id', '=', 'cc.status')
+            ->select([
+                'cc.id',
+                'cc.nome',
+                'cc.cpf',
+                'cc.telefone',
+                'cc.valor_atual',
+                'cc.fk_cliente_titular',
+                //'tc.nome as tipo', 
+                DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"),
+                //'s.nome as status_desc'
+                DB::raw("CASE WHEN cc.status = 1 THEN '<span class=\"badge badge-info\">DEVOLVIDO</span>'
                                 WHEN cc.status = 2 THEN '<span class=\"badge badge-success\">EM USO</span>'
                                 WHEN cc.status = 3 THEN '<span class=\"badge badge-danger\">BLOQUEADO</span>'
                             END AS status_desc")
-                ]);
+            ]);
 
         // if(!$request->data && !$request->telefone && !$request->nome) {
         //     $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), date('Y-m-d'));
         // }
         // else 
-        if($request->data) {
+        if ($request->data) {
             $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), $request->data);
         }
 
-        if($request->nome) {
+        if ($request->nome) {
             $sql->where('cc.nome', 'LIKE', "%{$request->nome}%");
         }
 
-        if($request->telefone) {
+        if ($request->telefone) {
             $sql->where('cc.telefone', preg_replace('/[^0-9]/', '', $request->telefone));
         }
 
@@ -77,43 +77,44 @@ class CartaoClienteDB extends Model
         return $sql->get();
     }
 
-    public static function gridPedido($request)
+    public static function gridAlunos($request)
     {
         $sql = DB::table('cartao_cliente as cc')
-                //>join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
-                ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')   
-                ->join('situacao_cartao as s', 's.id', '=', 'cc.status')
-                ->join('responsavel as r', 'r.id', '=', 'cc.responsavel_id')             
-                ->select([
-                    'cc.id', 
-                    'cc.nome', 
-                    'cc.cpf',
-                    'cc.telefone',
-                    'cc.valor_atual', 
-                    'cc.fk_cliente_titular',
-                    //'tc.nome as tipo', 
-                    DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"), 
-                    //'s.nome as status_desc'
-                    DB::raw("CASE WHEN cc.status = 1 THEN '<span class=\"badge badge-info\">DEVOLVIDO</span>'
-                                WHEN cc.status = 2 THEN '<span class=\"badge badge-success\">EM USO</span>'
+            //>join('tipo_cliente as tc', 'tc.id', '=', 'cc.fk_tipo_cliente')
+            ->join('cartao as c', 'c.id', '=', 'cc.fk_cartao')
+            ->join('situacao_cartao as s', 's.id', '=', 'cc.status')
+            ->join('responsavel as r', 'r.id', '=', 'cc.responsavel_id')
+            ->select([
+                'cc.id',
+                'cc.nome',
+                'cc.cpf',
+                'cc.telefone',
+                'cc.valor_atual',
+                'cc.fk_cliente_titular',
+                'c.codigo as cartao_codigo',
+                //'tc.nome as tipo', 
+                DB::raw("date_format(cc.created_at, '%d/%m/%Y %H:%i') as data"),
+                //'s.nome as status_desc'
+                DB::raw("CASE WHEN cc.status = 1 THEN '<span class=\"badge badge-info\">DEVOLVIDO</span>'
+                                WHEN cc.status = 2 THEN '<span class=\"badge badge-success\">ATIVO</span>'
                                 WHEN cc.status = 3 THEN '<span class=\"badge badge-danger\">BLOQUEADO</span>'
                             END AS status_desc"),
-                    'r.nome as responsavel'
-                ]);
+                'r.nome as responsavel'
+            ]);
 
         // if(!$request->data && !$request->telefone && !$request->nome) {
         //     $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), date('Y-m-d'));
         // }
         // else 
-        if($request->data) {
+        if ($request->data) {
             $sql->where(DB::raw("date_format(cc.created_at, '%Y-%m-%d')"), $request->data);
         }
 
-        if($request->nome) {
+        if ($request->nome) {
             $sql->where('cc.nome', 'LIKE', "%{$request->nome}%");
         }
 
-        if($request->telefone) {
+        if ($request->telefone) {
             $sql->where('cc.telefone', preg_replace('/[^0-9]/', '', $request->telefone));
         }
 
@@ -131,7 +132,7 @@ class CartaoClienteDB extends Model
             ->where('e.fk_cartao_cliente', $id_cartao_cliente)
             ->orderBy('e.id');
 
-        if($dtInicio && $dtTermino && $horaInicio && $horaTermino) {
+        if ($dtInicio && $dtTermino && $horaInicio && $horaTermino) {
             $sql1->whereBetween('e.data', ["$dtInicio $horaInicio", "$dtTermino $horaTermino"]);
         }
 
@@ -158,11 +159,11 @@ class CartaoClienteDB extends Model
             ->where('c.fk_situacao', 2)
             ->where('cc.status', 2);
 
-        if($codigo) {
+        if ($codigo) {
             $sql->where('c.codigo', $codigo);
         }
 
-        if($cpf) {
+        if ($cpf) {
             $sql->where('cc.cpf', $cpf);
         }
 

@@ -3,7 +3,7 @@
 
 @section('conteudo')
     <h5>
-        Localizara aluno
+        Localizar o aluno
         <a href="{{url('')}}" class="material-icons float-right" style="font-size: 1.3em; color: #333;">
             keyboard_backspace
         </a>
@@ -48,12 +48,12 @@
                 </div>
             </div>
             <!-- <div class="col-sm-12 col-md-12">
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-parque">
-                                                        <span class="material-icons icone">search</span> Pesquisar
-                                                    </button>
-                                                </div>
-                                            </div> -->
+                                                        <div class="form-group">
+                                                            <button type="submit" class="btn btn-parque">
+                                                                <span class="material-icons icone">search</span> Pesquisar
+                                                            </button>
+                                                        </div>
+                                                    </div> -->
         </div>
     </form>
 

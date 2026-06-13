@@ -125,9 +125,10 @@ class CartaoClienteController extends Controller
     }
 
 
-    public function leitorCartao()
+    public function leitorCartao(Request $request)
     {
-        return view('cartao.leitor-cartao');
+        $lista = CartaoClienteDB::gridAlunos($request);
+        return view('cartao.leitor-cartao', compact('lista'));
     }
 
     public function addCredito($codigo)
@@ -186,7 +187,7 @@ class CartaoClienteController extends Controller
 
             DB::commit();
             return redirect('cartao-cliente/confirma-credito')
-                ->with('sucesso', 'O valor de <b>R$ ' . number_format($p->valor, 2, ',', '.') . '</b> foi creditado no cartão informado.<br>Seu saldo é de <b>R$ '.number_format($cartaoCliente->valor_atual, 2, ',', '.').'</b>');
+                ->with('sucesso', 'O valor de <b>R$ ' . number_format($p->valor, 2, ',', '.') . '</b> foi creditado no cartão informado.<br>Seu saldo é de <b>R$ ' . number_format($cartaoCliente->valor_atual, 2, ',', '.') . '</b>');
         } catch (\Exception $ex) {
             DB::rollback();
             return redirect('cartao-cliente/leitor')->with('error', 'Um erro ocorreu.<br>' . $ex->getMessage());
