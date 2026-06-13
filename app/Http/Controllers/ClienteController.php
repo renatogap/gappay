@@ -1017,8 +1017,8 @@ class ClienteController extends Controller
             }
             DB::commit();
 
-            return redirect('cliente/senha/redefinir')
-                ->with('success', 'Você receberá um código em breve.');
+            return redirect('cliente/senha/redefinir');
+                // ->with('success', 'Você receberá um código em breve.');
         } catch (Exception $ex) {
             DB::rollback();
             return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
