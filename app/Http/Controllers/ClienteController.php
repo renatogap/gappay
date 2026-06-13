@@ -790,12 +790,19 @@ class ClienteController extends Controller
         $request->validate([
             'responsavel_id' => 'required|integer|exists:responsavel,id',
             'alunos' => 'required|array',
-            'alunos.*.nome' => 'required|string|min:3|max:255|regex:/^[^\d]+$/',
+            'alunos.*.nome' =>  [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'regex:/^[^\d]+$/',
+                'regex:/^\S{3,}(\s+\S+)*\s+\S{3,}$/',
+            ],
             'alunos.*.serie' => 'required|string|max:50',
         ], [
             'alunos.*.nome.required' => 'O nome do aluno é obrigatório.',
             'alunos.*.nome.min'      => 'O nome deve ter pelo menos 3 caracteres.',
-            'alunos.*.nome.regex'    => 'O nome não pode conter números.',
+            'alunos.*.nome.regex'    => 'Informe o nome completo do aluno (nome e sobrenome, cada um com pelo menos 3 letras).',
             'alunos.*.serie.required'=> 'A série do aluno é obrigatória.',
         ]);
 

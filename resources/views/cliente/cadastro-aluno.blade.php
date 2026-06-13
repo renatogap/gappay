@@ -384,7 +384,7 @@
                             </button>
                         </div>
                         <div class="form-group">
-                            <label>Nome do aluno</label>
+                            <label>Nome Completo do aluno *</label>
                             <input type="text" class="form-control" name="alunos[{{ $index }}][nome]" value="{{ $aluno['nome'] ?? '' }}" required>
                         </div>
                         <div class="form-row">
@@ -402,7 +402,7 @@
                     </div>
                     <input type="hidden" class="form-control" name="responsavel_id" value="{{ $responsavel->id }}" required>
                     <div class="form-group">
-                        <label>Nome do aluno</label>
+                        <label>Nome Completo do aluno *</label>
                         <input type="text" class="form-control" name="alunos[0][nome]" required>
                     </div>
                     <div class="form-row">
@@ -441,7 +441,7 @@
                     </button>
                 </div>
                 <div class="form-group">
-                    <label>Nome do aluno</label>
+                    <label>Nome Completo do aluno *</label>
                     <input type="text" class="form-control" name="alunos[${i}][nome]" required>
                 </div>
                 <div class="form-row">
@@ -459,6 +459,49 @@
         var btn = e.target.closest('.btn-remover-aluno');
         if (btn) {
             btn.closest('.aluno-item').remove();
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelectorAll('.erro-nome').forEach(function (el) { el.remove(); });
+        document.querySelectorAll('input[name*="[nome]"]').forEach(function (el) { el.classList.remove('is-invalid'); });
+
+        var alunos = document.querySelectorAll('.aluno-item');
+        var erros = [];
+
+        alunos.forEach(function (item, idx) {
+            var nomeInput = item.querySelector('input[name*="[nome]"]');
+            var nome = nomeInput ? nomeInput.value.trim() : '';
+            var tokens = nome.replace(/\s+/g, ' ').split(' ').filter(function (t) { return t.length > 0; });
+            var primeiro = tokens[0] || '';
+            var ultimo = tokens[tokens.length - 1] || '';
+            var numero = idx + 1;
+            var mensagem = null;
+
+            if (tokens.length < 2) {
+                mensagem = 'Informe o nome e sobrenome do aluno.';
+            } else if (primeiro.length < 3) {
+                mensagem = 'O nome deve ter pelo menos 3 letras.';
+            } else if (ultimo.length < 3) {
+                mensagem = 'O sobrenome deve ter pelo menos 3 letras.';
+            }
+
+            if (mensagem && nomeInput) {
+                nomeInput.classList.add('is-invalid');
+                var div = document.createElement('div');
+                div.className = 'invalid-feedback erro-nome';
+                div.textContent = mensagem;
+                nomeInput.after(div);
+                erros.push('Aluno #' + numero + ': ' + mensagem);
+            }
+        });
+
+        if (erros.length > 0) {
+            e.preventDefault();
+            var primeiroErro = document.querySelector('.is-invalid');
+            if (primeiroErro) {
+                primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     });
 </script>
