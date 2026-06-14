@@ -34,6 +34,10 @@ Route::get('cliente/login', [ClienteController::class, 'loginResponsavelTela'] )
 Route::post('cliente/login', [ClienteController::class, 'loginResponsavel'] )->name('login.responsavel');
 Route::get('cliente/cadastro', [ClienteController::class, 'cadastro'] )->name('tela.cadastro');
 Route::post('cliente/cadastro/store', [ClienteController::class, 'cadastroStore'] )->name('cliente.cadastro.store');
+Route::get('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarTela']);
+Route::post('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarCliente']);
+Route::get('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirTela']);
+Route::post('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirCliente']);
 
 Route::middleware(['session.responsavel'])->group(function () {
     Route::get('cliente/alunos', [ClienteController::class, 'gridAlunosResponsavel'] )->name('tela.alunos'); // Listar alunos do responsável
@@ -47,11 +51,6 @@ Route::middleware(['session.responsavel'])->group(function () {
     Route::get('cliente/meus-dados', [ClienteController::class, 'dadosResponsavel'] )->name('tela.meus-dados'); // Tela de dados do responsável
     Route::put('cliente/meus-dados/update', [ClienteController::class, 'updateDadosResponsavel'] )->name('update.meus-dados'); // Update dos dados do responsável
 });
-
-Route::get('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarTela']);
-Route::post('cliente/senha/recuperar', [ClienteController::class, 'senhaRecuperarCliente']);
-Route::get('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirTela']);
-Route::post('cliente/senha/redefinir', [ClienteController::class, 'senhaRedefinirCliente']);
 // Fim (Responsável)
 
 Route::middleware(['session.cliente'])->group(function () {

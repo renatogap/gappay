@@ -120,6 +120,36 @@
         .indicator.on {
             display: block
         }
+
+        #global-loader {
+            position: fixed;
+            inset: 0;
+            background: #0d0a0ae5;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #global-loader.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader-gif {
+            width: 120px;
+            height: auto;
+            border-radius: 50%;
+            animation: float 1s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
     </style>
 </head>
 
@@ -192,6 +222,23 @@
         </div>
     </div>
 
+    <div id="global-loader">
+        <img
+            src="{{ asset('images/logo-sistema.png') }}"
+            alt="Carregando..."
+            class="loader-gif">
+    </div>
+
 </body>
 <script src="{{ asset('materialize-css/materialize.min.js') }}"></script>
+
+<script>
+    // Ativar loading global ao enviar código
+    document.querySelectorAll('button[type="submit"]').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('global-loader').classList.add('active');
+        });
+    });
+</script>
+
 </html>
