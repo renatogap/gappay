@@ -37,9 +37,11 @@ use QRcode;
 
 class ClienteController extends Controller
 {
+    //Antiga tela de login - redireciona para o login do responsavel
+    //Futuramente pode ser removida
     public function index()
     {
-        return view('cliente.index');
+        return redirect()->route("tela.login.responsavel");
     }
 
     public function list(Request $request)
@@ -70,28 +72,27 @@ class ClienteController extends Controller
 
 
         try {
-            if(!$request->id){
+            if (!$request->id) {
                 $cliente = ClienteRegras::salvar($request);
-            }else{
+            } else {
                 $cliente = ClienteRegras::alterar($request);
             }
 
-            return redirect('cliente/edit/'.$cliente->id)->with('sucesso', 'Dados do Cliente salvos com sucesso.');
-        }
-        catch (Exception $ex){
+            return redirect('cliente/edit/' . $cliente->id)->with('sucesso', 'Dados do Cliente salvos com sucesso.');
+        } catch (Exception $ex) {
             return redirect($_SERVER['HTTP_REFERER'])->with('error', $ex->getMessage())->withInput();
         }
     }
 
     public function editar($id)
     {
-        $cliente        = Cliente::find($id);
-        $escolas        = EscolaDB::ativas();
-        $cartao         = Cartao::find($cliente->fk_cartao);
-        $tiposCliente   = ClienteDB::tiposDeCliente();
+        $cliente = Cliente::find($id);
+        $escolas = EscolaDB::ativas();
+        $cartao = Cartao::find($cliente->fk_cartao);
+        $tiposCliente = ClienteDB::tiposDeCliente();
         $formaPagamento = FormasPagamentoDB::listar();
         $grauParentesco = GrauParentesco::all();
-        $dependentes    = DependenteDB::todos($id);
+        $dependentes = DependenteDB::todos($id);
 
         return view('cliente.edit', compact('cliente', 'grauParentesco', 'cartao', 'escolas', 'tiposCliente', 'formaPagamento', 'dependentes'));
     }
@@ -99,7 +100,7 @@ class ClienteController extends Controller
     public function home()
     {
         $cartaoCliente = session('cliente');
-        $responsavel   = session('responsavel'); // Responsável do cartão cliente (aluno)
+        $responsavel = session('responsavel'); // Responsável do cartão cliente (aluno)
 
         $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
             ->where('status', 2) // Cartão em uso ativo
@@ -112,7 +113,7 @@ class ClienteController extends Controller
 
         //Saldo do Cartão Cliente (aluno)
         session('cliente')->valor_atual = (CartaoCliente::where('id', $cartaoCliente->id)->first()->valor_atual);
-        
+
         $pedidosPendentes = Pedido::where('fk_cartao_cliente', $cartaoCliente->id)
             ->where('status', 1) // status que representa pedido não finalizado
             ->count();
@@ -131,45 +132,45 @@ class ClienteController extends Controller
         #$cpf = preg_replace('/[^0-9]/', '', request('cpf'));
         $id_cartao_cliente = session('cliente')->id;
 
-        $dtInicio  = (request('dtInicio') ? request('dtInicio') : date('Y-m-d'));
+        $dtInicio = (request('dtInicio') ? request('dtInicio') : date('Y-m-d'));
         $dtTermino = (request('dtTermino') ? request('dtTermino') : date('Y-m-d'));
-        $horaInicio  = (request('horaInicio') ? request('horaInicio') : date('00:00'));
+        $horaInicio = (request('horaInicio') ? request('horaInicio') : date('00:00'));
         $horaTermino = (request('horaTermino') ? request('horaTermino') : date('H:i'));
-        
+
 
         $pedidos = DB::table('pedido as p')
-                    ->join('pedido_item as pi', 'pi.fk_pedido', '=', 'p.id')
-                    ->join('cardapio as c', 'c.id', '=', 'pi.fk_item_cardapio')
-                    ->join('cardapio_tipo as t', 't.id', '=', 'c.fk_tipo_cardapio')
-                    ->join('cartao_cliente as cc', 'p.fk_cartao_cliente', '=', 'cc.id')
-                    ->select([
-                        'p.id',
-                        't.nome as tipo_cardapio',
-                        'cc.nome',
-                        'c.nome_item',
-                        'pi.observacao',
-                        'c.valor as valor_item',
-                        'pi.quantidade',
-                        'pi.valor as valor_total_item',
-                        'pi.status',
-                        'p.valor_total',
-                        'p.taxa_servico',
-                        'p.dt_pedido',
-                        'p.dt_pronto',
-                        'p.dt_entrega'
-                    ])
-                    ->where('p.dt_pedido', '>=', "$dtInicio $horaInicio")
-                    ->where('p.dt_pedido', '<=', "$dtTermino $horaTermino")
-                    ->where('cc.id', $id_cartao_cliente)
-                    ->orderBy('p.dt_pedido', 'desc')
-                    ->get();
+            ->join('pedido_item as pi', 'pi.fk_pedido', '=', 'p.id')
+            ->join('cardapio as c', 'c.id', '=', 'pi.fk_item_cardapio')
+            ->join('cardapio_tipo as t', 't.id', '=', 'c.fk_tipo_cardapio')
+            ->join('cartao_cliente as cc', 'p.fk_cartao_cliente', '=', 'cc.id')
+            ->select([
+                'p.id',
+                't.nome as tipo_cardapio',
+                'cc.nome',
+                'c.nome_item',
+                'pi.observacao',
+                'c.valor as valor_item',
+                'pi.quantidade',
+                'pi.valor as valor_total_item',
+                'pi.status',
+                'p.valor_total',
+                'p.taxa_servico',
+                'p.dt_pedido',
+                'p.dt_pronto',
+                'p.dt_entrega'
+            ])
+            ->where('p.dt_pedido', '>=', "$dtInicio $horaInicio")
+            ->where('p.dt_pedido', '<=', "$dtTermino $horaTermino")
+            ->where('cc.id', $id_cartao_cliente)
+            ->orderBy('p.dt_pedido', 'desc')
+            ->get();
 
 
         $itensPedidoCliente = [];
         $pedidoCliente = [];
 
-        if($pedidos->count() > 0) {
-            foreach($pedidos as $pedido) {
+        if ($pedidos->count() > 0) {
+            foreach ($pedidos as $pedido) {
                 $itensPedidoCliente[$pedido->id][] = $pedido;
 
                 $pedidoCliente[$pedido->id] = [
@@ -192,7 +193,7 @@ class ClienteController extends Controller
 
     public function cardapios()
     {
-        $tipo_cardapios = CardapioTipo::where('status', 1)->orderBy('nome')->get();        
+        $tipo_cardapios = CardapioTipo::where('status', 1)->orderBy('nome')->get();
         return view('cliente.tipos-cardapio', compact('tipo_cardapios'));
     }
 
@@ -330,13 +331,13 @@ class ClienteController extends Controller
         //Validação do ESTOQUE
         $msgErro = [];
 
-        
+
         foreach ($params->pedidoCliente as $item) {
 
             //primeiro verifica se o produto esta ativo no estoque
             $estoqueItem = Estoque::where('fk_item_cardapio', $item->id_cardapio)->first();
 
-            
+
             //caso o produto esteja ativo, valida o saldo em estoque
             if ($estoqueItem) {
 
@@ -433,7 +434,7 @@ class ClienteController extends Controller
             ->where('p.status', '=', 1) //SOLICITADO
             ->get();
 
-        if($pedidos->count() == 0) {
+        if ($pedidos->count() == 0) {
             return redirect('cliente/meus-pedidos')->with('error', 'Pedido não encontrado ou já foi finalizado.');
         }
 
@@ -488,10 +489,10 @@ class ClienteController extends Controller
     public function pedidoItem($id)
     {
         $cardapio = Cardapio::where('id', $id)->first();
-        $fotoCardapio = CardapioFoto::where('fk_cardapio', $id)->select(['id'])->first(); 
+        $fotoCardapio = CardapioFoto::where('fk_cardapio', $id)->select(['id'])->first();
         $mesa = null;
 
-        if(request()->session()->exists('pedido')){
+        if (request()->session()->exists('pedido')) {
             $mesa = request()->session()->get('pedido')[0]->mesa;
         }
 
@@ -501,14 +502,14 @@ class ClienteController extends Controller
     public function verFoto($id)
     {
         $foto = CardapioFoto::where('fk_cardapio', $id)->first();
-        header('Content-Type:'.$foto->type);
+        header('Content-Type:' . $foto->type);
         exit($foto->foto);
     }
 
     public function verThumb($id)
     {
         $foto = CardapioFoto::where('fk_cardapio', $id)->first();
-        header('Content-Type:'.$foto->type);
+        header('Content-Type:' . $foto->type);
         exit($foto->thumbnail);
     }
 
@@ -517,14 +518,14 @@ class ClienteController extends Controller
         //encontra o cartão independente do status
         $cartao = Cartao::where('codigo', $codigo)->first();
 
-        if($cartao->fk_situacao !== 2) {
+        if ($cartao->fk_situacao !== 2) {
             return redirect('cliente')->withInput()
-                ->with('error', 'Não foi possível localizar o aluno. Este cartão se encontra <b>'.$cartao->situacao->nome.'</b> e não está habilitado para uso.');
+                ->with('error', 'Não foi possível localizar o aluno. Este cartão se encontra <b>' . $cartao->situacao->nome . '</b> e não está habilitado para uso.');
         }
 
         $cartaoCliente = CartaoCliente::where('fk_cartao', $cartao->id)->where('status', 2)->first();
 
-        if(!isset($cartaoCliente->status) || $cartaoCliente->status !== 2) {
+        if (!isset($cartaoCliente->status) || $cartaoCliente->status !== 2) {
             return redirect('cliente')->withInput()
                 ->with('error', 'Não foi possível localizar o aluno. Este cartão não está em uso.');
         }
@@ -542,9 +543,9 @@ class ClienteController extends Controller
 
     public function extrato()
     {
-        $dtInicio  = (request('dtInicio') ? request('dtInicio') : date('Y-m-d'));
+        $dtInicio = (request('dtInicio') ? request('dtInicio') : date('Y-m-d'));
         $dtTermino = (request('dtTermino') ? request('dtTermino') : date('Y-m-d'));
-        $horaInicio  = (request('horaInicio') ? request('horaInicio') : date('00:00'));
+        $horaInicio = (request('horaInicio') ? request('horaInicio') : date('00:00'));
         $horaTermino = (request('horaTermino') ? request('horaTermino') : date('H:i', strtotime('+1 minute')));
         $cartaoCliente = session('cliente');
 
@@ -633,7 +634,7 @@ class ClienteController extends Controller
         if (!$responsavel->validado) {
             return redirect()->back()->with('error', 'E-mail ainda não validado. Verifique sua caixa de entrada para validar o e-mail antes de fazer login.')->withInput();
         }
-        
+
         $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
             ->where('status', 2) // Cartão em uso
             ->get();
@@ -645,7 +646,7 @@ class ClienteController extends Controller
 
         session([
             'responsavel' => $responsavel,
-            'cliente'     => $alunos->first(),
+            'cliente' => $alunos->first(),
         ]);
 
         return redirect('cliente/home');
@@ -671,7 +672,7 @@ class ClienteController extends Controller
             try {
                 $responsavel = Responsavel::where('email', $request->email)->first();
 
-                if(!$responsavel){
+                if (!$responsavel) {
                     $responsavel = new Responsavel();
                     $responsavel->email = $request->email;
                     $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -681,11 +682,11 @@ class ClienteController extends Controller
                 if ($responsavel->validado && CartaoCliente::where('responsavel_id', $responsavel->id)->where('status', 2)->exists()) {
                     return redirect()->route('tela.login.responsavel')->with('success', 'E-mail já cadastrado. Faça login para acessar sua conta.');
                 }
-                 
+
                 if ($responsavel->validado) {
                     return redirect()->route('tela.cadastro', [
-                        'step'           => 3,
-                        'email'          => $responsavel->email,
+                        'step' => 3,
+                        'email' => $responsavel->email,
                         'responsavel_id' => $responsavel->id,
                     ])->with('success', 'E-mail validado. Agora complete os dados pessoais do responsável.');
                 }
@@ -727,8 +728,8 @@ class ClienteController extends Controller
 
         if ($step === 3) {
             $request->validate([
-                'responsavel_id'      => 'required|integer|exists:responsavel,id',
-                'nome'                => [
+                'responsavel_id' => 'required|integer|exists:responsavel,id',
+                'nome' => [
                     'required',
                     'string',
                     'min:3',
@@ -736,10 +737,10 @@ class ClienteController extends Controller
                     'regex:/^[^\d]+$/',
                     'regex:/^\S{3,}(\s+\S+)*\s+\S{3,}$/',
                 ],
-                'telefone'            => 'required|string|max:20',
-                'senha'               => 'required|string|min:6|same:confirmar_senha',
-                'termos'              => 'accepted',
-            ],[
+                'telefone' => 'required|string|max:20',
+                'senha' => 'required|string|min:6|same:confirmar_senha',
+                'termos' => 'accepted',
+            ], [
                 'nome.required' => 'O nome é obrigatório.',
                 'nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
                 'nome.regex' => 'Informe o nome completo do responsável.',
@@ -748,13 +749,13 @@ class ClienteController extends Controller
             ]);
 
             DB::beginTransaction();
-            try{
+            try {
                 $responsavel = Responsavel::find($request->responsavel_id);
-    
+
                 if (!$responsavel || !$responsavel->validado) {
                     return redirect()->back()->with('error', 'Responsável não encontrado ou ainda não validado.')->withInput();
                 }
-    
+
                 $responsavel->nome = $request->nome;
                 $responsavel->telefone = preg_replace('/\D/', '', $request->telefone);
                 $responsavel->senha = Hash::make($request->senha);
@@ -762,7 +763,7 @@ class ClienteController extends Controller
                 $responsavel->save();
 
                 DB::commit();
-    
+
                 session(['responsavel' => $responsavel]);
 
                 return redirect()->route('tela.cadastro.aluno');
@@ -780,12 +781,12 @@ class ClienteController extends Controller
         $responsavel = session('responsavel');
 
         $alunos = CartaoCliente::where('responsavel_id', $responsavel->id)
-                                ->where('status', 2) // Cartão em uso (ativo)
-                                ->get();
+            ->where('status', 2) // Cartão em uso (ativo)
+            ->get();
 
         $alunos->each(function ($aluno) {
             $partes = explode(' - ', $aluno->nome, 2);
-            $aluno->nome  = trim($partes[0]);
+            $aluno->nome = trim($partes[0]);
             $aluno->serie = isset($partes[1]) ? trim($partes[1]) : '';
         });
 
@@ -804,7 +805,7 @@ class ClienteController extends Controller
         $request->validate([
             'responsavel_id' => 'required|integer|exists:responsavel,id',
             'alunos' => 'required|array',
-            'alunos.*.nome' =>  [
+            'alunos.*.nome' => [
                 'required',
                 'string',
                 'min:3',
@@ -815,19 +816,19 @@ class ClienteController extends Controller
             'alunos.*.serie' => 'required|string|max:50',
         ], [
             'alunos.*.nome.required' => 'O nome do aluno é obrigatório.',
-            'alunos.*.nome.min'      => 'O nome deve ter pelo menos 3 caracteres.',
-            'alunos.*.nome.regex'    => 'Informe o nome completo do aluno (nome e sobrenome, cada um com pelo menos 3 letras).',
-            'alunos.*.serie.required'=> 'A série do aluno é obrigatória.',
+            'alunos.*.nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
+            'alunos.*.nome.regex' => 'Informe o nome completo do aluno (nome e sobrenome, cada um com pelo menos 3 letras).',
+            'alunos.*.serie.required' => 'A série do aluno é obrigatória.',
         ]);
 
         DB::beginTransaction();
         try {
             foreach ($request->alunos as $alunoData) {
                 //Cadastrar cartão para o aluno
-                $codigo = rand(1, 999999).date('dmyHis');
+                $codigo = rand(1, 999999) . date('dmyHis');
                 $codigo = str_pad($codigo, 15, "0", STR_PAD_RIGHT);
 
-                if(!Cartao::where('codigo', $codigo)->first()) {
+                if (!Cartao::where('codigo', $codigo)->first()) {
                     $cartao = Cartao::create([
                         'codigo' => $codigo,
                         'hash' => md5($codigo),
@@ -839,20 +840,20 @@ class ClienteController extends Controller
 
                 // Cadastrar Aluno
                 $aluno = CartaoCliente::create([
-                    'fk_cartao'         => $cartao->id,
-                    'responsavel_id'    => $request->responsavel_id,
-                    'nome'              => $alunoData['nome'].' - '.$alunoData['serie'],
-                    'cpf'               => null,
-                    'telefone'          => null,
-                    'fk_tipo_cliente'   => 1,
-                    'valor_atual'       => 0,
-                    'valor_cartao'      => 0,
+                    'fk_cartao' => $cartao->id,
+                    'responsavel_id' => $request->responsavel_id,
+                    'nome' => $alunoData['nome'] . ' - ' . $alunoData['serie'],
+                    'cpf' => null,
+                    'telefone' => null,
+                    'fk_tipo_cliente' => 1,
+                    'valor_atual' => 0,
+                    'valor_cartao' => 0,
                     'fk_tipo_pagamento' => null,
-                    'observacao'        => 'Cadastro de aluno',
-                    'devolvido'         => 'N',
-                    'status'            => 2,
-                    'created_at'        => date('Y-m-d H:i:s'),
-	                'fk_usuario'        => 1
+                    'observacao' => 'Cadastro de aluno',
+                    'devolvido' => 'N',
+                    'status' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'fk_usuario' => 1
                 ]);
 
             }
@@ -881,8 +882,8 @@ class ClienteController extends Controller
         }
 
         $partes = explode(' - ', $aluno->nome, 2); // POG para separa o nome do aluno da série.
-        $aluno->nome = trim($partes[0]); 
-        $aluno->serie      = isset($partes[1]) ? trim($partes[1]) : '';
+        $aluno->nome = trim($partes[0]);
+        $aluno->serie = isset($partes[1]) ? trim($partes[1]) : '';
 
         return view('cliente.editar-aluno', compact('aluno', 'responsavel'));
     }
@@ -891,7 +892,7 @@ class ClienteController extends Controller
     {
         $request->validate([
             'id' => 'required|integer',
-            'nome' =>  [
+            'nome' => [
                 'required',
                 'string',
                 'min:3',
@@ -902,7 +903,7 @@ class ClienteController extends Controller
             'serie' => 'required|string|max:50',
         ], [
             'nome.required' => 'O nome do aluno é obrigatório.',
-            'nome.min'   => 'O nome deve ter pelo menos 3 caracteres.',
+            'nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
             'nome.regex' => 'Informe o nome completo do aluno (nome e sobrenome, cada um com pelo menos 3 letras).',
             'serie.required' => 'A série do aluno é obrigatória.',
         ]);
@@ -919,7 +920,7 @@ class ClienteController extends Controller
             $aluno->nome = $request->nome . ' - ' . $request->serie;
             $aluno->save();
             DB::commit();
-            
+
             session(['cliente' => $aluno]);
 
             return redirect()->back()->with('success', 'Aluno atualizado com sucesso!');
@@ -951,7 +952,7 @@ class ClienteController extends Controller
         // return redirect()->back()->with('error', 'Exclusão de aluno não permitida no momento. Entre em contato com a administração para solicitar a exclusão.');
     }
 
-    public function  dadosResponsavel()
+    public function dadosResponsavel()
     {
         $responsavel = session('responsavel');
         return view('cliente.dados-responsavel', compact('responsavel'));
@@ -1010,7 +1011,7 @@ class ClienteController extends Controller
                 $responsavel->token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
                 $responsavel->save();
                 $responsavel->recuperarSenha = true;
-    
+
                 Mail::to($responsavel->email)->send(new ResponsavelTokenMail($responsavel));
 
                 session(['email' => $responsavel->email]);
@@ -1018,7 +1019,7 @@ class ClienteController extends Controller
             DB::commit();
 
             return redirect('cliente/senha/redefinir');
-                // ->with('success', 'Você receberá um código em breve.');
+            // ->with('success', 'Você receberá um código em breve.');
         } catch (Exception $ex) {
             DB::rollback();
             return redirect()->back()->with('error', 'Erro ao enviar o token por e-mail: ' . $ex->getMessage())->withInput();
@@ -1033,14 +1034,12 @@ class ClienteController extends Controller
         if (session()->has('email')) {
             $modo = 'recuperacao';
             $email = session('email');
-        }
-
-        elseif (session()->has('responsavel')) {
+        } elseif (session()->has('responsavel')) {
             $modo = 'alteracao';
             $email = session('responsavel')->email;
         }
 
-        return view('cliente.senha-redefinir', compact('modo', 'email',));
+        return view('cliente.senha-redefinir', compact('modo', 'email', ));
     }
 
     public function senhaRedefinirCliente(Request $request)
