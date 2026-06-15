@@ -30,7 +30,7 @@ Route::group(['middleware' => ['seguranca']], function () {
 
     Route::get('/home', [UsuarioLocalController::class, 'home'])->name('home');
 
-    Route::controller(\App\Http\Controllers\UsuarioLocalController::class)->group(function () {
+    Route::controller(UsuarioLocalController::class)->group(function () {
         Route::get('admin/usuario', 'index');
         Route::get('admin/usuario/grid', 'grid');
         Route::get('admin/usuario/criar', 'criar')->name('usuario.create');
@@ -131,7 +131,7 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::get('pedido/confirmar-entrega-gerente/{id_pedido}', [PedidoController::class, 'confirmarEntregaGerente']);
     Route::post('pedido/salvar-entrega-gerente/{id_pedido}', [PedidoController::class, 'salvarEntregaGerente']);
     Route::get('pedido/salvar-entrega/via-qrcode/{id_pedido}', [PedidoController::class, 'salvarEntregaViaQrCode']);
-    
+
 
 
     //Cozinha
@@ -181,7 +181,7 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::post('admin/perfil/update', [PerfilController::class, 'update']);
     Route::post('admin/perfil/excluir/{perfil}', [PerfilController::class, 'destroy']);
 
-   
+
     Route::get('portaria', [PortariaController::class, 'index']);
     Route::post('portaria/validar-entrada', [PortariaController::class, 'validarEntrada']);
 
@@ -200,7 +200,7 @@ Route::group(['middleware' => ['seguranca']], function () {
     Route::view('seguranca/acoes/create', 'layouts.vue');
     Route::view('seguranca/acoes/{id}/edit', 'layouts.vue');
 
-    Route::controller(\App\Http\Controllers\PerfilController::class)->group(function () {
+    Route::controller(PerfilController::class)->group(function () {
         Route::get('/admin/perfil', 'index');
         Route::get('/admin/perfil/create', 'create');
         Route::get('/admin/perfil/{id}/edit', 'edit');

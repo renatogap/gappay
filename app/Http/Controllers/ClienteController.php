@@ -379,7 +379,7 @@ class ClienteController extends Controller
             DB::commit();
             return redirect('cliente/meu-pedido/' . $pedido->id)->with('sucesso', 'Pedido finalizado com sucesso!');
             //return view('cliente.pedido-finalizado', compact('params'));
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             DB::rollback();
             return redirect('cliente/confirmar-pedido')->with('error', '<b>Atenção, algo aconteceu!</b><br>' . $ex->getMessage());
         }

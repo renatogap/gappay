@@ -9,16 +9,15 @@ Route::get('/', [UsuarioLocalController::class, 'login'])->name('tela.login');
 Route::get('/login', [UsuarioLocalController::class, 'login'])->name('tela.login');
 Route::post('/login', [\GapPay\Seguranca\Controllers\AutenticacaoController::class, 'login'])->name('login');
 
-Route::get('/login/atualizar-senha', [\App\Http\Controllers\UsuarioLocalController::class, 'telaAtualizacaoSenhaViaHash'])->name('atualizar-senha');
+Route::get('/login/atualizar-senha', [UsuarioLocalController::class, 'telaAtualizacaoSenhaViaHash'])->name('atualizar-senha');
 Route::view('/atualizar-senha', 'layouts.vue');
 Route::view('/atualizar-senha/{hash}', 'layouts.vue');
 Route::view('/login/esqueci-email-senha', 'layouts.vue');
 
 Route::get('cardapio/tipo-cardapio/thumb/{id}', 'CardapioController@verThumbTipoCardapio'); //Publico
 
-//Cliente
-
-Route::controller(\App\Http\Controllers\ClienteController::class)->group(function () {
+//Cliente - Rotas públicas
+Route::controller(ClienteController::class)->group(function () {
     Route::get('cliente', 'index'); //Publico
     //Route::get('cliente/login/{codigo}', 'login'); //Publico
     Route::get('cliente/cardapios', 'cardapios');
@@ -41,40 +40,43 @@ Route::controller(\App\Http\Controllers\ClienteController::class)->group(functio
 
 
 Route::middleware(['session.responsavel'])->group(function () {
-    Route::get('cliente/alunos', [ClienteController::class, 'gridAlunosResponsavel'])->name('tela.alunos'); // Listar alunos do responsável
-    Route::get('cliente/aluno/create', [ClienteController::class, 'cadastroAluno'])->name('tela.cadastro.aluno'); // Tela de cadastro de alunos do responsável
-    Route::post('cliente/aluno/store', [ClienteController::class, 'cadastroAlunoStore']); // Store do cadastro de alunos do responsável
-    Route::get('cliente/aluno/{id}/edit', [ClienteController::class, 'editAluno'])->name('tela.edit.aluno'); // Tela de edição de aluno do responsável
-    Route::put('cliente/aluno/{id}/update', [ClienteController::class, 'updateAluno'])->name('tela.update.aluno'); // Update de aluno do responsável   
-    Route::delete('cliente/aluno/{id}/delete', [ClienteController::class, 'deleteAluno'])->name('tela.delete.aluno');
-    Route::post('cliente/trocar-aluno', [ClienteController::class, 'trocarAluno']);
 
-    Route::get('cliente/meus-dados', [ClienteController::class, 'dadosResponsavel'])->name('tela.meus-dados'); // Tela de dados do responsável
-    Route::put('cliente/meus-dados/update', [ClienteController::class, 'updateDadosResponsavel'])->name('update.meus-dados'); // Update dos dados do responsável
+    Route::controller(ClienteController::class)->group(function () {
+        Route::get('cliente/alunos', 'gridAlunosResponsavel')->name('tela.alunos'); // Listar alunos do responsável
+        Route::get('cliente/aluno/create', 'cadastroAluno')->name('tela.cadastro.aluno'); // Tela de cadastro de alunos do responsável
+        Route::post('cliente/aluno/store', 'cadastroAlunoStore'); // Store do cadastro de alunos do responsável
+        Route::get('cliente/aluno/{id}/edit', 'editAluno')->name('tela.edit.aluno'); // Tela de edição de aluno do responsável
+        Route::put('cliente/aluno/{id}/update', 'updateAluno')->name('tela.update.aluno'); // Update de aluno do responsável   
+        Route::delete('cliente/aluno/{id}/delete', 'deleteAluno')->name('tela.delete.aluno');
+        Route::post('cliente/trocar-aluno', 'trocarAluno');
+        Route::get('cliente/meus-dados', 'dadosResponsavel')->name('tela.meus-dados'); // Tela de dados do responsável
+        Route::put('cliente/meus-dados/update', 'updateDadosResponsavel')->name('update.meus-dados'); // Update dos dados do responsável
+    });
 });
 // Fim (Responsável)
 
 Route::middleware(['session.cliente'])->group(function () {
-    Route::get('cliente/home', [ClienteController::class, 'home']);
-    Route::get('cliente/pedidos', [ClienteController::class, 'pedidos']);
-    Route::get('cliente/saldo', [ClienteController::class, 'saldo']);
-    Route::get('cliente/extrato', [ClienteController::class, 'extrato']);
-    Route::get('cliente/recarga', [ClienteController::class, 'recarga']);
-    Route::get('cliente/logout', [ClienteController::class, 'logout']);
 
-    Route::post('cliente/recarga/store', [ClienteController::class, 'recargaStore']);
-    Route::get('cliente/recarga/success', [ClienteController::class, 'recargaSuccess']);
-    Route::get('cliente/recarga/cancel', [ClienteController::class, 'recargaCancel']);
+    Route::controller(ClienteController::class)->group(function () {
+        Route::get('cliente/home', 'home');
+        Route::get('cliente/pedidos', 'pedidos');
+        Route::get('cliente/saldo', 'saldo');
+        Route::get('cliente/extrato', 'extrato');
+        Route::get('cliente/recarga', 'recarga');
+        Route::get('cliente/logout', 'logout');
 
-    Route::get('cliente/cardapio/show/{id_tipo_cardapio}', [ClienteController::class, 'getCardapioDoPDV']);
-    Route::post('cliente/cardapio/add-pedido-cliente', [ClienteController::class, 'addPedidoCliente']);
-    Route::post('cliente/cardapio/remove-item-pedido-cliente', [ClienteController::class, 'removeItemPedidoCliente']);
-    Route::get('cliente/confirmar-pedido', [ClienteController::class, 'confirmarPedido']);
-    Route::get('cliente/pedido/finalizar', [ClienteController::class, 'finalizarPedido']);
-    Route::get('cliente/meus-pedidos', [ClienteController::class, 'meusPedidos']);
-    Route::get('cliente/meu-pedido/{pedido_id}', [ClienteController::class, 'meuPedido']);
+        Route::post('cliente/recarga/store', 'recargaStore');
+        Route::get('cliente/recarga/success', 'recargaSuccess');
+        Route::get('cliente/recarga/cancel', 'recargaCancel');
 
-
+        Route::get('cliente/cardapio/show/{id_tipo_cardapio}', 'getCardapioDoPDV');
+        Route::post('cliente/cardapio/add-pedido-cliente', 'addPedidoCliente');
+        Route::post('cliente/cardapio/remove-item-pedido-cliente', 'removeItemPedidoCliente');
+        Route::get('cliente/confirmar-pedido', 'confirmarPedido');
+        Route::get('cliente/pedido/finalizar', 'finalizarPedido');
+        Route::get('cliente/meus-pedidos', 'meusPedidos');
+        Route::get('cliente/meu-pedido/{pedido_id}', 'meuPedido');
+    });
 
     Route::get('debug/session', function () {
         dd(session('cliente'));
