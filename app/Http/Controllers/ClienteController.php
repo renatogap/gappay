@@ -452,9 +452,9 @@ class ClienteController extends Controller
         $qrCodeData = base64_encode(file_get_contents($qrCodePath));
         $qrCode = '<img src="data:image/png;base64,' . $qrCodeData . '" class="ticket-qrcode-img" alt="QR Code">';
 
-    // Enviar email com o pedido do cliente
-    $emailResponsavel = session('responsavel')->email;
-    Mail::to($emailResponsavel)->send(new ClientePedidoMail($pedidos, $qrCodePath)); 
+        // Enviar email com o pedido do cliente
+        $emailResponsavel = session('responsavel')->email;
+        Mail::to($emailResponsavel)->send(new ClientePedidoMail($pedidos, $qrCodePath)); 
 
         return view('cliente.meu-pedido', compact('pedidos', 'qrCode'));
     }
