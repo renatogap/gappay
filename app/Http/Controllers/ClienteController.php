@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ClientePedidoMail;
 use App\Models\Entity\Cardapio;
 use App\Models\Entity\CardapioFoto;
 use App\Models\Entity\CardapioTipo;
@@ -450,6 +451,10 @@ class ClienteController extends Controller
         // Converter para base64 para embedding direto
         $qrCodeData = base64_encode(file_get_contents($qrCodePath));
         $qrCode = '<img src="data:image/png;base64,' . $qrCodeData . '" class="ticket-qrcode-img" alt="QR Code">';
+
+    // Enviar email com o pedido do cliente
+    $emailResponsavel = session('responsavel')->email;
+    Mail::to($emailResponsavel)->send(new ClientePedidoMail($pedidos, $qrCodePath)); 
 
         return view('cliente.meu-pedido', compact('pedidos', 'qrCode'));
     }
