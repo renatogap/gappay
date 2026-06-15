@@ -88,7 +88,6 @@
       position: relative;
     }
 
-    .ticket-perfuracao-top,
     .ticket-perfuracao-bottom {
       height: 14px;
       background: repeating-linear-gradient(
@@ -275,7 +274,6 @@
       </p>
 
       <div class="ticket-comprovante">
-        {{-- <div class="ticket-perfuracao-top"></div> --}}
 
         <div class="ticket-conteudo">
 
@@ -289,7 +287,7 @@
             {{ date('d/m/Y H:i', strtotime($pedidos[0]->dt_pedido)) }}h
           </div>
 
-          <hr class="ticket-divisor">
+          {{-- <hr class="ticket-divisor"> --}}
 
           <table class="ticket-itens" cellpadding="0" cellspacing="0">
             @foreach($pedidos as $pedido)
