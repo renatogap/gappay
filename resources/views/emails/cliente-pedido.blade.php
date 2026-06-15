@@ -80,7 +80,6 @@
       margin-bottom: 32px;
     }
 
-    /* ── TICKET (mesmo nome da página: ticket-comprovante) ── */
     .ticket-comprovante {
       background: #dbf3ff;
       border-radius: 12px;
@@ -89,7 +88,6 @@
       position: relative;
     }
 
-    /* Perfuração topo/base (substitui o ::before/::after da página) */
     .ticket-perfuracao-top,
     .ticket-perfuracao-bottom {
       height: 14px;
@@ -102,12 +100,10 @@
       );
     }
 
-    /* ticket-conteudo: mesmo nome da página */
     .ticket-conteudo {
       padding: 24px 28px;
     }
 
-    /* ticket-logo: mesmo nome da página */
     .ticket-logo {
       text-align: center;
       font-size: 16px;
@@ -116,7 +112,6 @@
       margin-bottom: 4px;
     }
 
-    /* ticket-numero-pedido: mesmo nome da página */
     .ticket-numero-pedido {
       font-size: 13px;
       font-weight: 700;
@@ -126,7 +121,6 @@
       margin-top: 4px;
     }
 
-    /* ticket-data: mesmo nome da página */
     .ticket-data {
       font-size: 12px;
       color: #777;
@@ -134,14 +128,12 @@
       margin-top: 4px;
     }
 
-    /* ticket-divisor: mesmo nome da página */
     .ticket-divisor {
       border: none;
       border-top: 2px dashed #aac8d8;
       margin: 16px 0;
     }
 
-    /* ticket-itens: mesmo nome da página */
     .ticket-itens {
       width: 100%;
       border-collapse: collapse;
@@ -149,21 +141,18 @@
       border-top: 1px dotted #999;
     }
 
-    /* ticket-item-linha: mesmo nome da página */
     .ticket-item-linha td {
       padding: 0.6em 0;
       border-bottom: 1px dotted #999;
       font-size: 0.85em;
     }
 
-    /* ticket-item-nome: mesmo nome da página */
     .ticket-item-nome {
       font-weight: 600;
       color: #333;
       width: 100%;
     }
 
-    /* ticket-item-valor: mesmo nome da página */
     .ticket-item-valor {
       white-space: nowrap;
       font-weight: 600;
@@ -178,19 +167,16 @@
       padding: 2px 0 6px;
     }
 
-    /* ticket-totais: mesmo nome da página */
     .ticket-totais {
       margin-top: 1.5em;
     }
 
-    /* ticket-total-linha: mesmo nome da página */
     .ticket-total-linha td {
       font-size: 0.95em;
       color: #555;
       padding: 3px 0;
     }
 
-    /* ticket-total-final: mesmo nome da página */
     .ticket-total-final td {
       font-size: 1.3em;
       font-weight: 700;
@@ -198,14 +184,12 @@
       padding-top: 0.8em;
     }
 
-    /* ticket-qrcode: mesmo nome da página */
     .ticket-qrcode {
       text-align: center;
       margin: 1.5em 0;
       padding: 1.5em 0;
     }
 
-    /* ticket-qrcode-img: mesmo nome da página */
     .ticket-qrcode-img {
       width: 160px;
       height: 160px;
@@ -213,7 +197,6 @@
       margin: 0 auto 0.8em;
     }
 
-    /* ticket-qrcode-label: mesmo nome da página */
     .ticket-qrcode-label {
       font-size: 0.8em;
       color: #999;
@@ -222,7 +205,6 @@
       font-weight: 600;
     }
 
-    /* ticket-rodape: mesmo nome da página */
     .ticket-rodape {
       text-align: center;
       font-size: 0.8em;
@@ -232,7 +214,6 @@
       border-top: 1px dotted #999;
     }
 
-    /* ── NOTE ── */
     .note {
       background: rgba(79,195,247,0.07);
       border-left: 3px solid #4fc3f7;
@@ -243,7 +224,6 @@
       line-height: 1.6;
     }
 
-    /* ── FOOTER ── */
     .footer {
       background: #0d1b2a;
       padding: 24px 40px;
