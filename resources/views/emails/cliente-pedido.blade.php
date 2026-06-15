@@ -343,7 +343,7 @@
 
           <div class="ticket-rodape">
             Obrigado pela sua compra!<br>
-            {{ config('app.NOME_SISTEMA') }}
+            {{ env('NOME_SISTEMA') }}
           </div>
 
         </div>
@@ -366,7 +366,7 @@
       <div class="divider"></div>
       <p class="legal">
         Este é um e-mail automático, por favor não responda diretamente a esta mensagem.<br>
-        © {{ date('Y') }} {{ config('app.NOME_SISTEMA') }}. Todos os direitos reservados.
+        © {{ date('Y') }} {{ env('NOME_SISTEMA') }}. Todos os direitos reservados.
       </p>
     </div>
 
