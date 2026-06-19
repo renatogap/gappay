@@ -194,7 +194,7 @@ class ClienteRegras
                     'quantity' => 1,
                 ]
             ],
-            'payment_method_types' => ['card', 'boleto'],
+            'payment_method_types' => ['card', 'pix'],
             'mode' => 'payment',
             'success_url' => url('cliente/recarga/success'),
             'cancel_url' => url('cliente/recarga/cancel'),
