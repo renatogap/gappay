@@ -1,9 +1,330 @@
 @extends('layouts.default')
 
 @section('conteudo')
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h5 style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
-            <span class="material-icons" style="color: #195287; font-size: 28px; vertical-align: middle;">account_box</span>
+<style>
+    /* Estilos do Dashboard */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .dashboard-title {
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .header-icon {
+        color: #195287;
+        font-size: 28px;
+        vertical-align: middle;
+    }
+    .btn-back {
+        font-size: 1.5em;
+        color: #333;
+        text-decoration: none;
+    }
+    .dashboard-divider {
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+
+    /* Profile Header */
+    .profile-card {
+        background: #195287;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #144370;
+        margin-bottom: 25px;
+    }
+    .profile-info {
+        gap: 15px;
+    }
+    .profile-avatar {
+        width: 55px;
+        height: 55px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        flex-shrink: 0;
+    }
+    .profile-name {
+        margin: 0;
+        font-weight: bold;
+        color: #ffffff;
+    }
+    .profile-meta {
+        margin: 3px 0 0 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .profile-meta-strong {
+        color: #ffffff;
+    }
+    .balance-container {
+        display: inline-block;
+        text-align: left;
+        padding: 10px 15px;
+        min-width: 160px;
+    }
+    .balance-label {
+        color: #a5d6a7;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 2px;
+    }
+    .balance-value {
+        color: #ffffff;
+        margin: 0;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    /* Tabs */
+    .nav-tabs-custom {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 10px;
+        gap: 5px;
+    }
+    .nav-link-custom {
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 6px;
+        padding: 10px 16px;
+    }
+
+    /* Orders Tab */
+    .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .order-card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        transition: transform 0.2s;
+    }
+    .order-header {
+        background: #eef5fc;
+        border-bottom: 1px solid #d0e1f5;
+        padding: 12px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .order-title-wrapper {
+        font-size: 13px;
+        color: #495057;
+    }
+    .order-title {
+        font-weight: bold;
+        font-size: 14px;
+        color: #212529;
+    }
+    .order-table-badge {
+        margin-left: 8px;
+        background: #e2e3e5;
+        color: #383d41;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 11px;
+    }
+    .order-time {
+        margin-top: 2px;
+        color: #888;
+    }
+    .order-meta-right {
+        font-size: 13px;
+        color: #888;
+    }
+    .order-total-header {
+        color: #195287;
+        font-weight: bold;
+        font-size: 14px;
+        margin-top: 2px;
+    }
+    .order-body {
+        padding: 15px 18px;
+    }
+    .order-table {
+        margin: 0;
+        font-size: 14px;
+    }
+    .order-table-header-row {
+        color: #888;
+        font-size: 11px;
+        text-transform: uppercase;
+        border-top: none;
+    }
+    .order-table-header {
+        border-top: none;
+        padding-bottom: 6px;
+    }
+    .order-row {
+        border-bottom: 1px solid #f9f9f9;
+    }
+    .order-cell {
+        vertical-align: middle;
+        padding: 8px 0;
+        border-top: none;
+    }
+    .order-cell-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .order-item-canceled {
+        text-decoration: line-through;
+        color: #aaa;
+    }
+    .order-item-active {
+        font-weight: 500;
+    }
+    .order-badge-canceled {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    .order-price-canceled {
+        text-decoration: line-through;
+        color: #aaa;
+        font-size: 13px;
+    }
+    .order-price-zero {
+        font-size: 11px;
+        color: red;
+        font-weight: bold;
+    }
+    .order-price-active {
+        font-weight: 500;
+    }
+    .order-summary {
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        font-size: 13px;
+    }
+    .order-summary-flex {
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        color: #666;
+        flex-wrap: wrap;
+    }
+    .order-summary-total {
+        color: #212529;
+    }
+
+    /* Total Consumed Bottom Card */
+    .total-card {
+        background: #fff;
+        border: 2px solid #28a745;
+        border-radius: 10px;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.05);
+    }
+    .total-card-label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #2e7d32;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .total-card-value {
+        font-size: 22px;
+        color: #1b5e20;
+    }
+
+    /* Warning Alerts */
+    .alert-custom {
+        gap: 8px;
+    }
+
+    /* Financial Tab */
+    .finance-card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .finance-header {
+        padding: 18px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    .finance-title {
+        margin: 0;
+        font-weight: bold;
+        color: #495057;
+    }
+    .finance-body {
+        padding: 0;
+    }
+    .finance-table {
+        margin: 0;
+        font-size: 14px;
+    }
+    .finance-table-header-row {
+        background: #fafafa;
+        color: #888;
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+    .finance-table-header {
+        padding: 12px 18px;
+        border-top: none;
+    }
+    .finance-cell {
+        padding: 14px 18px;
+        color: #666;
+        vertical-align: middle;
+    }
+    .finance-cell-description {
+        padding: 14px 18px;
+        color: #495057;
+        vertical-align: middle;
+    }
+    .finance-badge {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .finance-value {
+        padding: 14px 18px;
+        font-weight: bold;
+        text-align: right;
+        vertical-align: middle;
+        font-size: 15px;
+    }
+</style>
+
+    <div class="dashboard-header">
+        <h5 class="dashboard-title">
+            <span class="material-icons header-icon">account_box</span>
             <strong>Consultar Aluno</strong>
         </h5>
         <a href="{{url('relatorio/consultar-pedidos')}}" class="material-icons" style="font-size: 1.5em; color: #333; text-decoration: none;" title="Voltar">

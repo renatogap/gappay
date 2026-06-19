@@ -19,8 +19,9 @@ class ClienteRegras
     public static function salvar($p)
     {
         $p->cartao = self::validaCartao($p->codigo);
-        
-        if(!$p->cartao) throw new Exception(self::$error);
+
+        if (!$p->cartao)
+            throw new Exception(self::$error);
 
         $cliente = self::saveCliente($p);
         $p->cartaoCliente = self::saveNovoCartaoCliente($p, $cliente);
@@ -33,34 +34,35 @@ class ClienteRegras
     {
         $p->cartao = self::validaCartao($p->codigo, $p->id);
 
-        if(!$p->cartao) throw new Exception(self::$error);
+        if (!$p->cartao)
+            throw new Exception(self::$error);
 
         $cliente = self::saveCliente($p);
-        
+
         //verifica se cartão do cliente no BD = ao submetido do Formulário
-        if($cliente->fk_cartao != $p->cartao->id) {
+        if ($cliente->fk_cartao != $p->cartao->id) {
             self::saveDevolucao($cliente);
             $p->cartaoCliente = self::saveNovoCartaoCliente($p, $cliente);
             self::saveEntradaCreditoRefCaucao($p);
-        }else {
+        } else {
             self::editaCartaoCliente($p, $cliente);
         }
         return $cliente;
     }
 
-    
+
     public static function saveCliente($p)
     {
         //INSERT
-        if(!$p->id) {
+        if (!$p->id) {
             $cliente = new Cliente();
             $cliente->created_at = date('Y-m-d H:i:s');
             $cliente->fk_usuario = Auth::user()->id;
-        } 
-        
+        }
+
         //UPDATE
         else {
-            $cliente = Cliente::find($p->id);            
+            $cliente = Cliente::find($p->id);
             $cliente->updated_at = date('Y-m-d H:i:s');
             $cliente->fk_usuario_alt = Auth::user()->id;
         }
@@ -75,7 +77,7 @@ class ClienteRegras
         $cliente->observacao = $p->observacao;
         $cliente->save();
 
-        
+
 
         return $cliente;
     }
@@ -99,7 +101,7 @@ class ClienteRegras
             'fk_usuario' => Auth::user()->id,
         ]);
 
-    
+
         Cartao::where('id', $p->cartao->id)->update(['fk_situacao' => 2]);
 
         return $cartaoCliente;
@@ -131,7 +133,7 @@ class ClienteRegras
             'fk_cartao_cliente' => $p->cartaoCliente->id,
             'valor' => formatarMoedaDB($p->valorCartao),
             'fk_tipo_pagamento' => $p->tipoPagamento,
-            'observacao' => 'Crédito Cartão aluno: '.$p->nome,
+            'observacao' => 'Crédito Cartão aluno: ' . $p->nome,
             'data' => date('Y-m-d H:i:s'),
             'fk_usuario' => Auth::user()->id
         ]);
@@ -140,36 +142,35 @@ class ClienteRegras
     public static function saveDevolucao($cliente)
     {
         CartaoCliente::where('id', $cliente->fk_cartao_cliente)->update(['status' => 1, 'devolvido' => 'S']);
-        
+
         Cartao::where('id', $cliente->fk_cartao)->update(['fk_situacao' => 1]);
     }
 
-    public static function validaCartao($codigo, $id=null)
+    public static function validaCartao($codigo, $id = null)
     {
         $cartao = Cartao::where('codigo', $codigo)->first();
-        
-        if(!$cartao){
+
+        if (!$cartao) {
             self::$error = "Cartão inválido.";
             return false;
         }
 
-        if(!$id) { //validação no cadastro
-            if($cartao->fk_situacao == 2){
+        if (!$id) { //validação no cadastro
+            if ($cartao->fk_situacao == 2) {
                 self::$error = "Este cartão já está em uso. Por favor, passe outro cartão.";
                 return false;
             }
-        }
-        else { //validação somente na alteração
+        } else { //validação somente na alteração
             $cliente = ClienteDB::find($id);
 
-            if($cliente->codigo != $codigo) { //verifica se o cartão do cliente no BD != do informado no form
-                if($cartao->fk_situacao == 2){
+            if ($cliente->codigo != $codigo) { //verifica se o cartão do cliente no BD != do informado no form
+                if ($cartao->fk_situacao == 2) {
                     self::$error = "Este cartão já está em uso. Por favor, passe outro cartão.";
                     return false;
                 }
             }
         }
-            
+
         return $cartao;
     }
 
@@ -178,22 +179,24 @@ class ClienteRegras
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $unitAmount = (int) formatarMoedaDB($price); // preço em centavos (ex: 500 = $5.00)
-        
+
 
         $checkout_session = \Stripe\Checkout\Session::create([
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => $currency,
-                    'product_data' => [
-                        'name' => $productName,
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => $currency,
+                        'product_data' => [
+                            'name' => $productName,
+                        ],
+                        'unit_amount' => $unitAmount,
                     ],
-                    'unit_amount' => $unitAmount,
-                ],
-                'quantity' => 1,
-            ]],
+                    'quantity' => 1,
+                ]
+            ],
             'payment_method_types' => ['card', 'boleto'],
             'mode' => 'payment',
-            'success_url' => url('cliente/recarga/success?session_id={CHECKOUT_SESSION_ID}&price_recarga='.$price_recarga),
+            'success_url' => url('cliente/recarga/success'),
             'cancel_url' => url('cliente/recarga/cancel'),
         ]);
 
@@ -249,11 +252,11 @@ class ClienteRegras
             } else {
                 throw new Exception('O pagamento não foi concluído. Por favor, tente novamente. ');
             }
-            
+
         } catch (Exception $e) {
             // Log do erro ou tratamento adicional
             throw new Exception('Erro ao atualizar saldo do cartão: ' . $e->getMessage());
-        }   
+        }
     }
 
 }

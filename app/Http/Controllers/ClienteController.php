@@ -570,6 +570,12 @@ class ClienteController extends Controller
         try {
             $checkout_session = ClienteRegras::processarRecarga(session('cliente'), $request->product_name, $request->price, $request->price_recarga);
 
+            // Armazena na sessão os dados da recarga para recuperar no retorno de forma segura
+            session([
+                'stripe_checkout_session_id' => $checkout_session->id,
+                'stripe_price_recarga' => $request->price_recarga
+            ]);
+
             return redirect($checkout_session->url);
         } catch (Exception $ex) {
             return redirect('cliente/recarga')->with('error', $ex->getMessage())->withInput();
@@ -578,15 +584,19 @@ class ClienteController extends Controller
 
     public function recargaSuccess(Request $request)
     {
-        $session_id = $request->query('session_id');
+        $session_id = session('stripe_checkout_session_id');
+        $price_recarga = session('stripe_price_recarga');
 
         if (!$session_id) {
-            return redirect('cliente/recarga')->with('error', 'Sessão de pagamento não encontrada.');
+            return redirect('cliente/recarga')->with('error', 'Sessão de pagamento não encontrada ou já processada.');
         }
 
         try {
 
-            ClienteRegras::atualizarSaldoAposRecarga($session_id, $request->query('price_recarga'));
+            ClienteRegras::atualizarSaldoAposRecarga($session_id, $price_recarga);
+
+            // Limpa as variáveis de sessão para evitar reprocessamento em caso de refresh
+            session()->forget(['stripe_checkout_session_id', 'stripe_price_recarga']);
 
             return redirect('cliente/extrato')->with('sucesso', 'Recarga realizada com sucesso! O valor já está disponível no seu cartão.');
         } catch (Exception $ex) {
